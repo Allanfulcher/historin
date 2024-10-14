@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historin - Histórias de Gramado</title>
+    
+    <!-- Bibliotecas e estilos externos -->
+    <!-- React e ReactDOM -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+    
+    <!-- React Router DOM -->
+    <script src="https://unpkg.com/react-router-dom@5/umd/react-router-dom.min.js" crossorigin></script>
+    
+    <!-- Babel para JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Merriweather:wght@400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome (versão 6.6.0 para consistência) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="styles.css" />
+
+</head>
+<body>
+    <div id="root"></div>
+
+    <!-- Banco de Dados -->
+    <script src="bd.js"></script>
+    
+    <!-- Bibliotecas externas -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    
+    <!-- Script principal -->
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+        const { HashRouter, Switch, Route, Link, useParams, useHistory } = window.ReactRouterDOM;
+
+        // Função para verificar se o popup deve ser exibido
+        const shouldShowPopup = () => {
+            const lastShown = localStorage.getItem('popupLastShown');
+            const now = new Date().getTime();
+            const showInterval = 1 * 24 * 60 * 60 * 1000; // Exibir a cada 1 dia
+            if (!lastShown || now - lastShown > showInterval) {
+                localStorage.setItem('popupLastShown', now);
+                return true;
+            }
+            return false;
+        };
+
+        // Componente de Modal de Dados (DataModal)
+        const DataModal = ({ isOpen, onClose, title, data, columns }) => {
+            if (!isOpen) return null;
+
+            return (
+                <div 
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" 
+                    onClick={onClose}
+                >
+                    <div 
+                        className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative" 
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button 
+                            className="absolute top-4 right-4 text-gray-600 hover:text-gray-800" 
+                            onClick={onClose}
+                            aria-label="Fechar modal"
+                        >
+                            <i className="fas fa-times text-xl"></i>
+                        </button>
+                        <h3 className="text-xl font-bold mb-4 text-center">{title}</h3>
+                        <div className="max-h-64 overflow-y-auto">
+                            <ul>
+                                {data.map((item, index) => (
+                                    <li key={index} className="flex justify-between items-center py-2 border-b">
+                                        {columns.map((column, colIndex) => (
+                                            <span key={colIndex} className="w-1/2">{item[column.accessor]}</span>
+                                        ))}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="mt-4 text-center">
+                            <p className="text-gray-500">Total de {title.toLowerCase()}: <span className="font-bold">{data.length}</span></p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Componente do Popup Carrossel
+        const PopupCarrossel = ({ onClose }) => {
+            const [currentSlide, setCurrentSlide] = useState(0);
+            const slides = [
+                { image: 'fotos/criadores-historin-gramado.jpeg', text: 'Conheça mais sobre nós', buttonText: 'Ver agora', link: '/sobre' },
+                { image: 'fotos/legado-africano-gramado.png', text: 'Conheça o legado africano em Gramado', buttonText: 'Saiba Mais!', link: '/legado-africano' },
+                { image: 'fotos/comprar-ingressos.png', text: 'Ingressos para essa semana em Promoção', buttonText: 'Comprar agora', link: 'https://parksnet.com.br/ingressos/' }
+            ];
+
+            const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+            const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+
+            const handleOverlayClick = (e) => {
+                if (e.target === e.currentTarget) {
+                    onClose();
+                }
+            };
+
+            return (
+                <div 
+                    className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center fade-in z-50"
+                    onClick={handleOverlayClick}
+                >
+                    <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-2xl relative">
+                        <button onClick={onClose} className="absolute top-2 right-2 text-gray-600 hover:text-gray-800">
+                            <i className="fas fa-times text-xl"></i>
+                        </button>
+
+                        <div className="text-center">
+                            <img src={slides[currentSlide].image} alt={`Slide ${currentSlide + 1}`} className="rounded-lg mb-4 w-full object-cover h-64" />
+                            <p className="text-lg font-semibold mb-4">{slides[currentSlide].text}</p>
+                            <Link 
+                                to={slides[currentSlide].link} 
+                                className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition"
+                                onClick={onClose} // Fecha o popup ao clicar no botão
+                            >
+                                {slides[currentSlide].buttonText}
+                            </Link>
+                        </div>
+
+                        <div className="flex justify-between items-center mt-4">
+                            <button 
+                                onClick={prevSlide} 
+                                className="px-4 py-2 bg-gray-300 rounded-full hover:bg-gray-400 transition flex items-center justify-center w-12 h-12"
+                            >
+                                <i className="fas fa-chevron-left text-black text-2xl"></i>
+                            </button>
+                            <button 
+                                onClick={nextSlide} 
+                                className="px-4 py-2 bg-gray-300 rounded-full hover:bg-gray-400 transition flex items-center justify-center w-12 h-12"
+                            >
+                                <i className="fas fa-chevron-right text-black text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Cabeçalho da Aplicação
+        const Header = ({ setMenuOpen }) => (
+            <header className="flex justify-between items-center p-4 bg-[#E6D3B4]">
+                <div className="flex items-center">
+                    <Link to="/" className="ml-2 text-2xl font-bold font-merriweather">
+                        HISTORIN
+                    </Link>
+                </div>
+                <div className="text-2xl cursor-pointer" onClick={() => setMenuOpen(true)}>
+                    <i className="fas fa-bars"></i>
+                </div>
+            </header>
+        );
+
+        // Menu Lateral
+        const Menu = ({ menuOpen, setMenuOpen, setShowMap }) => {
+            const history = useHistory();
+
+            const handleSurpriseMe = () => {
+                if (historias && historias.length > 0) {
+                    const randomHistoria = historias[Math.floor(Math.random() * historias.length)];
+                    history.push(`/rua/${randomHistoria.rua_id}/historia/${randomHistoria.id}`);
+                    setMenuOpen(false);
+                } else {
+                    alert('Nenhuma história disponível.');
+                }
+            };
+
+            return (
+                <>
+                    {/* Overlay do Menu */}
+                    <div 
+                        className={`menu-overlay ${menuOpen ? 'open' : ''}`} 
+                        onClick={() => setMenuOpen(false)}
+                    ></div>
+
+                    {/* Navegação do Menu */}
+                    <nav className={`menu ${menuOpen ? 'open' : ''}`}>
+                        {/* Cabeçalho do Menu */}
+                        <div className="menu-header text-center mt-8 px-6">
+                            <h2 className="text-3xl font-serif font-bold">Menu</h2>
+                        </div>
+
+                        {/* Itens do Menu */}
+                        <div className="flex flex-col flex-grow mt-8 px-6">
+                            <Link 
+                                to="/" 
+                                className="menu-item px-4 py-3 hover:bg-gray-100 rounded-md" 
+                                onClick={() => { setShowMap(true); setMenuOpen(false); }}
+                            >
+                                <span className="block text-lg font-semibold">ÍNICIO</span>
+                                <span className="subtitle block text-sm text-gray-500">e MAPA</span>
+                            </Link>
+                            <Link 
+                                to="/adicionar-historia" 
+                                className="menu-item px-4 py-3 hover:bg-gray-100 rounded-md" 
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                <span className="subtitle block text-sm text-gray-500">Conte a sua</span>
+                                <span className="block text-lg font-semibold">HISTÓRIA</span>
+                            </Link>
+
+                            <Link 
+                                to="/ruas-e-historias" 
+                                className="menu-item px-4 py-3 hover:bg-gray-100 rounded-md text-lg font-semibold" 
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                RUAS E HISTÓRIAS
+                            </Link>
+                            <Link 
+                                to="/sobre" 
+                                className="menu-item px-4 py-3 hover:bg-gray-100 rounded-md text-lg font-semibold" 
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                SOBRE
+                            </Link>
+                            
+                            {/* Botão Surpreenda-me */}
+                            <button
+                                className="menu-item px-4 py-3 hover:bg-gray-100 rounded-md text-lg font-semibold text-left mt-4"
+                                onClick={handleSurpriseMe}
+                            >
+                                SURPREENDA-ME
+                            </button>
+                        </div>
+
+                        {/* Rodapé do Menu */}
+                        <div className="menu-footer px-6 pb-6">
+                            {/* Imagem do Rodapé */}
+                            <img 
+                                src="https://i.postimg.cc/8C184M44/parks-net.png" 
+                                alt="Banner" 
+                                className="mb-4 w-full h-48 object-cover rounded-md"
+                            />
+                            
+                            {/* Botão Compre Seus Ingressos */}
+                            <a 
+                                href="https://parksnet.com.br/ingressos/" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="button bg-blue-500 text-white px-4 py-2 rounded-md mb-2 block text-center"
+                            >
+                                Compre seus ingressos
+                            </a>
+
+                            {/* Botão Apoie */}
+                            <Link 
+                                to="/apoio" 
+                                className="button bg-yellow-400 text-white px-4 py-2 rounded-md block text-center" 
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                APOIE
+                            </Link>
+
+                            {/* Texto de Rodapé */}
+                            <div className="footer-text text-center text-sm text-gray-600 mt-4">
+                                Criado em Gramado
+                            </div>
+                        </div>
+                    </nav>
+                </>
+            );
+        };
+
+// Página Sobre
+const Sobre = () => {
+    const [showParticipation, setShowParticipation] = useState(false);
+
+    const participationData = [
+        { name: 'Allan Fulcher', participation: 'Criação' },
+        { name: 'Mateus Canova', participation: 'Criação' },
+        { name: 'Ike Koetz', participation: 'Incentivo' },
+        // Adicione mais participantes conforme necessário
+    ];
+
+    return (
+        <div className="p-4">
+            <header className="flex justify-between items-center mb-4">
+                <div className="text-2xl cursor-pointer">
+                    <Link to="/">
+                        <i className="fas fa-arrow-left"></i>
+                    </Link>
+                </div>
+                <h1 className="text-lg font-bold">Sobre nós</h1>
+                <div className="w-10 h-10"></div>
+            </header>
+            <section className="mb-6">
+                <h2 className="text-center text-lg font-bold mb-2">Historin</h2>
+                <p className="text-center text-sm mb-4">
+                    Um projeto Incubado Secretaria de Cultura de Gramado, no Vila Joaquina, com intuito de renovar o sentimento de pertencimento através da história da cidade, com QR codes nas principais ruas históricas que acessam memórias que são contadas pelos usuários e ficam eternizadas nessa plataforma. Uma Viagem no Tempo! Esta é a versão MVP (inicial). Em breve muitas novidades por aqui fiquem atentos!
+                </p>
+            </section>
+            <section className="mb-6">
+                <h3 className="text-center text-lg font-bold mb-2">Criação e Curadoria</h3>
+                <div className="space-y-2">
+                    <button className="w-full py-2 bg-gray-200 rounded-full">Allan Fulcher</button>
+                    <button className="w-full py-2 bg-gray-200 rounded-full">Mateus Canova</button>
+                </div>
+                <div className="text-center mt-4">
+                    <button 
+                        className="font-bold text-blue-600 hover:underline"
+                        onClick={() => setShowParticipation(true)}
+                    >
+                        Ver Todos
+                    </button>
+                </div>
+            </section>
+
+            <DataModal
+                isOpen={showParticipation}
+                onClose={() => setShowParticipation(false)}
+                title="Participantes"
+                data={participationData}
+                columns={[
+                    { header: 'Nome', accessor: 'name' },
+                    { header: 'Participação', accessor: 'participation' },
+                ]}
+            />
+
+            <section className="mb-6">
+                <h3 className="text-center text-lg font-bold mb-2">Apoio e patrocínio:</h3>
+                <div className="flex justify-around mb-4">
+                    <div className="text-center">
+                        <i className="fas fa-city text-2xl mb-1"></i>
+                        <p className="text-xs">Prefeitura de Gramado</p>
+                    </div>
+                    <div className="text-center">
+                        <i className="fas fa-university text-2xl mb-1"></i>
+                        <p className="text-xs">Feevale</p>
+                    </div>
+                    <div className="text-center">
+                        <i className="fas fa-building text-2xl mb-1"></i>
+                        <p className="text-xs">Empresas</p>
+                    </div>
+                </div>
+                <p className="text-center text-sm mb-2">Um projeto crowdfunding</p>
+                <div className="bg-gray-200 rounded-full h-4 mb-2 relative">
+                    <div className="bg-yellow-400 h-4 rounded-full absolute" style={{ width: '20%' }}></div>
+                    <div className="absolute inset-0 flex justify-between text-xs px-2">
+                        <span>R$660,00</span>
+                        <span>R$25.000,00</span>
+                    </div>
+                </div>
+                <Link to="/apoio">
+                    <button className="w-full py-2 bg-yellow-400 rounded-full text-white font-bold">Apoie agora</button>
+                </Link>
+            </section>
+{/* Novo Elemento de Contato */}
+<section className="mb-6">
+                <h3 className="text-center text-lg font-bold mb-4">Entre em contato conosco</h3>
+                <div className="flex justify-center space-x-6">
+                    {/* Link para WhatsApp */}
+                    <a
+                        href="https://wa.me/54993264627"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center text-green-500 hover:text-green-600 transition"
+                    >
+                        <i className="fab fa-whatsapp text-3xl"></i>
+                        <span className="text-sm">WhatsApp</span>
+                    </a>
+
+                    {/* Link para E-mail */}
+                    <a
+                        href="mailto:contato@historin.com.br"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center text-blue-500 hover:text-blue-600 transition"
+                    >
+                        <i className="fas fa-envelope text-3xl"></i>
+                        <span className="text-sm">E-mail</span>
+                    </a>
+                </div>
+            </section>
+        </div>
+    );
+};
+
+
+// Página Apoio
+const Apoio = () => {
+    const [showAllDonors, setShowAllDonors] = useState(false);
+    // Lista de doadores adicionais (exemplo)
+    const allDonors = [
+        { name: 'Elias Fulcher', amount: 500 },
+        { name: 'Eliane Silva', amount: 100 },
+        { name: 'Rosmarie Benetti', amount: 20 },
+        { name: 'Stevi R.', amount: 4 },
+        // Adicione mais doadores conforme necessário
+    ];
+
+    const copyToClipboard = () => {
+        navigator.clipboard.writeText('00020101021126580014br.gov.bcb.pix01368eac1054-b957-4af2-88c7-046b743ece015204000053039865802BR5925allcom comercio e servico6009SAO PAULO622905251J87ZBFMDTY970D6AP39DEHSC6304FDFB');
+        alert('Chave Pix copiada!');
+    };
+
+    return (
+        <div className="p-4">
+            <header className="flex justify-between items-center mb-4">
+                <div className="text-2xl cursor-pointer">
+                    <Link to="/">
+                        <i className="fas fa-arrow-left"></i>
+                    </Link>
+                </div>
+                <h1 className="text-lg font-bold">Apoio</h1>
+                <div className="w-10 h-10"></div>
+            </header>
+            <h2 className="text-center text-lg font-bold mb-2">Faça parte do Historin</h2>
+            <p className="text-center text-gray-600 mb-4">
+                O Historin é uma plataforma criada com financiamento coletivo. De pessoas para pessoas! <br/>
+                Ajude-nos a expandir essa iniciativa.
+            </p>
+            
+            <div className="mb-4">
+                <h3 className="font-bold mb-2">Ranking de doações</h3>
+                {/* Aqui você pode mapear os doadores reais ou fictícios */}
+                <div className="bg-white p-2 rounded-lg flex justify-between items-center mb-2">
+                    <span>#1 Elias Fulcher</span>
+                    <span className="text-gray-500">R$ 500,00</span>
+                </div>
+                <div className="bg-white p-2 rounded-lg flex justify-between items-center mb-2">
+                    <span>#2 Eliane</span>
+                    <span className="text-gray-500">R$ 100,00</span>
+                </div>
+                <div className="bg-white p-2 rounded-lg flex justify-between items-center mb-2">
+                    <span>#3 Rosmarie Benetti</span>
+                    <span className="text-gray-500">R$ 20,00</span>
+                </div>
+                <p className="text-gray-500 text-right">e outras:                     
+                    <button 
+                        className="font-bold text-blue-600 hover:underline ml-1"
+                        onClick={() => setShowAllDonors(true)}
+                    >
+                        {allDonors.length > 4 ? `${allDonors.length - 3} pessoas` : '1 pessoa'}
+                    </button>
+                </p>
+            </div>
+
+            <div className="mb-4">
+                <p className="text-center text-sm mb-2">Um projeto crowdfunding</p>
+                <div className="bg-gray-200 rounded-full h-4 mb-2 relative">
+                    <div className="bg-yellow-400 h-4 rounded-full absolute" style={{ width: '20%' }}></div>
+                    <div className="absolute inset-0 flex justify-between text-xs px-2">
+                        <span>R$660,00</span>
+                        <span>R$25.000,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <h3 className="font-bold mb-2">Apoie com Pix:</h3>
+                <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <p className="mb-4 text-center">
+                        Clique no botão abaixo para copiar nossa chave Pix e realizar sua doação:
+                    </p>
+                    <button
+                        className="bg-[#8A5A44] text-white px-6 py-3 rounded-md hover:bg-[#D8A568] flex items-center space-x-2 transition-transform transform hover:scale-105"
+                        onClick={copyToClipboard}
+                    >
+                        <i className="fas fa-copy"></i>
+                        <span>Copiar Chave Pix</span>
+                    </button>
+                </div>
+
+                <DataModal
+                    isOpen={showAllDonors}
+                    onClose={() => setShowAllDonors(false)}
+                    title="Apoiadores"
+                    data={allDonors}
+                    columns={[
+                        { header: 'Nome', accessor: 'name' },
+                        { header: 'Valor', accessor: 'amount' },
+                    ]}
+                />
+            </div>
+
+        </div>
+    );
+};
+
+// Página Adicionar História
+const AdicionarHistoria = () => {
+const [formData, setFormData] = useState({
+nome: '',
+telefone: '',
+local: '',
+ano: '',
+historia: ''
+});
+
+const handleChange = (e) => {
+const { id, value } = e.target;
+setFormData({ ...formData, [id]: value });
+};
+
+const handleSubmit = async (e) => {
+e.preventDefault();
+
+const formspreeEndpoint = "https://formspree.io/f/meojbabr"; // Substitua pelo seu endpoint do Formspree
+
+const data = {
+    nome: formData.nome,
+    telefone: formData.telefone,
+    local: formData.local,
+    ano: formData.ano,
+    historia: formData.historia
+};
+
+try {
+    const response = await fetch(formspreeEndpoint, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+        alert('História enviada com sucesso! Entraremos em contato para captar as imagens.');
+        setFormData({
+            nome: '',
+            telefone: '',
+            local: '',
+            ano: '',
+            historia: ''
+        });
+    } else {
+        alert('Houve um problema ao enviar sua história. Por favor, tente novamente.');
+    }
+} catch (error) {
+    console.error('Erro:', error);
+    alert('Houve um erro ao enviar sua história. Por favor, tente novamente.');
+}
+};
+
+return (
+<div className="p-4">
+    <header className="flex justify-between items-center mb-4">
+        <div className="text-2xl cursor-pointer">
+            <Link to="/">
+                <i className="fas fa-arrow-left"></i>
+            </Link>
+        </div>
+        <h1 className="text-lg font-bold">Envie uma história</h1>
+        <div className="w-10 h-10"></div>
+    </header>
+    <div className="bg-[#f5f0e1] p-4 rounded-lg shadow-md max-w-lg mx-auto">
+        <form onSubmit={handleSubmit}>
+
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nome">Nome:</label>
+                <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="nome"
+                    type="text"
+                    placeholder="Seu nome"
+                    value={formData.nome}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="telefone">Telefone:</label>
+                <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="telefone"
+                    type="text"
+                    placeholder="Seu telefone"
+                    value={formData.telefone}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="local">Local:</label>
+                <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="local"
+                    type="text"
+                    placeholder="Local"
+                    value={formData.local}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ano">Ano:</label>
+                <input
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="ano"
+                    type="number"
+                    placeholder="Ano"
+                    value={formData.ano}
+                    onChange={handleChange}
+                    required
+                />
+            </div>
+
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="historia">Conte sua história:</label>
+                <textarea
+                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="historia"
+                    rows="4"
+                    placeholder="Conte sua história"
+                    value={formData.historia}
+                    onChange={handleChange}
+                    required
+                ></textarea>
+            </div>
+
+            {/* Removido o campo de upload de fotos e adicionado o card informativo */}
+            <div className="mb-4 p-4 bg-[#e2e8f0] rounded">
+                <p className="text-gray-700">
+                    Sua história passará por análise e entraremos em contato para captar as imagens.
+                </p>
+            </div>
+
+            <div className="flex items-center justify-center">
+                <button
+                    className="bg-[#8A5A44] hover:bg-[#5a3e2e] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                >
+                    Enviar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+);
+};
+
+// Página Ruas e Histórias
+const RuasEHistorias = () => {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredRuas, setFilteredRuas] = useState(ruas);
+    const [filteredHistorias, setFilteredHistorias] = useState(historias);
+
+    useEffect(() => {
+        if (searchTerm === '') {
+            setFilteredRuas(ruas);
+            setFilteredHistorias(historias);
+        } else {
+            const lowercasedTerm = searchTerm.toLowerCase();
+            setFilteredRuas(ruas.filter(rua => rua.nome.toLowerCase().includes(lowercasedTerm)));
+            setFilteredHistorias(historias.filter(historia => historia.titulo.toLowerCase().includes(lowercasedTerm)));
+        }
+    }, [searchTerm]);
+
+    // Mapear filteredRuas para incluir uma foto aleatória das histórias associadas
+    const filteredRuasWithImages = useMemo(() => {
+        return filteredRuas.map(rua => {
+            const historiasDaRua = historias.filter(historia => historia.rua_id === rua.id);
+            const fotos = historiasDaRua.flatMap(historia => historia.fotos);
+            const randomFoto = fotos.length > 0 ? fotos[Math.floor(Math.random() * fotos.length)] : null;
+            return { ...rua, fotos: randomFoto };
+        });
+    }, [filteredRuas, historias]);
+
+    return (
+        <div className="p-4">
+            {/* Header e barra de busca fixa */}
+            <header className="sticky top-0 z-10 bg-white py-4">
+                <div className="flex justify-between items-center mb-4">
+                    <div className="text-2xl cursor-pointer">
+                        <Link to="/">
+                            <i className="fas fa-arrow-left"></i>
+                        </Link>
+                    </div>
+                    <h1 className="text-lg font-bold">Ruas e Histórias</h1>
+                    <div className="w-10 h-10"></div>
+                </div>
+                {/* Campo de Busca Aprimorado */}
+                <div className="relative mb-4">
+                    <input
+                        type="text"
+                        placeholder="Buscar..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[#8A5A44]"
+                    />
+                    <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                </div>
+            </header>
+
+            {/* Botão Ver Mapa */}
+            <div className="mb-4">
+                <Link to="/">
+                    <button
+                        className="w-full p-4 rounded-lg bg-[#8A5A44] text-white font-semibold flex items-center justify-center"
+                    >
+                        <i className="fas fa-map-marker-alt mr-2"></i> Ver Mapa
+                    </button>
+                </Link>
+            </div>
+
+            {/* Seção de Todas as Ruas */}
+            <div>
+                <h2 className="text-lg font-semibold mb-2">Todas as Ruas</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {filteredRuasWithImages.map(rua => (
+                        <Link
+                            key={rua.id}
+                            to={`/rua/${rua.id}`}
+                            className="bg-white p-2 rounded-lg shadow cursor-pointer block hover:shadow-lg transition-shadow duration-300"
+                        >
+                            <img src={rua.fotos || 'https://placehold.co/300x200'} alt={rua.nome} className="rounded-lg mb-2 w-full h-40 object-cover" />
+                            <h3 className="font-semibold">{rua.nome}</h3>
+                        </Link>
+                    ))}
+                </div>
+            </div>
+
+            {/* Seção de Todas as Histórias */}
+            <div className="mt-6">
+                <h2 className="text-lg font-semibold mb-2">Todas as Histórias</h2>
+                {filteredHistorias.map(historia => (
+                    <Link
+                        key={historia.id}
+                        to={`/rua/${historia.rua_id}/historia/${historia.id}`}
+                        className="bg-white p-2 rounded-lg shadow mb-2 flex items-center cursor-pointer block hover:shadow-lg transition-shadow duration-300"
+                    >
+                        <img src={historia.fotos[0] || 'https://placehold.co/100x100'} alt={historia.titulo} className="rounded-lg mr-2 w-24 h-24 object-cover" />
+                        <div>
+                            <h3 className="font-semibold">{historia.titulo}</h3>
+                            <p className="text-sm text-gray-600">{historia.descricao.slice(0, 60)}...</p>
+                        </div>
+                    </Link>
+                ))}
+            </div>
+
+            {/* Seção do Legado Africano */}
+            <div className="px-4 mt-6">
+                {/* Card que direciona para a página do Legado Africano */}
+                <Link to="/legado-africano" className="block bg-white p-6 rounded-lg shadow mb-4 hover:shadow-lg transition-shadow duration-300">
+                    <div className="flex flex-col md:flex-row items-center">
+                        <img src="fotos/legado-africano-gramado.png" alt="Legado Africano" className="w-24 h-24 object-cover rounded-lg mb-4 md:mb-0 md:mr-4" />
+                        <div>
+                            <h2 className="text-xl font-bold mb-2">Legado Africano em Gramado</h2>
+                            <p className="text-gray-700">
+                                Conheça a história e o legado africano em Gramado. Descubra relatos e contribuições da população negra na formação cultural da cidade.
+                            </p>
+                        </div>
+                    </div>
+                </Link>
+            </div>
+
+        </div>
+    );
+};
+
+// Componente de Carrossel Reutilizável
+const Carousel = ({ items, onItemClick, type }) => (
+    <div className="carousel">
+        {items.map(item => (
+            <div
+                key={item.id}
+                className="carousel-item"
+                onClick={() => onItemClick(item)}
+            >
+                <img src={item.fotos || (type === 'rua' ? 'https://placehold.co/200x150' : 'https://placehold.co/200x150')} alt={item.nome || item.titulo} className="w-full h-40 object-cover rounded-lg" />
+                <div className="item-content">
+                    <h3 className="font-semibold text-sm">{item.nome || item.titulo}</h3>
+                </div>
+            </div>
+        ))}
+    </div>
+);
+
+// Componente de Mapa
+const MapView = ({ setSelectedRuaId, setPreviewContent }) => {
+    useEffect(() => {
+        const map = L.map('map').setView([-29.379372524074153, -50.87327704684197], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        ruas.forEach(rua => {
+            const marker = L.marker(rua.coordenadas).addTo(map);
+            marker.bindPopup(`<b>${rua.nome}</b>`);
+
+            marker.on('click', () => {
+                setSelectedRuaId(rua.id);
+                setPreviewContent({
+                    title: rua.nome,
+                    description: rua.descricao,
+                    images: historias.filter(h => h.rua_id === rua.id).flatMap(h => h.fotos)
+                });
+            });
+        });
+
+        return () => {
+            map.remove();
+        };
+    }, []);
+
+    return <div id="map" className="map-container h-96"></div>;
+};
+
+// Componente de Seleção de Rua
+const RuaCarousel = ({ ruas, handleRuaClick, selectedRuaId }) => (
+    <div className="w-full py-2 md:py-4">
+        <div className="overflow-x-auto whitespace-nowrap py-2">
+            <div className="flex space-x-2 inline-flex">
+                {ruas.map(rua => (
+                    <span
+                        key={rua.id}
+                        className={`px-4 py-2 rounded-full cursor-pointer whitespace-nowrap 
+                            ${rua.id === selectedRuaId ? 'bg-[#8A5A44] text-white' : 'bg-gray-200'}`}
+                        onClick={() => handleRuaClick(rua)}
+                    >
+                        {rua.nome}
+                    </span>
+                ))}
+            </div>
+        </div>
+    </div>
+);
+
+// Componente de Conteúdo da História
+const HistoriaContent = ({
+    currentHistory,
+    historiasDaRua,
+    currentIndex,
+    setCurrentIndex,
+    setCurrentHistory,
+    showAllStories,
+    setShowAllStories,
+    selectedRuaId
+}) => {
+    const [showRuaDescription, setShowRuaDescription] = useState(false);
+    const history = useHistory();
+
+    const rua = ruas.find(r => r.id === selectedRuaId) || {};
+
+    const handlePrev = () => {
+        if (currentIndex > 0) {
+            const newIndex = currentIndex - 1;
+            const newHistory = historiasDaRua[newIndex];
+            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+            setCurrentHistory(newHistory);
+            setCurrentIndex(newIndex);
+        }
+    };
+
+    const handleNext = () => {
+        if (currentIndex < historiasDaRua.length - 1) {
+            const newIndex = currentIndex + 1;
+            const newHistory = historiasDaRua[newIndex];
+            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+            setCurrentHistory(newHistory);
+            setCurrentIndex(newIndex);
+        }
+    };
+
+    const handleRangeChange = (event) => {
+        const newIndex = parseInt(event.target.value);
+        if (newIndex >= 0 && newIndex < historiasDaRua.length) {
+            const newHistory = historiasDaRua[newIndex];
+            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+            setCurrentHistory(newHistory);
+            setCurrentIndex(newIndex);
+        }
+    };
+
+    if (!currentHistory) {
+        return (
+            <div className="w-full py-4">
+                <h2 className="text-xl font-bold">Nenhuma história disponível para esta rua.</h2>
+            </div>
+        );
+    }
+
+    return (
+        <div className="main-content w-full flex flex-col items-center flex-grow overflow-y-auto p-4">
+            {/* Nome da Rua com seta de detalhes */}
+            <div className="w-full py-2 md:py-4 flex justify-between items-center">
+                <h2 className="text-2xl font-bold">{rua.nome}</h2>
+                <button onClick={() => setShowRuaDescription(!showRuaDescription)}>
+                    <i className={`fas fa-chevron-${showRuaDescription ? 'up' : 'down'}`}></i>
+                </button>
+            </div>
+            {/* Descrição da Rua */}
+            {showRuaDescription && (
+                <div className="w-full py-2 md:py-4">
+                    <div className="border border-black p-4 rounded-md max-h-40 overflow-y-scroll bg-[#f5f1e8]">
+                        <p>{rua.descricao}</p>
+                    </div>
+                </div>
+            )}
+
+            {/* Mostrar todas as histórias em lista vertical */}
+            {showAllStories ? (
+                <div className="w-full py-2 md:py-4">
+                    {historiasDaRua.map((historia, index) => (
+                        <div key={historia.id} className="w-full mb-4 bg-white p-4 rounded-lg shadow-md">
+                            <h3 className="text-xl font-bold">{historia.titulo}</h3>
+                            <p className="text-sm text-gray-600">Por: {historia.criador}</p>
+                            <p className="text-sm text-gray-600">Ano: {historia.ano}</p>
+                            {historia.fotos && historia.fotos.length > 0 && (
+                                <div className="mt-2 grid grid-cols-2 gap-2">
+                                    {historia.fotos.map((foto, fotoIndex) => (
+                                        <img 
+                                            key={fotoIndex} 
+                                            src={foto} 
+                                            alt={`Foto de ${historia.titulo} ${fotoIndex + 1}`} 
+                                            className="w-full h-32 object-cover rounded-md"
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                            <div className="mt-2 max-h-40 overflow-y-scroll">
+                                <p>{historia.descricao}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <>
+                    {/* Conteúdo da História Atual */}
+                    <div className="w-full border-b border-black py-4 md:py-8 text-center">
+                        <div className="carousel grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {currentHistory.fotos && currentHistory.fotos.map((image, index) => (
+                                <img
+                                    key={index}
+                                    src={image}
+                                    alt={`Foto de ${currentHistory.ano} ${index + 1}`}
+                                    className="w-full h-auto object-cover rounded-lg shadow-md"
+                                />
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="w-full py-2 md:py-4">
+                        <div className="border border-black p-4 rounded-md max-h-40 overflow-y-scroll bg-[#f5f1e8]">
+                            <h3 className="text-xl md:text-2xl font-bold mb-2">{currentHistory.titulo}</h3>
+                            <div className="flex justify-between items-center text-sm text-gray-600 mb-2">
+                                <span>Por: {currentHistory.criador}</span>
+                                <span>Ano: {currentHistory.ano}</span>
+                            </div>
+                            <p>{currentHistory.descricao}</p>
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {/* Renderização Condicional da Parte Inferior */}
+            {showAllStories ? (
+                // Botão "Ver Histórias" fixado quando showAllStories está ativo
+                <div className="w-full fixed bottom-0 left-0 py-2 m-0">
+                    <div className="w-full py-2 md:py-4">
+                        <button
+                            onClick={() => setShowAllStories(false)}
+                            className="w-full bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
+                        >
+                            Ver Histórias
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                // Controles de Navegação fixados quando showAllStories está inativo
+                <div className="w-full fixed bottom-0 left-0 py-2 m-0">
+                    <div className="w-full py-2 md:py-4">
+                        <div className="border border-black p-4 rounded-md bg-[#f5f1e8]">
+                            <div className="flex items-center space-x-4 justify-center">
+                                <button
+                                    onClick={handlePrev}
+                                    className="p-2 bg-[#8A5A44] text-white rounded-full hover:bg-[#D8A568] focus:outline-none"
+                                    disabled={currentIndex === 0}
+                                >
+                                    <i className="fas fa-chevron-left"></i>
+                                </button>
+
+                                {/* Input Range com Largura Ajustada */}
+                                <input
+                                    type="range"
+                                    min={0}
+                                    max={historiasDaRua.length - 1}
+                                    value={currentIndex}
+                                    onChange={handleRangeChange}
+                                    className="w-1/2"
+                                    step="1"
+                                />
+
+                                <button
+                                    onClick={handleNext}
+                                    className="p-2 bg-[#8A5A44] text-white rounded-full hover:bg-[#D8A568] focus:outline-none"
+                                    disabled={currentIndex === historiasDaRua.length - 1}
+                                >
+                                    <i className="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+
+                            <p className="text-center mt-2 text-sm">
+                                Ano <strong>{currentHistory.ano}</strong>, história {currentIndex + 1} de {historiasDaRua.length}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Botão para alternar entre "Ver Histórias" e "Tudo desta rua" */}
+            {!showAllStories && (
+                <div className="w-full py-2 md:py-4 mb-20">
+<button
+onClick={() => setShowAllStories(true)}
+className="w-full bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
+>
+Tudo desta rua
+</button>
+</div>
+
+            )}
+        </div>
+    );
+};
+// Componente Legado Africano (Atualizado)
+const LegadoAfricano = () => {
+    // IDs das histórias selecionadas manualmente
+    const selectedStoryIds = [49, 50, 51]; // Substitua pelos IDs reais
+
+    // Filtrar as histórias com base nos IDs selecionados
+    const historiasLegadoAfricano = historias.filter(historia => selectedStoryIds.includes(historia.id));
+
+            return (
+                <div className="p-4">
+                    <header className="flex justify-between items-center mb-4">
+                        <div className="text-2xl cursor-pointer">
+                            <Link to="/">
+                                <i className="fas fa-arrow-left"></i>
+                            </Link>
+                        </div>
+                        <h1 className="text-lg font-bold">Legado Africano e Indígena</h1>
+                        <div className="w-10 h-10"></div>
+                    </header>
+
+                    {/* Seção de Introdução */}
+                    <section className="mb-6">
+                        <h2 className="text-center text-xl font-bold mb-4">A Importância da Inclusão Histórica</h2>
+                        <p className="text-justify">
+                            Para o projeto Historin, a inclusão de histórias sobre a presença indígena e africana no Rio Grande do Sul e em Gramado é essencial para refletir a diversidade cultural e os legados históricos muitas vezes negligenciados.
+                        </p>
+                    </section>
+
+                    {/* Seção sobre os Índios */}
+                    <section className="mb-6">
+                        <h3 className="text-lg font-bold mb-2">🌿 Índios no Rio Grande do Sul e Gramado</h3>
+                        <div className="border border-gray-300 rounded-lg p-4 bg-white">
+                            <p className="text-justify mb-2">
+                                Os povos indígenas foram os primeiros habitantes da região onde hoje se encontra o Rio Grande do Sul. Entre as principais etnias indígenas que viveram nessa área estão os <strong>Kaingang</strong> e os <strong>Guarani</strong>. Eles ocupavam a serra gaúcha muito antes da chegada de colonizadores europeus.
+                            </p>
+                            <p className="text-justify mb-2">
+                                Em Gramado, seus vestígios podem ser percebidos através de toponímias (nomes de lugares), práticas agrícolas e na relação profunda com a natureza local. Eles habitavam áreas ao redor de rios e florestas, praticando caça, coleta e agricultura de subsistência, como o cultivo de milho e mandioca.
+                            </p>
+                            <p className="text-justify">
+                                O contato com os colonizadores resultou em conflitos, e muitos indígenas foram expulsos ou exterminados de suas terras originais. Embora suas histórias tenham sido silenciadas ao longo dos séculos, elas permanecem no imaginário cultural da região.
+                            </p>
+                        </div>
+                    </section>
+
+                    {/* Seção sobre a População Negra */}
+                    <section className="mb-6">
+                        <h3 className="text-lg font-bold mb-2">🖤 Escravos e a População Negra em Gramado</h3>
+                        <div className="border border-gray-300 rounded-lg p-4 bg-white">
+                            <p className="text-justify mb-2">
+                                A história da população negra em Gramado, embora menos conhecida, é igualmente fundamental. Durante os períodos colonial e imperial, escravos africanos foram trazidos para a região para trabalhar em plantações, construção e outros serviços pesados.
+                            </p>
+                            <p className="text-justify mb-2">
+                                O trabalho de escravos foi essencial para o desenvolvimento das infraestruturas iniciais, como estradas e edificações, e suas contribuições continuam a influenciar a cultura local. A invisibilidade de sua contribuição está sendo corrigida através de esforços para a inclusão do legado africano em espaços públicos.
+                            </p>
+                            <p className="text-justify">
+                                Gramado reconhece a importância de divulgar as contribuições culturais e históricas dos negros para a formação da cidade, incluindo seu trabalho nas fazendas da Linha Caboclo.
+                            </p>
+                        </div>
+                    </section>
+
+                    {/* Botão para o Artigo Completo */}
+                    <div className="text-center mb-6">
+                        <a 
+                            href="https://periodicos.unb.br/index.php/emtempos/article/view/31760/26500" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition"
+                        >
+                            Leia o Artigo Completo
+                        </a>
+                    </div>
+
+                    {/* Seção de Histórias Selecionadas */}
+            <section className="mb-6">
+                <h3 className="text-lg font-bold mb-4">📚 Histórias Selecionadas</h3>
+                {historiasLegadoAfricano.map(historia => (
+                    <Link
+                        key={historia.id}
+                        to={`/rua/${historia.rua_id}/historia/${historia.id}`}
+                        className="bg-white p-2 rounded-lg shadow mb-2 flex items-center cursor-pointer block hover:shadow-lg transition-shadow duration-300"
+                    >
+                        <img 
+                            src={historia.fotos[0] || 'https://placehold.co/100x100'} 
+                            alt={historia.titulo} 
+                            className="rounded-lg mr-2 w-24 h-24 object-cover" 
+                        />
+                        <div>
+                            <h3 className="font-semibold">{historia.titulo}</h3>
+                            <p className="text-sm text-gray-600">{historia.descricao.slice(0, 60)}...</p>
+                            <p className="text-sm text-gray-600">Ano: {historia.ano}</p>
+                        </div>
+                    </Link>
+                ))}
+            </section>
+        </div>
+    );
+};
+
+// Componente de Preview (Overlay Parcial)
+const Preview = ({ previewContent, onClose, selectedRuaId }) => (
+    <div className="preview-card">
+        <Link to={`/rua/${selectedRuaId}`} className="block" onClick={onClose}>
+            <img src={previewContent.images[0] || 'https://placehold.co/400x200'} alt={previewContent.title} className="w-full h-40 object-cover rounded-lg" />
+            <div className="preview-content mt-2">
+                <h3 className="font-semibold">{previewContent.title}</h3>
+                <p className="text-sm">{previewContent.description.slice(0, 100)}...</p>
+            </div>
+        </Link>
+        <button
+            onClick={onClose}
+            className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-700 focus:outline-none"
+        >
+            Fechar
+        </button>
+    </div>
+);
+
+// Componente de Página de Rua e História (Atualizado)
+const RuaHistoria = () => {
+    const { id, historiaId } = useParams();
+    const history = useHistory();
+    const [currentHistory, setCurrentHistory] = useState(null);
+    const [historiasDaRua, setHistoriasDaRua] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [showAllStories, setShowAllStories] = useState(false);
+
+    useEffect(() => {
+        const rua = ruas.find(r => r.id === parseInt(id));
+        if (rua) {
+            const historiasList = historias
+                .filter(h => h.rua_id === rua.id)
+                .sort((a, b) => a.ano - b.ano || a.id - b.id);
+            setHistoriasDaRua(historiasList);
+
+            if (historiaId) {
+                const historia = historiasList.find(h => h.id === parseInt(historiaId));
+                if (historia) {
+                    setCurrentHistory(historia);
+                    const index = historiasList.findIndex(h => h.id === historia.id);
+                    setCurrentIndex(index);
+                } else {
+                    setCurrentHistory(null);
+                }
+            } else {
+                if (historiasList.length > 0) {
+                    const primeiraHistoria = historiasList[0];
+                    setCurrentHistory(primeiraHistoria);
+                    setCurrentIndex(0);
+                    history.replace(`/rua/${id}/historia/${primeiraHistoria.id}`);
+                } else {
+                    setCurrentHistory(null);
+                }
+            }
+        }
+    }, [id, historiaId, history]);
+
+    const handleRuaClick = (rua) => {
+        history.push(`/rua/${rua.id}`);
+    };
+
+    return (
+        <main className="w-full flex flex-col items-center flex-grow overflow-y-auto p-4">
+            <RuaCarousel ruas={ruas} handleRuaClick={handleRuaClick} selectedRuaId={parseInt(id)} />
+            <HistoriaContent
+                currentHistory={currentHistory}
+                historiasDaRua={historiasDaRua}
+                currentIndex={currentIndex}
+                setCurrentIndex={setCurrentIndex}
+                setCurrentHistory={setCurrentHistory}
+                showAllStories={showAllStories}
+                setShowAllStories={setShowAllStories}
+                selectedRuaId={parseInt(id)}
+            />
+        </main>
+    );
+};
+
+
+// Componente Principal da Aplicação
+        function App() {
+            const [menuOpen, setMenuOpen] = useState(false);
+            const [showMap, setShowMap] = useState(true);
+            const [previewContent, setPreviewContent] = useState(null);
+            const [selectedRuaId, setSelectedRuaId] = useState(null);
+            const [showPopup, setShowPopup] = useState(false);
+
+            // Mapeando ruas com uma imagem aleatória das histórias associadas
+            const ruasWithImages = useMemo(() => {
+                return ruas.map(rua => {
+                    const historiasDaRua = historias.filter(historia => historia.rua_id === rua.id);
+                    const fotos = historiasDaRua.flatMap(historia => historia.fotos);
+                    const randomFoto = fotos.length > 0 ? fotos[Math.floor(Math.random() * fotos.length)] : null;
+                    return { ...rua, fotos: randomFoto };
+                });
+            }, [ruas, historias]);
+
+            const handlePreviewClose = () => {
+                setPreviewContent(null);
+            };
+
+            // Variáveis para a homepage
+            const filteredRuasWithImages = useMemo(() => {
+                return ruasWithImages.slice(0, 4);
+            }, [ruasWithImages]);
+
+            const filteredHistorias = useMemo(() => {
+                return historias.slice(0, 4);
+            }, []);
+
+            // Função para lidar com cliques em ruas a partir da home
+            const handleRuaClick = (rua) => {
+                setSelectedRuaId(rua.id);
+                setPreviewContent({
+                    title: rua.nome,
+                    description: rua.descricao,
+                    images: historias.filter(h => h.rua_id === rua.id).flatMap(h => h.fotos)
+                });
+            };
+
+            // Função para lidar com cliques em histórias a partir da home
+            const handleHistoriaClick = (historia) => {
+                setSelectedRuaId(historia.rua_id);
+                setPreviewContent({
+                    title: historia.titulo,
+                    description: historia.descricao,
+                    images: historia.fotos
+                });
+            };
+
+            useEffect(() => {
+                if (shouldShowPopup()) {
+                    setTimeout(() => {
+                        setShowPopup(true);
+                    }, 5000); // Mostra o popup 5 segundos após carregar a página
+                }
+            }, []);
+
+            return (
+                <HashRouter>
+                    <div className="font-roboto bg-[#F4ECE1] text-[#3E3A33] min-h-screen flex flex-col">
+                        <Menu menuOpen={menuOpen} setMenuOpen={setMenuOpen} setShowMap={setShowMap} />
+                        <Header setMenuOpen={setMenuOpen} />
+
+                        {showPopup && <PopupCarrossel onClose={() => setShowPopup(false)} />}
+
+                        <Switch>
+                            <Route path="/sobre" component={Sobre} />
+                            <Route path="/apoio" component={Apoio} />
+                            <Route path="/adicionar-historia" component={AdicionarHistoria} />
+                            <Route path="/ruas-e-historias" component={RuasEHistorias} />
+                            <Route path="/legado-africano" component={LegadoAfricano} />
+                            <Route path="/rua/:id/historia/:historiaId" component={RuaHistoria} />
+                            <Route path="/rua/:id" component={RuaHistoria} />
+                            <Route path="/">
+                                {showMap ? (
+                                    <div className="w-full relative">
+                                        <MapView setSelectedRuaId={setSelectedRuaId} setPreviewContent={setPreviewContent} />
+                                        {previewContent && (
+                                            <Preview previewContent={previewContent} onClose={handlePreviewClose} selectedRuaId={selectedRuaId} />
+                                        )}
+
+                                        <div className="introduction p-4">
+                                            <p>Bem-vindo ao Historin! Explore o mapa e clique nos pontos para descobrir histórias fascinantes sobre ruas e eventos de Gramado.</p>
+                                        </div>
+
+                                        {/* Seção de Ruas Recomendadas */}
+                                        <div className="px-4">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <h2 className="text-lg font-semibold">Ruas Recomendadas</h2>
+                                                <Link to="/ruas-e-historias">
+                                                    <button className="text-sm text-[#8A5A44] hover:underline">
+                                                        Ver tudo
+                                                    </button>
+                                                </Link>
+                                            </div>
+                                            
+                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                {filteredRuasWithImages.map(rua => (
+                                                    <Link
+                                                        key={rua.id}
+                                                        to={`/rua/${rua.id}`}
+                                                        className="bg-white p-2 rounded-lg shadow cursor-pointer block hover:shadow-lg transition-shadow duration-300"
+                                                    >
+                                                        <img src={rua.fotos || 'https://placehold.co/300x200'} alt={rua.nome} className="rounded-lg mb-2 w-full h-40 object-cover" />
+                                                        <h3 className="font-semibold">{rua.nome}</h3>
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Seção de Histórias Mais Vistas */}
+                                        <div className="px-4 mt-6">
+                                            <div className="flex justify-between items-center mb-2">
+                                                <h2 className="text-lg font-semibold">Histórias Mais Vistas</h2>
+                                                <Link to="/ruas-e-historias">
+                                                    <button className="text-sm text-[#8A5A44] hover:underline">
+                                                        Ver tudo
+                                                    </button>
+                                                </Link>
+                                            </div>
+                                            {filteredHistorias.map(historia => (
+                                                <Link
+                                                    key={historia.id}
+                                                    to={`/rua/${historia.rua_id}/historia/${historia.id}`}
+                                                    className="bg-white p-2 rounded-lg shadow mb-2 flex items-center cursor-pointer block hover:shadow-lg transition-shadow duration-300"
+                                                >
+                                                    <img src={historia.fotos[0] || 'https://placehold.co/100x100'} alt={historia.titulo} className="rounded-lg mr-2 w-24 h-24 object-cover" />
+                                                    <div>
+                                                        <h3 className="font-semibold">{historia.titulo}</h3>
+                                                        <p className="text-sm text-gray-600">{historia.descricao.slice(0, 60)}...</p>
+                                                    </div>
+                                                </Link>
+                                            ))}
+
+                                            {/* Seção do Legado Africano */}
+                                            <div className="px-4 mt-6">
+                                                {/* Card que direciona para a página do Legado Africano */}
+                                                <Link to="/legado-africano" className="block bg-white p-6 rounded-lg shadow mb-4 hover:shadow-lg transition-shadow duration-300">
+                                                    <div className="flex flex-col md:flex-row items-center">
+                                                        <img src="fotos/legado-africano-gramado.png" alt="Legado Africano" className="w-24 h-24 object-cover rounded-lg mb-4 md:mb-0 md:mr-4" />
+                                                        <div>
+                                                            <h2 className="text-xl font-bold mb-2">Legado Africano em Gramado</h2>
+                                                            <p className="text-gray-700">
+                                                                Conheça a história e o legado africano em Gramado. Descubra relatos e contribuições da população negra na formação cultural da cidade.
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </div>
+
+                                            {/* Nova Seção: Informações sobre a Plataforma */}
+                                            <div className="px-4 mt-8">
+                                                <div className="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row items-center">
+                                                    <img src="https://i.imgur.com/nav9mZa.jpeg" alt="Informações sobre a plataforma" className="w-full md:w-1/3 rounded-lg mb-4 md:mb-0 md:mr-6 object-cover" />
+                                                    <div>
+                                                        <h2 className="text-xl font-bold mb-2">Viva a História </h2>
+                                                        <p className="text-gray-700">
+                                                            O Historin é uma plataforma dedicada a preservar e compartilhar as histórias e memórias de Gramado. Nosso objetivo é fortalecer o sentimento de pertencimento através de narrativas que conectam passado e presente. Em breve teremos nas ruas QR codes que trazem uma experiência interativa de Realidade aumentada para turistas e moradores.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <RuaHistoria />
+                                )}
+                            </Route>
+                        </Switch>
+
+                        {/* Rodapé Fixo para Computadores */}
+                        <footer className="fixed-footer">
+                            <p>Essa aplicação é voltada para dispositivos móveis</p>
+                        </footer>
+                    </div>
+                </HashRouter>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+    
+</body>
+</html>

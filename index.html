@@ -1,0 +1,2368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historin - Histórias de Gramado</title>
+    <meta name="theme-color" content="#E6D3B4">
+    <link rel="icon" href="fotos/historin.ico" />
+    <!-- Banco de Dados -->
+    <script src="bd.js"></script>
+    <!-- Bibliotecas e estilos externos -->
+    <!-- React e ReactDOM -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+
+    <!-- React Router DOM -->
+    <script src="https://unpkg.com/react-router-dom@5/umd/react-router-dom.min.js" crossorigin></script>
+
+    <!-- Babel para JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    
+
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Merriweather:wght@400;700&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome (versão 6.6.0 para consistência) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="styles3.2.css" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6RZP5DGP0E"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-6RZP5DGP0E', { 'send_page_view': false });
+    </script>
+    <script type="text/babel" src="legadoAfricano.js"></script>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <!-- Bibliotecas externas -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- Script principal -->
+    <script type="text/babel">
+        const { useState, useEffect, useMemo, useRef } = React;
+        const { HashRouter, Switch, Route, Link, useParams, useHistory, useLocation } = window.ReactRouterDOM;
+
+        // Função para verificar se o popup deve ser exibido
+        const shouldShowPopup = () => {
+            const lastShown = localStorage.getItem('popupLastShown');
+            const now = new Date().getTime();
+            const showInterval = 1 * 24 * 60 * 60 * 1000; // Exibir a cada 1 dia
+            if (!lastShown || now - lastShown > showInterval) {
+                localStorage.setItem('popupLastShown', now);
+                return true;
+            }
+            return false;
+        };
+
+        // Novo Componente OnboardingPopup com Barra de Carregamento e Botão "Começar"
+        const OnboardingPopup = ({ onClose }) => {
+            const [step, setStep] = useState(0);
+            const totalSteps = 3;
+
+            const handleNext = () => {
+                if (step < totalSteps - 1) {
+                    setStep(step + 1);
+                }
+            };
+
+            const handleSkip = () => {
+                setStep(totalSteps - 1);
+            };
+
+            return (
+                <div className="z-high fixed inset-0 flex items-center justify-center bg-black bg-opacity-75">
+                    <div
+                        className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative flex flex-col items-center"
+                        style={{
+                            maxHeight: '90vh', // Limitar altura máxima a 90% da altura da tela
+                            overflowY: 'auto', // Permitir rolagem se o conteúdo ultrapassar o limite
+                        }}
+                    >
+                        {/* Conteúdo do Onboarding baseado na Home */}
+                        <div className="introduction p-4">
+                            <h2>Bem-vindo ao Historin!</h2>
+                            <div className="steps">
+                                {step === 0 && (
+                                    <div className="step">
+                                        <span className="step-number">1</span>
+                                        <p>Explore histórias pela geografia e descubra a história por trás dos lugares!</p>
+                                    </div>
+                                )}
+                                {step === 1 && (
+                                    <div className="step">
+                                        <span className="step-number">2</span>
+                                        <p>Navegue pela linha do tempo para reviver os eventos que moldaram nossa cidade!</p>
+                                    </div>
+                                )}
+                                {step === 2 && (
+                                    <div className="step">
+                                        <span className="step-number">3</span>
+                                        <p>Contribua com suas histórias e experiências e aproveite a jornada!</p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Botão de Avançar */}
+                        {step < totalSteps - 1 && (
+                            <button
+                                className="bg-blue-500 text-white px-6 py-2 rounded-md mb-4 hover:bg-blue-600 transition"
+                                onClick={handleNext}
+                                aria-label="Avançar"
+                            >
+                                Avançar
+                            </button>
+                        )}
+
+                        {/* Botão "Começar" */}
+                        {step === totalSteps - 1 && (
+                            <button
+                                className="bg-green-500 text-white px-6 py-2 rounded-md mb-4 hover:bg-green-600 transition"
+                                onClick={onClose}
+                                aria-label="Começar"
+                            >
+                                Começar
+                            </button>
+                        )}
+
+                        {/* Botão de Pular */}
+                        {step < totalSteps - 1 && (
+                            <button
+                                className="text-gray-600 underline mb-4 hover:text-gray-800 transition"
+                                onClick={handleSkip}
+                                aria-label="Pular"
+                            >
+                                Pular
+                            </button>
+                        )}
+
+                        {/* Botão de Fechar */}
+                        <button
+                            className={`absolute top-2 right-2 text-gray-600 cursor-pointer`}
+                            onClick={onClose}
+                            aria-label="Fechar onboarding"
+                        >
+                            <i className="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+
+
+
+
+        // Novo Componente DonationPopup
+        const DonationPopup = ({ onClose }) => {
+            return (
+                <div className="z-high fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white rounded-lg shadow-lg max-w-sm w-full p-6 relative">
+                        <button
+                            className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+                            onClick={onClose}
+                            aria-label="Fechar doação"
+                        >
+                            <i className="fas fa-times text-xl"></i>
+                        </button>
+                        <h3 className="text-xl font-bold mb-4 text-center">Gostou do Historin?</h3>
+                        <p className="text-center mb-4">Apoie nosso projeto com uma doação!</p>
+                        <div className="flex justify-center">
+                            <Link
+                                to="/apoio"
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+                                onClick={onClose}
+                            >
+                                Doar Agora
+                            </Link>
+
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Componente de Modal de Dados (DataModal)
+        const DataModal = ({ isOpen, onClose, title, data, columns }) => {
+            if (!isOpen) return null;
+
+            return (
+                <div
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                    onClick={onClose}
+                >
+                    <div
+                        className="bg-white rounded-lg shadow-lg max-w-lg w-full p-6 relative"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className="absolute top-4 right-4 text-gray-600 hover:text-gray-800"
+                            onClick={onClose}
+                            aria-label="Fechar modal"
+                        >
+                            <i className="fas fa-times text-xl"></i>
+                        </button>
+                        <h3 className="text-xl font-bold mb-4 text-center">{title}</h3>
+                        <div className="max-h-64 overflow-y-auto">
+                            <ul>
+                                {data.map((item, index) => (
+                                    <li key={index} className="flex justify-between items-center py-2 border-b">
+                                        {columns.map((column, colIndex) => (
+                                            <span key={colIndex} className="w-1/2">{item[column.accessor]}</span>
+                                        ))}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="mt-4 text-center">
+                            <p className="text-gray-500">Total de {title.toLowerCase()}: <span className="font-bold">{data.length}</span></p>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Componente do Popup Carrossel
+        const PopupCarrossel = ({ onClose }) => {
+            const [currentSlide, setCurrentSlide] = useState(0);
+            const slides = [
+                { image: 'fotos/criadores-historin-gramado.jpeg', text: 'Conheça mais sobre nós', buttonText: 'Ver agora', link: '/sobre' },
+                { image: 'fotos/legado-africano-gramado.png', text: 'Conheça o legado africano em Gramado', buttonText: 'Saiba Mais!', link: '/legado-africano' },
+                { image: 'fotos/comprar-ingressos.png', text: 'Ingressos para essa semana em Promoção', buttonText: 'Comprar agora', link: 'https://parksnet.com.br/ingressos/' }
+            ];
+
+            const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+            const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+
+            const handleOverlayClick = (e) => {
+                if (e.target === e.currentTarget) {
+                    onClose();
+                }
+            };
+
+            return (
+                <div
+                    className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center fade-in z-high"
+                    onClick={handleOverlayClick}
+                >
+                    <div className="bg-white rounded-lg shadow-lg p-6 w-11/12 max-w-2xl relative">
+                        <button onClick={onClose} className="absolute top-2 right-2 text-gray-600 hover:text-gray-800">
+                            <i className="fas fa-times text-xl"></i>
+                        </button>
+
+                        <div className="text-center">
+                            <img src={slides[currentSlide].image} alt={`Slide ${currentSlide + 1}`} className="rounded-lg mb-4 w-full object-cover h-64" />
+                            <p className="text-lg font-semibold mb-4">{slides[currentSlide].text}</p>
+                            <Link
+                                to={slides[currentSlide].link}
+                                className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition"
+                                onClick={onClose} // Fecha o popup ao clicar no botão
+                            >
+                                {slides[currentSlide].buttonText}
+                            </Link>
+                        </div>
+
+                        <div className="flex justify-between items-center mt-4">
+                            <button
+                                onClick={prevSlide}
+                                className="px-4 py-2 bg-gray-300 rounded-full hover:bg-gray-400 transition flex items-center justify-center w-12 h-12"
+                            >
+                                <i className="fas fa-chevron-left text-black text-2xl"></i>
+                            </button>
+                            <button
+                                onClick={nextSlide}
+                                className="px-4 py-2 bg-gray-300 rounded-full hover:bg-gray-400 transition flex items-center justify-center w-12 h-12"
+                            >
+                                <i className="fas fa-chevron-right text-black text-2xl"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Componente Header modificado
+        const Header = ({ setMenuOpen, setShowFeedback }) => (
+            <header className="flex justify-between items-center p-4 bg-[#E6D3B4]">
+                <div className="flex items-center">
+                    <Link to="/" className="ml-2 text-2xl font-bold logo">
+                        HISTORIN
+                    </Link>
+                </div>
+                <div className="flex items-center space-x-4">
+                    <button onClick={() => setShowFeedback(true)} aria-label="Feedback" className="text-2xl pr-2">
+                        <i className="fas fa-comment-dots"></i>
+                    </button>
+                    <div className="text-2xl cursor-pointer" onClick={() => setMenuOpen(true)}>
+                        <i className="fas fa-bars"></i>
+                    </div>
+                </div>
+            </header>
+        );
+
+
+
+        // Menu Lateral
+        const Menu = ({ menuOpen, setMenuOpen, setShowMap }) => {
+            const history = useHistory();
+
+            const handleSurpriseMe = () => {
+                if (historias && historias.length > 0) {
+                    const randomHistoria = historias[Math.floor(Math.random() * historias.length)];
+                    history.push(`/rua/${randomHistoria.rua_id}/historia/${randomHistoria.id}`);
+                    setMenuOpen(false);
+                } else {
+                    alert('Nenhuma história disponível.');
+                }
+            };
+
+            return (
+                <>
+                    {/* Overlay do Menu */}
+                    <div
+                        className={`menu-overlay ${menuOpen ? 'open' : ''}`}
+                        onClick={() => setMenuOpen(false)}
+                    ></div>
+
+                    {/* Navegação do Menu */}
+                    <nav className={`menu ${menuOpen ? 'open' : ''}`}>
+                        {/* Cabeçalho do Menu */}
+                        <div className="menu-header text-center mt-8 px-6">
+                            <h2 className="text-3xl font-serif font-bold">Menu</h2>
+                        </div>
+
+                        {/* Itens do Menu */}
+                        <div className="flex flex-col flex-grow mt-8 px-6">
+                            <Link
+                                to="/"
+                                className="menu-item px-4 py-3 hover:bg-gray-100 rounded-md"
+                                onClick={() => { setShowMap(true); setMenuOpen(false); }}
+                            >
+                                <span className="block text-lg font-semibold">ÍNICIO</span>
+                                <span className="subtitle block text-sm text-gray-500">e MAPA</span>
+                            </Link>
+                            <Link
+                                to="/adicionar-historia"
+                                className="menu-item px-4 py-3 hover:bg-gray-100 rounded-md"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                <span className="subtitle block text-sm text-gray-500">Conte a sua</span>
+                                <span className="block text-lg font-semibold">HISTÓRIA</span>
+                            </Link>
+
+                            <Link
+                                to="/ruas-e-historias"
+                                className="menu-item px-4 py-3 hover:bg-gray-100 rounded-md text-lg font-semibold"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                TODAS
+                                <span className="subtitle block text-sm text-gray-500">Ruas e Histórias</span>
+
+                            </Link>
+                            <Link
+                                to="/sobre"
+                                className="menu-item px-4 py-3 hover:bg-gray-100 rounded-md text-lg font-semibold"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                SOBRE
+                            </Link>
+
+                            {/* Botão Surpreenda-me */}
+                            <button
+                                className="menu-item px-4 py-3 hover:bg-gray-100 rounded-md text-lg font-semibold text-left mt-4 flex justify-between items-center"
+                                onClick={handleSurpriseMe}
+                            >
+                                ALEATÓRIA
+                                <i className="fas fa-random text-gray-500"></i>
+                            </button>
+
+                        </div>
+
+                        {/* Rodapé do Menu */}
+                        <div className="menu-footer px-6 pb-6">
+                            {/* Imagem do Rodapé */}
+                            <img
+                                src="https://i.postimg.cc/8C184M44/parks-net.png"
+                                alt="Banner"
+                                className="mb-4 w-full h-48 object-cover rounded-md"
+                            />
+
+                            {/* Botão Compre Seus Ingressos */}
+                            <a
+                                href="https://parksnet.com.br/ingressos/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="button bg-blue-500 text-white px-4 py-2 rounded-md mb-2 block text-center"
+                            >
+                                Compre seus ingressos
+                            </a>
+
+                            {/* Botão Apoie */}
+                            <Link
+                                to="/apoio"
+                                className="button bg-yellow-400 text-white px-4 py-2 rounded-md block text-center"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                APOIE
+                            </Link>
+
+                            {/* Texto de Rodapé */}
+                            <div className="footer-text text-center text-sm text-gray-600 mt-4">
+                                Criado em Gramado
+                            </div>
+                        </div>
+                    </nav>
+                </>
+            );
+        };
+
+        // Página Sobre (Atualizada com botão "Cadastre-se")
+        const Sobre = () => {
+            useEffect(() => {
+                document.title = "Sobre Nós - Historin";
+
+                // Update the meta description
+                let metaDescription = document.querySelector('meta[name="description"]');
+                if (metaDescription) {
+                    metaDescription.setAttribute('content', 'Saiba mais sobre o Historin, nossa visão, equipe e como você pode contribuir.');
+                } else {
+                    metaDescription = document.createElement('meta');
+                    metaDescription.name = "description";
+                    metaDescription.content = 'Saiba mais sobre o Historin, nossa visão, equipe e como você pode contribuir.';
+                    document.head.appendChild(metaDescription);
+                }
+            }, []);
+
+            const [selectedMember, setSelectedMember] = useState(null);
+            const [showJoinModal, setShowJoinModal] = useState(false); // Novo estado para o modal
+
+            const teamMembers = [
+                {
+                    name: 'Allan Fulcher',
+                    role: 'Fundador',
+                    description: `Allan Fulcher, fundador do Historin, é um empreendedor dinâmico com uma visão inovadora. Com experiência em múltiplos segmentos de negócios e uma profunda conexão com a cidade de Gramado, Allan acredita que a história deve ser preservada e contada de maneira acessível a todos. Com sua expertise em tecnologia e marketing, ele idealizou o Historin como uma maneira de imortalizar as histórias que moldaram a cidade, trazendo-as para o mundo digital.`,
+                },
+                {
+                    name: 'Mateus Canova',
+                    role: 'Co-fundador',
+                    description: `Mateus Canova, co-fundador do projeto, é um estrategista de marketing com uma mente criativa, responsável por trazer inovação e dinamismo ao Historin. Com uma vasta experiência em comunicação digital, Mateus está focado em conectar pessoas e histórias de uma forma única. Sua paixão por soluções visuais e narrativas envolventes é o que torna o Historin uma experiência não só informativa, mas também emocional para seus usuários.`,
+                },
+                // Adicione mais membros conforme necessário
+            ];
+
+            return (
+                <div className="p-4 w-full lg:w-4/5">
+                    {/* Cabeçalho */}
+                    <header className="flex justify-between items-center mb-4">
+                        <div className="text-2xl cursor-pointer">
+                            <Link to="/">
+                                <i className="fas fa-arrow-left"></i>
+                            </Link>
+                        </div>
+                        <h1 className="text-lg font-bold">Sobre Nós</h1>
+                        <div className="w-10 h-10"></div>
+                    </header>
+
+                    {/* Seção Sobre Nós */}
+                    <section className="mb-6">
+                        <h2 className="text-center text-2xl font-bold mb-4">Sobre Nós</h2>
+                        <p className="text-justify">
+                            O Historin nasceu da paixão pela história, pela inovação e pelo desejo de conectar passado e presente de maneira interativa. Somos um projeto incubado na Secretaria de Cultura de Gramado, desenvolvido para preservar as memórias da cidade através de uma plataforma acessível e inovadora.
+                        </p>
+                    </section>
+
+                    {/* Espaço para o Vídeo do YouTube */}
+                    <section className="mb-6">
+                        <div className="video-container mb-4">
+                            {/* Substitua "SEU_VIDEO_ID" pelo ID real do vídeo do YouTube */}
+                            <iframe
+                                width="100%"
+                                height="215"
+                                src="https://www.youtube.com/embed/SEU_VIDEO_ID"
+                                title="YouTube video player"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="rounded-lg shadow-md"
+                            ></iframe>
+                        </div>
+                    </section>
+
+                    {/* Seção Quem Somos */}
+                    <section className="mb-6">
+                        <h2 className="text-center text-2xl font-bold mb-4">Quem Somos</h2>
+                        <p className="text-justify mb-4">
+                            Allan Fulcher e Mateus Canova, dois empreendedores apaixonados por tecnologia, inovação e desenvolvimento local, são os responsáveis pela criação do Historin.
+                        </p>
+                    </section>
+
+                    {/* Seção Criação e Curadoria */}
+                    <section className="mb-6">
+                        <h3 className="text-center text-xl font-bold mb-4">Criação e Curadoria</h3>
+                        <div className="space-y-2">
+                            {teamMembers.map((member, index) => (
+                                <button
+                                    key={index}
+                                    className={`w-full py-2 px-4 rounded-full focus:outline-none flex justify-between items-center transition-colors duration-300 ${selectedMember === member ? 'bg-[#8A5A44] text-white' : 'bg-gray-200 text-black'
+                                        }`}
+                                    onClick={() => setSelectedMember(selectedMember === member ? null : member)}
+                                >
+                                    <span>{member.name}</span>
+                                    {/* Ícone da seta que muda de direção */}
+                                    <i
+                                        className={`fas ${selectedMember === member ? 'fa-chevron-up' : 'fa-chevron-down'
+                                            } transition-transform duration-300`}
+                                    ></i>
+                                </button>
+                            ))}
+                        </div>
+                        {/* Exibe a descrição do membro selecionado */}
+                        {selectedMember && (
+                            <div className="mt-4 border border-black p-4 rounded-md bg-[#f5f1e8]">
+                                <h4 className="text-xl font-bold mb-2">{selectedMember.name}</h4>
+                                <p className="text-sm text-gray-600 mb-2">{selectedMember.role}</p>
+                                <p>{selectedMember.description}</p>
+                            </div>
+                        )}
+                    </section>
+
+                    {/* Nova Seção: Precisamos de Ajuda / Cadastre-se */}
+                    <section className="mb-6">
+                        <h3 className="text-center text-xl font-bold mb-4">Precisamos de Ajuda</h3>
+                        <p className="text-center text-gray-700 mb-4">
+                            Estamos sempre em busca de pessoas apaixonadas por história, tecnologia e inovação para se juntarem ao nosso time. Se você deseja contribuir com o Historin, inscreva-se abaixo!
+                        </p>
+                        <div className="flex justify-center">
+                            <button
+                                onClick={() => setShowJoinModal(true)}
+                                className="bg-[#8A5A44] text-white px-6 py-3 rounded-md hover:bg-[#5a3e2e] transition"
+                            >
+                                Cadastre-se
+                            </button>
+                        </div>
+                    </section>
+
+                    {/* Modal de Inscrição */}
+                    {showJoinModal && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                            <div
+                                className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative"
+                                onClick={(e) => e.stopPropagation()} // Evita fechar ao clicar dentro do modal
+                            >
+                                {/* Botão de Fechar */}
+                                <button
+                                    className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+                                    onClick={() => setShowJoinModal(false)}
+                                    aria-label="Fechar formulário"
+                                >
+                                    <i className="fas fa-times text-xl"></i>
+                                </button>
+                                <h3 className="text-xl font-bold mb-4 text-center">Junte-se ao Historin</h3>
+                                <form
+                                    action="https://formspree.io/f/xvgopalo" // Substitua pelo seu endpoint do Formspree
+                                    method="POST"
+                                >
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nome">
+                                            Nome:
+                                        </label>
+                                        <input
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="nome"
+                                            type="text"
+                                            name="nome"
+                                            placeholder="Seu nome"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                                            E-mail:
+                                        </label>
+                                        <input
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="email"
+                                            type="email"
+                                            name="email"
+                                            placeholder="Seu e-mail"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="cargo">
+                                            Cargo de Interesse:
+                                        </label>
+                                        <input
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="cargo"
+                                            type="text"
+                                            name="cargo"
+                                            placeholder="Qual posição você deseja ocupar?"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="mensagem">
+                                            Mensagem:
+                                        </label>
+                                        <textarea
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="mensagem"
+                                            name="mensagem"
+                                            rows="4"
+                                            placeholder="Por que você quer se juntar ao Historin?"
+                                            required
+                                        ></textarea>
+                                    </div>
+                                    <div className="flex items-center justify-center">
+                                        <button
+                                            type="submit"
+                                            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                        >
+                                            Enviar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Seção Nossa Visão */}
+                    <section className="mb-6">
+                        <h2 className="text-center text-2xl font-bold mb-4">Nossa Visão</h2>
+                        <p className="text-justify">
+                            Queremos que o Historin seja mais do que um repositório de histórias. Nossa visão é que a plataforma seja uma ferramenta de aprendizado, inspiração e conexão. Acreditamos que ao contar as histórias de Gramado, desde os pioneiros até os dias atuais, podemos fortalecer a identidade local e conectar gerações de uma forma envolvente, usando tecnologias como QR codes e Realidade Aumentada para proporcionar uma "viagem no tempo".
+                        </p>
+                        <p className="text-justify mt-2">
+                            Nosso compromisso é com a valorização da história e da cultura local, criando experiências que inspirem tanto moradores quanto turistas a explorar as ruas de Gramado de um jeito novo e interativo.
+                        </p>
+                    </section>
+
+                    {/* Seção Onde Estamos */}
+                    <section className="mb-6">
+                        <h2 className="text-center text-2xl font-bold mb-4">Onde Estamos</h2>
+                        <p className="text-justify">
+                            O projeto é incubado na Vila Joaquina, em parceria com a Secretaria de Cultura de Gramado, e estamos sempre trabalhando para expandir nossas iniciativas, incorporando novas histórias e novos olhares sobre o que faz de Gramado uma cidade tão única.
+                        </p>
+                    </section>
+
+                    {/* Seção Apoio e Patrocínio */}
+                    <section className="mb-6">
+                        <h3 className="text-center text-xl font-bold mb-4">Apoio e Patrocínio</h3>
+                        <div className="flex justify-around mb-4">
+                            <div className="text-center">
+                                <i className="fas fa-city text-3xl mb-1"></i>
+                                <p className="text-sm">Prefeitura de Gramado</p>
+                            </div>
+                            <div className="text-center">
+                                <i className="fas fa-university text-3xl mb-1"></i>
+                                <p className="text-sm">Feevale</p>
+                            </div>
+                            <div className="text-center">
+                                <i className="fas fa-building text-3xl mb-1"></i>
+                                <p className="text-sm">Empresas</p>
+                            </div>
+                        </div>
+                        <p className="text-center text-sm mb-2">Um projeto crowdfunding</p>
+                        <div className="bg-gray-200 rounded-full h-4 mb-2 relative">
+                            <div className="bg-yellow-400 h-4 rounded-full absolute" style={{ width: '20%' }}></div>
+                            <div className="absolute inset-0 flex justify-between text-xs px-2">
+                                <span>R$660,00</span>
+                                <span>R$25.000,00</span>
+                            </div>
+                        </div>
+                        <Link to="/apoio">
+                            <button className="w-full py-2 bg-yellow-400 rounded-full text-white font-bold">
+                                Apoie agora
+                            </button>
+                        </Link>
+                    </section>
+
+                    {/* Seção Entre em Contato */}
+                    <section className="mb-6">
+                        <h3 className="text-center text-xl font-bold mb-4">Entre em Contato Conosco</h3>
+                        <div className="flex justify-center space-x-6">
+                            {/* Link para WhatsApp */}
+                            <a
+                                href="https://wa.me/54993264627"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex flex-col items-center text-green-500 hover:text-green-600 transition"
+                            >
+                                <i className="fab fa-whatsapp text-3xl"></i>
+                                <span className="text-sm">WhatsApp</span>
+                            </a>
+
+                            {/* Link para E-mail */}
+                            <a
+                                href="mailto:contato@historin.com.br"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex flex-col items-center text-blue-500 hover:text-blue-600 transition"
+                            >
+                                <i className="fas fa-envelope text-3xl"></i>
+                                <span className="text-sm">E-mail</span>
+                            </a>
+                        </div>
+                    </section>
+                </div>
+            );
+        };
+
+
+
+
+
+        // Página Apoio
+        const Apoio = () => {
+            useEffect(() => {
+                document.title = "Apoio ao Historin - Faça Parte Dessa História";
+
+                // Atualizar a meta descrição
+                let metaDescription = document.querySelector('meta[name="description"]');
+                if (metaDescription) {
+                    metaDescription.setAttribute('content', 'Apoie o projeto Historin e ajude a preservar e contar as histórias da cidade de Gramado.');
+                } else {
+                    metaDescription = document.createElement('meta');
+                    metaDescription.name = "description";
+                    metaDescription.content = 'Apoie o projeto Historin e ajude a preservar e contar as histórias da cidade de Gramado.';
+                    document.head.appendChild(metaDescription);
+                }
+            }, []);
+
+            const [showAllDonors, setShowAllDonors] = useState(false);
+            // Lista de doadores adicionais (exemplo)
+            const allDonors = [
+                { name: 'Elias Fulcher', amount: 500 },
+                { name: 'Eliane Silva', amount: 100 },
+                { name: 'Rosmarie Benetti', amount: 20 },
+                { name: 'Stevi R.', amount: 4 },
+                // Adicione mais doadores conforme necessário
+            ];
+
+            const copyToClipboard = () => {
+                navigator.clipboard.writeText('00020101021126580014br.gov.bcb.pix01368eac1054-b957-4af2-88c7-046b743ece015204000053039865802BR5925allcom comercio e servico6009SAO PAULO622905251J87ZBFMDTY970D6AP39DEHSC6304FDFB');
+                alert('Chave Pix copiada!');
+            };
+
+            return (
+                <div className="p-4">
+                    <header className="flex justify-between items-center mb-4">
+                        <div className="text-2xl cursor-pointer">
+                            <Link to="/">
+                                <i className="fas fa-arrow-left"></i>
+                            </Link>
+                        </div>
+                        <h1 className="text-lg font-bold">Apoio</h1>
+                        <div className="w-10 h-10"></div>
+                    </header>
+                    <h2 className="text-center text-lg font-bold mb-2">Faça parte do Historin</h2>
+                    <p className="text-center text-gray-600 mb-4">
+                        O Historin é uma plataforma criada com financiamento coletivo. De pessoas para pessoas! <br />
+                        Ajude-nos a expandir essa iniciativa.
+                    </p>
+
+                    <div className="mb-4">
+                        <h3 className="font-bold mb-2">Ranking de doações</h3>
+                        {/* Aqui você pode mapear os doadores reais ou fictícios */}
+                        <div className="bg-white p-2 rounded-lg flex justify-between items-center mb-2">
+                            <span>#1 Elias Fulcher</span>
+                            <span className="text-gray-500">R$ 500,00</span>
+                        </div>
+                        <div className="bg-white p-2 rounded-lg flex justify-between items-center mb-2">
+                            <span>#2 Eliane</span>
+                            <span className="text-gray-500">R$ 100,00</span>
+                        </div>
+                        <div className="bg-white p-2 rounded-lg flex justify-between items-center mb-2">
+                            <span>#3 Rosmarie Benetti</span>
+                            <span className="text-gray-500">R$ 20,00</span>
+                        </div>
+                        <p className="text-gray-500 text-right">e outras:
+                            <button
+                                className="font-bold text-blue-600 hover:underline ml-1"
+                                onClick={() => setShowAllDonors(true)}
+                            >
+                                {allDonors.length > 4 ? `${allDonors.length - 3} pessoas` : '1 pessoa'}
+                            </button>
+                        </p>
+                    </div>
+
+                    <div className="mb-4">
+                        <p className="text-center text-sm mb-2">Um projeto crowdfunding</p>
+                        <div className="bg-gray-200 rounded-full h-4 mb-2 relative">
+                            <div className="bg-yellow-400 h-4 rounded-full absolute" style={{ width: '20%' }}></div>
+                            <div className="absolute inset-0 flex justify-between text-xs px-2">
+                                <span>R$660,00</span>
+                                <span>R$25.000,00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h3 className="font-bold mb-2">Apoie com Pix:</h3>
+                        <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                            <p className="mb-4 text-center">
+                                Clique no botão abaixo para copiar nossa chave Pix e realizar sua doação:
+                            </p>
+                            <button
+                                className="bg-[#8A5A44] text-white px-6 py-3 rounded-md hover:bg-[#D8A568] flex items-center space-x-2 transition-transform transform hover:scale-105"
+                                onClick={copyToClipboard}
+                            >
+                                <i className="fas fa-copy"></i>
+                                <span>Copiar Chave Pix</span>
+                            </button>
+                        </div>
+
+                        <DataModal
+                            isOpen={showAllDonors}
+                            onClose={() => setShowAllDonors(false)}
+                            title="Apoiadores"
+                            data={allDonors}
+                            columns={[
+                                { header: 'Nome', accessor: 'name' },
+                                { header: 'Valor', accessor: 'amount' },
+                            ]}
+                        />
+                    </div>
+
+                </div>
+            );
+        };
+
+
+
+        // Página Compartilhar Acervo
+        const AdicionarHistoria = () => {
+            const [formData, setFormData] = useState({
+                nome: '',
+                telefone: '',
+                local: '',
+                historia: ''
+            });
+
+            const handleChange = (e) => {
+                const { id, value } = e.target;
+                setFormData({ ...formData, [id]: value });
+            };
+
+            const handleSubmit = async (e) => {
+                e.preventDefault();
+
+                const formspreeEndpoint = "https://formspree.io/f/meojbabr"; // Substitua pelo seu endpoint do Formspree
+
+                const data = {
+                    nome: formData.nome,
+                    telefone: formData.telefone,
+                    local: formData.local,
+                    historia: formData.historia
+                };
+
+                try {
+                    const response = await fetch(formspreeEndpoint, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        alert('História enviada com sucesso! Entraremos em contato para captar os materiais que serão postados no seu nome.');
+                        setFormData({
+                            nome: '',
+                            telefone: '',
+                            local: '',
+                            historia: ''
+                        });
+                    } else {
+                        alert('Houve um problema ao enviar sua história. Por favor, tente novamente.');
+                    }
+                } catch (error) {
+                    console.error('Erro:', error);
+                    alert('Houve um erro ao enviar sua história. Por favor, tente novamente.');
+                }
+            };
+
+            return (
+                <div className="p-4">
+                    <header className="flex justify-between items-center mb-4">
+                        <div className="text-2xl cursor-pointer">
+                            <Link to="/">
+                                <i className="fas fa-arrow-left"></i>
+                            </Link>
+                        </div>
+                        <h1 className="text-lg font-bold">Compartilhe seu acervo</h1>
+                        <div className="w-10 h-10"></div>
+                    </header>
+                    <div className="bg-[#f5f0e1] p-4 rounded-lg shadow-md max-w-lg mx-auto">
+                        <p className="mb-4 text-gray-700">Dependemos de pessoas como você para aumentar nosso acervo. Vamos até o local para captar uma série de fotos ou até mesmo apenas uma história que você queira compartilhar.</p>
+                        <form onSubmit={handleSubmit}>
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nome">Nome:</label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="nome"
+                                    type="text"
+                                    placeholder="Seu nome"
+                                    value={formData.nome}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="telefone">Telefone:</label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="telefone"
+                                    type="text"
+                                    placeholder="Seu telefone"
+                                    value={formData.telefone}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="local">Local:</label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="local"
+                                    type="text"
+                                    placeholder="Local relacionado à história"
+                                    value={formData.local}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="historia">Conte sua história:</label>
+                                <textarea
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="historia"
+                                    rows="4"
+                                    placeholder="Compartilhe uma história relacionada ao local ou à época descrita. Pode ser um acontecimento histórico, memórias pessoais ou contribuições culturais."
+                                    value={formData.historia}
+                                    onChange={handleChange}
+                                    required
+                                ></textarea>
+                            </div>
+
+                            {/* Card informativo sobre o processo de captação de materiais */}
+                            <div className="mb-4 p-4 bg-[#e2e8f0] rounded">
+                                <p className="text-gray-700">
+                                    Sua história passará por análise e entraremos em contato para captar os materiais que serão postados em seu nome.
+                                </p>
+                            </div>
+
+                            <div className="flex items-center justify-center">
+                                <button
+                                    className="bg-[#8A5A44] hover:bg-[#5a3e2e] text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    type="submit"
+                                >
+                                    Enviar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+        // Página Ruas e Histórias (Atualizada com seção "Destaque")
+        const RuasEHistorias = () => {
+            useEffect(() => {
+                document.title = "Ruas e Histórias de Gramado - Explore o Historin";
+
+                // Atualizar a meta descrição
+                let metaDescription = document.querySelector('meta[name="description"]');
+                if (metaDescription) {
+                    metaDescription.setAttribute('content', 'Descubra as histórias fascinantes por trás das ruas de Gramado. Explore o Historin e conheça mais sobre o legado histórico da cidade.');
+                } else {
+                    metaDescription = document.createElement('meta');
+                    metaDescription.name = "description";
+                    metaDescription.content = 'Descubra as histórias fascinantes por trás das ruas de Gramado. Explore o Historin e conheça mais sobre o legado histórico da cidade.';
+                    document.head.appendChild(metaDescription);
+                }
+            }, []);
+
+            const [searchTerm, setSearchTerm] = useState('');
+            const [filteredRuas, setFilteredRuas] = useState(ruas);
+            const [filteredHistorias, setFilteredHistorias] = useState(historias);
+
+            useEffect(() => {
+                if (searchTerm === '') {
+                    setFilteredRuas(ruas);
+                    setFilteredHistorias(historias);
+                } else {
+                    const lowercasedTerm = searchTerm.toLowerCase();
+                    setFilteredRuas(ruas.filter(rua => rua.nome.toLowerCase().includes(lowercasedTerm)));
+                    setFilteredHistorias(historias.filter(historia => historia.titulo.toLowerCase().includes(lowercasedTerm)));
+                }
+            }, [searchTerm]);
+
+            // Mapear filteredRuas para incluir uma foto aleatória das histórias associadas
+            const filteredRuasWithImages = useMemo(() => {
+                return filteredRuas.map(rua => {
+                    const historiasDaRua = historias.filter(historia => historia.rua_id === rua.id);
+                    const fotos = historiasDaRua.flatMap(historia => historia.fotos);
+                    const randomFoto = fotos.length > 0 ? fotos[Math.floor(Math.random() * fotos.length)] : null;
+                    return { ...rua, fotos: randomFoto };
+                });
+            }, [filteredRuas, historias]);
+
+            return (
+                <div className="p-4 w-full lg:w-4/5">
+                    {/* Header e barra de busca fixa */}
+                    <header className="sticky top-0 z-10 bg-white py-4">
+                        <div className="flex justify-between items-center mb-4">
+                            <div className="text-2xl cursor-pointer">
+                                <Link to="/">
+                                    <i className="fas fa-arrow-left"></i>
+                                </Link>
+                            </div>
+                            <h1 className="text-lg font-bold">Ruas e Histórias</h1>
+                            <div className="w-10 h-10"></div>
+                        </div>
+                        {/* Campo de Busca Aprimorado */}
+                        <div className="relative mb-4">
+                            <input
+                                type="text"
+                                placeholder="Buscar..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-[#8A5A44]"
+                            />
+                            <i className="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                    </header>
+
+                    {/* Botão Ver Mapa */}
+                    <div className="mb-4">
+                        <Link to="/">
+                            <button
+                                className="w-full p-4 rounded-lg bg-[#8A5A44] text-white font-semibold flex items-center justify-center"
+                            >
+                                <i className="fas fa-map-marker-alt mr-2"></i> Ver Mapa
+                            </button>
+                        </Link>
+                    </div>
+
+                    {/* Seção "Destaque" */}
+                    <section className="mb-6">
+                        <h2 className="text-lg font-semibold mb-4">Destaque</h2>
+                        <LegadoAfricanoCard />
+                    </section>
+
+                    {/* Seção de Todas as Ruas */}
+                    <div>
+                        <h2 className="text-lg font-semibold mb-2">Todas as Ruas</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {filteredRuasWithImages.map(rua => (
+                                <Link
+                                    key={rua.id}
+                                    to={`/rua/${rua.id}`}
+                                    className="bg-white p-2 rounded-lg shadow cursor-pointer block hover:shadow-lg transition-shadow duration-300"
+                                >
+                                    <img src={rua.fotos || 'https://placehold.co/300x200'} alt={rua.nome} className="rounded-lg mb-2 w-full h-40 object-cover" />
+                                    <h3 className="font-semibold">{rua.nome}</h3>
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Seção de Todas as Histórias */}
+                    <div className="mt-6">
+                        <h2 className="text-lg font-semibold mb-2">Todas as Histórias</h2>
+                        {filteredHistorias.map(historia => (
+                            <Link
+                                key={historia.id}
+                                to={`/rua/${historia.rua_id}/historia/${historia.id}`}
+                                className="bg-white p-2 rounded-lg shadow mb-2 flex items-center cursor-pointer block hover:shadow-lg transition-shadow duration-300"
+                            >
+                                <img src={historia.fotos[0] || 'https://placehold.co/100x100'} alt={historia.titulo} className="rounded-lg mr-2 w-24 h-24 object-cover" />
+                                <div>
+                                    <h3 className="font-semibold">{historia.titulo}</h3>
+                                    <p className="text-sm text-gray-600">{historia.descricao.slice(0, 60)}...</p>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+
+        // componente seção legado africano
+        const LegadoAfricanoCard = () => {
+            return (
+                <div className="px-4 mt-6">
+                    {/* Card que direciona para a página do Legado Africano */}
+                    <Link to="/legado-africano" className="block bg-white p-6 rounded-lg shadow mb-4 hover:shadow-lg transition-shadow duration-300">
+                        <div className="flex flex-col md:flex-row items-center">
+                            <img src="fotos/legado-africano-gramado.png" alt="Legado Africano" className="w-56 h-32 object-cover rounded-lg mb-4 md:mb-0 md:mr-4" />
+                            <div>
+                                <h2 className="text-xl font-bold mb-2">Legado Afro-brasileiro em Gramado</h2>
+                                <p className="text-gray-700">
+                                    Conheça a história e o legado afro-brasileiro em Gramado. Descubra relatos e contribuições da população negra na formação cultural da cidade.
+                                </p>
+                            </div>
+                        </div>
+                    </Link>
+                </div>
+            );
+        };
+
+        // Componente de Carrossel Reutilizável
+        const Carousel = ({ items, onItemClick, type }) => (
+            <div className="carousel">
+                {items.map(item => (
+                    <div
+                        key={item.id}
+                        className="carousel-item"
+                        onClick={() => onItemClick(item)}
+                    >
+                        <img src={item.fotos || (type === 'rua' ? 'https://placehold.co/200x150' : 'https://placehold.co/200x150')} alt={item.nome || item.titulo} className="w-full h-40 object-cover rounded-lg" />
+                        <div className="item-content">
+                            <h3 className="font-semibold text-sm">{item.nome || item.titulo}</h3>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        );
+
+
+
+        //componente de mapa
+        const MapView = ({ setSelectedRuaId, setPreviewContent }) => {
+            const [selectedType, setSelectedType] = useState('ruas'); // Variável para definir o tipo de marcador: ruas ou histórias
+            const mapRef = useRef(null); // Referência ao mapa Leaflet
+            const markersRef = useRef([]); // Armazena os marcadores atuais para removê-los e atualizar o mapa
+
+            useEffect(() => {
+                // Inicializa o mapa apenas uma vez, centrado nas coordenadas fornecidas
+                mapRef.current = L.map('map').setView([-29.379372524074153, -50.87327704684197], 14);
+                // Adiciona as tiles do OpenStreetMap com a devida atribuição
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(mapRef.current);
+
+                // Adiciona os marcadores iniciais
+                addMarkers();
+
+                return () => {
+                    // Remove o mapa quando o componente for desmontado
+                    mapRef.current.remove();
+                };
+            }, []);
+
+            useEffect(() => {
+                // Atualiza os marcadores sempre que o tipo selecionado (ruas ou histórias) mudar
+                addMarkers();
+            }, [selectedType]);
+
+            const addMarkers = () => {
+                // Remove todos os marcadores existentes do mapa antes de adicionar novos
+                markersRef.current.forEach(marker => {
+                    mapRef.current.removeLayer(marker);
+                });
+                markersRef.current = [];
+
+                if (selectedType === 'ruas') {
+                    // Ícone para ruas
+                    const ruaIcon = L.icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/images/marker-shadow.png',
+                        shadowSize: [41, 41]
+                    });
+
+                    ruas.forEach(rua => {
+                        // Verificação de coordenadas válidas
+                        if (
+                            rua.coordenadas &&
+                            Array.isArray(rua.coordenadas) &&
+                            rua.coordenadas.length === 2 &&
+                            typeof rua.coordenadas[0] === 'number' &&
+                            typeof rua.coordenadas[1] === 'number'
+                        ) {
+                            const marker = L.marker(rua.coordenadas, { icon: ruaIcon }).addTo(mapRef.current);
+                            marker.bindPopup(`
+                        <b>${rua.nome}</b><br>
+                        <a href="https://www.google.com/maps?q=${rua.coordenadas[0]},${rua.coordenadas[1]}" target="_blank">
+                            Ver no Google Maps
+                        </a>
+                    `);
+
+                            marker.on('click', () => {
+                                setSelectedRuaId(rua.id);
+                                setPreviewContent({
+                                    type: 'rua',
+                                    title: rua.nome,
+                                    description: rua.descricao,
+                                    images: historias.filter(h => h.rua_id === rua.id).flatMap(h => h.fotos),
+                                    ruaId: rua.id,
+                                });
+                            });
+
+                            markersRef.current.push(marker);
+                        } else {
+                            console.warn(`Rua "${rua.nome}" não possui coordenadas válidas e foi ignorada.`);
+                        }
+                    });
+                } else if (selectedType === 'historias') {
+                    // Ícone para histórias
+                    const historiaIcon = L.icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.4/images/marker-shadow.png',
+                        shadowSize: [41, 41]
+                    });
+
+                    historias.forEach(historia => {
+                        // Verificação de coordenadas válidas
+                        if (
+                            historia.coordenadas &&
+                            Array.isArray(historia.coordenadas) &&
+                            historia.coordenadas.length === 2 &&
+                            typeof historia.coordenadas[0] === 'number' &&
+                            typeof historia.coordenadas[1] === 'number'
+                        ) {
+                            const marker = L.marker(historia.coordenadas, { icon: historiaIcon }).addTo(mapRef.current);
+                            marker.bindPopup(`
+                        <b>${historia.titulo}</b><br>
+                        <a href="https://www.google.com/maps?q=${historia.coordenadas[0]},${historia.coordenadas[1]}" target="_blank">
+                            Ver no Google Maps
+                        </a>
+                    `);
+
+                            marker.on('click', () => {
+                                setSelectedRuaId(historia.rua_id);
+                                setPreviewContent({
+                                    type: 'historia',
+                                    title: historia.titulo,
+                                    description: historia.descricao,
+                                    images: historia.fotos,
+                                    historiaId: historia.id,
+                                    ruaId: historia.rua_id,
+                                });
+                            });
+
+                            markersRef.current.push(marker);
+                        } else {
+                            console.warn(`História "${historia.titulo}" não possui coordenadas válidas e foi ignorada.`);
+                        }
+                    });
+                }
+            };
+
+            return (
+                <div className="map-container relative">
+                    {/* Botões no canto superior esquerdo para alternar entre marcadores de ruas e histórias */}
+                    <div className="absolute top-2 left-2 z-50">
+                        <button
+                            onClick={() => setSelectedType('ruas')}
+                            className={`px-4 py-2 ${selectedType === 'ruas' ? 'bg-blue-500 text-white' : 'bg-white text-black'} rounded-l-md`}
+                        >
+                            Ruas
+                        </button>
+                        <button
+                            onClick={() => setSelectedType('historias')}
+                            className={`px-4 py-2 ${selectedType === 'historias' ? 'bg-[#cb2940] text-white' : 'bg-white text-black'} rounded-r-md`}
+                        >
+                            Histórias
+                        </button>
+                    </div>
+                    {/* Div do Mapa, onde o mapa será renderizado */}
+                    <div id="map" className="h-full"></div>
+                </div>
+            );
+        };
+
+
+
+        // Componente de Preview (Modificado)
+        const Preview = ({ previewContent, onClose }) => {
+            let linkTo = '/';
+            if (previewContent.type === 'rua') {
+                linkTo = `/rua/${previewContent.ruaId}`;
+            } else if (previewContent.type === 'historia') {
+                linkTo = `/rua/${previewContent.ruaId}/historia/${previewContent.historiaId}`;
+            }
+
+            return (
+                <div className="preview-card">
+                    <Link to={linkTo} className="block" onClick={onClose}>
+                        <img src={previewContent.images[0] || 'https://placehold.co/400x200'} alt={previewContent.title} className="w-full h-40 object-cover rounded-lg" />
+                        <div className="preview-content mt-2">
+                            <h3 className="font-semibold">{previewContent.title}</h3>
+                            <p className="text-sm">{previewContent.description.slice(0, 100)}...</p>
+                        </div>
+                    </Link>
+                    <button
+                        onClick={onClose}
+                        className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-700 focus:outline-none"
+                    >
+                        Fechar
+                    </button>
+                </div>
+            );
+        };
+
+
+        // Componente de Seleção de Rua
+        const RuaCarousel = ({ ruas, handleRuaClick, selectedRuaId }) => {
+            const carouselRef = useRef(null);
+
+            useEffect(() => {
+                if (carouselRef.current && selectedRuaId) {
+                    const selectedElement = carouselRef.current.querySelector(`[data-id='${selectedRuaId}']`);
+                    if (selectedElement) {
+                        const carouselWidth = carouselRef.current.offsetWidth;
+                        const selectedElementOffset = selectedElement.offsetLeft;
+                        const selectedElementWidth = selectedElement.offsetWidth;
+
+                        const scrollPosition = selectedElementOffset - (carouselWidth / 2) + (selectedElementWidth / 2);
+                        window.requestAnimationFrame(() => {
+                            carouselRef.current.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+                        });
+                    }
+                }
+            }, [selectedRuaId]);
+
+            return (
+                <div className="w-full">
+                    <div ref={carouselRef} className="overflow-x-auto whitespace-nowrap py-2">
+                        <div className="flex space-x-2 inline-flex">
+                            {ruas.map(rua => (
+                                <span
+                                    key={rua.id}
+                                    data-id={rua.id}
+                                    className={`px-4 py-2 rounded-full cursor-pointer whitespace-nowrap 
+                            ${rua.id === selectedRuaId ? 'bg-[#8A5A44] text-white' : 'bg-gray-200'}`}
+                                    onClick={() => handleRuaClick(rua)}
+                                >
+                                    {rua.nome}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+
+
+        // Componente de Conteúdo da História
+const HistoriaContent = ({
+    currentHistory,
+    historiasDaRua,
+    currentIndex,
+    setCurrentIndex,
+    setCurrentHistory,
+    showAllStories,
+    setShowAllStories,
+    selectedRuaId
+}) => {
+    const { useState, useEffect, useRef } = React;
+
+    // Estados para descrição da rua, modal de imagem, zoom e tradução
+    const [showRuaDescription, setShowRuaDescription] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [currentZoom, setCurrentZoom] = useState(1);
+    const [translateX, setTranslateX] = useState(0);
+    const [translateY, setTranslateY] = useState(0);
+
+    // Refs para gerenciar o estado de arrasto
+    const isDraggingRef = useRef(false);
+    const startXRef = useRef(0);
+    const startYRef = useRef(0);
+    const initialTranslateXRef = useRef(0);
+    const initialTranslateYRef = useRef(0);
+
+    const modalImageRef = useRef(null);
+
+    const history = useHistory();
+
+    const rua = ruas.find(r => r.id === selectedRuaId) || {};
+
+    const handlePrev = () => {
+        if (currentIndex > 0) {
+            const newIndex = currentIndex - 1;
+            const newHistory = historiasDaRua[newIndex];
+            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+            setCurrentHistory(newHistory);
+            setCurrentIndex(newIndex);
+        }
+    };
+
+    const handleNext = () => {
+        if (currentIndex < historiasDaRua.length - 1) {
+            const newIndex = currentIndex + 1;
+            const newHistory = historiasDaRua[newIndex];
+            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+            setCurrentHistory(newHistory);
+            setCurrentIndex(newIndex);
+        }
+    };
+
+    const handleRangeChange = (event) => {
+        const newIndex = parseInt(event.target.value);
+        if (newIndex >= 0 && newIndex < historiasDaRua.length) {
+            const newHistory = historiasDaRua[newIndex];
+            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+            setCurrentHistory(newHistory);
+            setCurrentIndex(newIndex);
+        }
+    };
+
+    const openModal = (image) => {
+        setSelectedImage(image);
+        setIsModalOpen(true);
+        setCurrentZoom(1); // Resetar o zoom ao abrir o modal
+        setTranslateX(0);  // Resetar a tradução ao abrir o modal
+        setTranslateY(0);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedImage(null);
+        setCurrentZoom(1); // Resetar o zoom ao fechar o modal
+        setTranslateX(0);  // Resetar a tradução ao fechar o modal
+        setTranslateY(0);
+    };
+
+    // Fechar modal ao pressionar a tecla Esc
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    // Funções para lidar com arrastar a imagem (Panning) - Desktop
+    const handleMouseDown = (e) => {
+        if (currentZoom <= 1) return; // Não permitir arrastar se não houver zoom
+
+        isDraggingRef.current = true;
+        startXRef.current = e.clientX;
+        startYRef.current = e.clientY;
+        initialTranslateXRef.current = translateX;
+        initialTranslateYRef.current = translateY;
+
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+    };
+
+    const handleMouseMove = (e) => {
+        if (!isDraggingRef.current) return;
+
+        const deltaX = e.clientX - startXRef.current;
+        const deltaY = e.clientY - startYRef.current;
+
+        setTranslateX(initialTranslateXRef.current + deltaX);
+        setTranslateY(initialTranslateYRef.current + deltaY);
+    };
+
+    const handleMouseUp = () => {
+        isDraggingRef.current = false;
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    // Funções para lidar com arrastar a imagem (Panning) - Mobile
+    const handleTouchStartPan = (e) => {
+        if (currentZoom <= 1 || e.touches.length !== 1) return;
+
+        isDraggingRef.current = true;
+        startXRef.current = e.touches[0].clientX;
+        startYRef.current = e.touches[0].clientY;
+        initialTranslateXRef.current = translateX;
+        initialTranslateYRef.current = translateY;
+
+        window.addEventListener('touchmove', handleTouchMovePan);
+        window.addEventListener('touchend', handleTouchEndPan);
+    };
+
+    const handleTouchMovePan = (e) => {
+        if (!isDraggingRef.current || e.touches.length !== 1) return;
+
+        const deltaX = e.touches[0].clientX - startXRef.current;
+        const deltaY = e.touches[0].clientY - startYRef.current;
+
+        setTranslateX(initialTranslateXRef.current + deltaX);
+        setTranslateY(initialTranslateYRef.current + deltaY);
+    };
+
+    const handleTouchEndPan = () => {
+        isDraggingRef.current = false;
+        window.removeEventListener('touchmove', handleTouchMovePan);
+        window.removeEventListener('touchend', handleTouchEndPan);
+    };
+
+    if (!currentHistory) {
+        return (
+            <div className="w-full py-4">
+                <h2 className="text-xl font-bold">Nenhuma história disponível para esta rua.</h2>
+            </div>
+        );
+    }
+
+    return (
+        <div className="main-content w-full flex flex-col items-center flex-grow overflow-y-auto">
+            <div className="w-full lg:py-4 flex justify-between items-center">
+                <button
+                    onClick={() => history.push('/')}
+                    className="flex items-center text-sm text-blue-600 mr-4"
+                    aria-label="Abrir Mapa"
+                >
+                    <i className="fas fa-map"></i>
+                    <span className="ml-1">Mapa</span>
+                </button>
+
+                <h2 className="text-sm font-medium">{rua.cidade_id}</h2>
+                <button
+                    onClick={() => setShowRuaDescription(!showRuaDescription)}
+                    className="flex items-center text-sm text-blue-600"
+                >
+                    Sobre a rua
+                    <i className={`ml-1 fas fa-chevron-${showRuaDescription ? 'up' : 'down'}`}></i>
+                </button>
+            </div>
+            {/* Descrição da Rua */}
+            {showRuaDescription && (
+                <div className="w-full py-2 lg:py-4">
+                    <div className="border border-black p-3 rounded-md max-h-32 overflow-y-scroll bg-[#f5f1e8]">
+                        <p className="text-sm">{rua.descricao}</p>
+                    </div>
+                </div>
+            )}
+
+            {/* Mostrar todas as histórias em lista vertical */}
+            {showAllStories ? (
+                <div className="w-full py-2 md:py-4">
+                    {historiasDaRua.map((historia, index) => (
+                        <div key={historia.id} className="w-full mb-4 bg-white p-4 rounded-lg shadow-md">
+                            <h3 className="text-xl font-bold">{historia.titulo}</h3>
+                            <p className="text-sm text-gray-600">Por: {historia.criador}</p>
+                            <p className="text-sm text-gray-600">Ano: {historia.ano}</p>
+                            {historia.fotos && historia.fotos.length > 0 && (
+                                <div className="mt-2 grid grid-cols-2 gap-2">
+                                    {historia.fotos.map((foto, fotoIndex) => (
+                                        <img
+                                            key={fotoIndex}
+                                            src={foto}
+                                            alt={`Foto de ${historia.titulo} ${fotoIndex + 1}`}
+                                            className="w-full h-32 object-cover rounded-md cursor-pointer"
+                                            onClick={() => openModal(foto)}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                            <div className="mt-2 max-h-40 overflow-y-scroll">
+                                <p>{historia.descricao}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <>
+                    {/* Conteúdo da História Atual */}
+                    <div className="w-full py-2 md:py-4">
+                        {/* Caixa com altura ajustada e cabeçalho fixo */}
+                        <div className="border border-black px-2 rounded-md max-h-60 overflow-y-scroll bg-[#f5f1e8]">
+                            {/* Cabeçalho fixo com título, criador, ano e link para Google Maps */}
+                            <div className="sticky top-0 bg-[#f5f1e8] pb-2">
+                                <h3 className="text-xl pt-2 md:text-2xl font-bold mb-1">{currentHistory.titulo}</h3>
+                                <div className="flex justify-between items-center text-sm text-gray-600">
+                                    <span>Por: {currentHistory.criador}</span>
+                                    <span>Ano: {currentHistory.ano}</span>
+                                    {/* Verificação se há coordenadas e criação do link para o Google Maps */}
+                                    {currentHistory.coordenadas && currentHistory.coordenadas.length === 2 && (
+                                        <a
+                                            href={`https://www.google.com/maps?q=${currentHistory.coordenadas[0]},${currentHistory.coordenadas[1]}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 hover:underline"
+                                        >
+                                            Ver no Maps
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                            {/* Descrição da história */}
+                            <p>{currentHistory.descricao}</p>
+                        </div>
+                    </div>
+
+                    {/* Carousel de fotos */}
+                    <div className="w-full border-b border-black py-4 md:py-8 text-center">
+                        <div className="carousel grid grid-cols-1 gap-2">
+                            {currentHistory.fotos && currentHistory.fotos.map((image, index) => (
+                                <img
+                                    key={index}
+                                    src={image}
+                                    alt={`Foto de ${currentHistory.ano} ${index + 1}`}
+                                    className="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer"
+                                    onClick={() => openModal(image)}
+                                />
+                            ))}
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {/* Modal de imagem em tela cheia com zoom e panning */}
+            {isModalOpen && selectedImage && (
+                <div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+                    onClick={closeModal}
+                >
+                    <img
+                        ref={modalImageRef}
+                        src={selectedImage}
+                        alt="Imagem ampliada"
+                        className="max-w-[90%] max-h-[90%] object-contain cursor-grab"
+                        style={{
+                            transform: `scale(${currentZoom}) translate(${translateX}px, ${translateY}px)`,
+                            transition: 'transform 0.3s ease',
+                            cursor: currentZoom > 1 ? 'grab' : 'default'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        onMouseDown={handleMouseDown}
+                        onTouchStartPan={handleTouchStartPan} // Custom handler para panning em touch
+                        draggable="false"
+                    />
+                    {/* Botão de fechar com destaque */}
+                    <button
+                        className="absolute top-4 right-4 text-white text-2xl bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 focus:outline-none"
+                        onClick={closeModal}
+                        aria-label="Fechar modal"
+                    >
+                        &times;
+                    </button>
+                    {/* Botões de zoom */}
+                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
+                        <button
+                            className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setCurrentZoom(prevZoom => Math.min(prevZoom + 0.2, 3));
+                            }}
+                            aria-label="Aumentar zoom"
+                        >
+                            <i className="fas fa-search-plus"></i>
+                        </button>
+                        <button
+                            className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setCurrentZoom(prevZoom => Math.max(prevZoom - 0.2, 1));
+                            }}
+                            aria-label="Diminuir zoom"
+                        >
+                            <i className="fas fa-search-minus"></i>
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Renderização Condicional da Parte Inferior */}
+            {showAllStories ? (
+                // Botão "Ver Histórias" fixado quando showAllStories está ativo
+                <div className="w-full fixed bottom-0 left-0 py-2 m-0">
+                    <div className="w-full lg:py-8 flex justify-center">
+                        <button
+                            onClick={() => setShowAllStories(false)}
+                            className="w-[90%] bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
+                        >
+                            Ver Linha do Tempo
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                // Controles de Navegação fixados quando showAllStories está inativo
+                <div className="w-full fixed bottom-0 left-0 m-0">
+                    <div className="w-full lg:py-4">
+                        <div className="border border-black p-2 mb-2 sm:mb-0 lg:mb-8 rounded-md bg-[#f5f1e8]">
+                            {/* Ano Centralizado Acima */}
+                            <p className="text-center text-lg font-bold -mb-4">
+                                Ano <strong>{currentHistory.ano}</strong>
+                            </p>
+
+                            <div className="flex items-center space-x-4 justify-center">
+                                <button
+                                    onClick={handlePrev}
+                                    className="p-2 bg-[#8A5A44] text-white rounded-full hover:bg-[#D8A568] focus:outline-none"
+                                    disabled={currentIndex === 0}
+                                    aria-label="História Anterior"
+                                >
+                                    <i className="fas fa-chevron-left"></i>
+                                </button>
+
+                                {/* Input Range com Largura Ajustada */}
+                                <input
+                                    type="range"
+                                    min={0}
+                                    max={historiasDaRua.length - 1}
+                                    value={currentIndex}
+                                    onChange={handleRangeChange}
+                                    className="w-1/2"
+                                    step="1"
+                                    aria-label="Selecionar história"
+                                />
+
+                                <button
+                                    onClick={handleNext}
+                                    className="p-2 bg-[#8A5A44] text-white rounded-full hover:bg-[#D8A568] focus:outline-none"
+                                    disabled={currentIndex === historiasDaRua.length - 1}
+                                    aria-label="Próxima História"
+                                >
+                                    <i className="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+
+                            {/* Texto de 'história X de Y' Centralizado Abaixo */}
+                            <p className="text-center text-sm -mt-2">
+                                História {currentIndex + 1} de {historiasDaRua.length}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Botão para alternar entre "Ver Histórias" e "Tudo desta rua" */}
+            {!showAllStories && (
+                <div className="w-full py-2 md:py-4 mb-12 lg:mb-20">
+                    <button
+                        onClick={() => setShowAllStories(true)}
+                        className="w-full bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
+                    >
+                        Tudo desta rua
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};
+        
+
+
+
+
+
+        // Componente de Página de Rua e História (Atualizado)
+        const RuaHistoria = () => {
+            const { id, historiaId } = useParams();
+            const history = useHistory();
+            const [currentHistory, setCurrentHistory] = useState(null);
+            const [historiasDaRua, setHistoriasDaRua] = useState([]);
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [showAllStories, setShowAllStories] = useState(false);
+
+            useEffect(() => {
+                const rua = ruas.find(r => r.id === parseInt(id));
+                if (rua) {
+                    const historiasList = historias
+                        .filter(h => h.rua_id === rua.id)
+                        .sort((a, b) => a.ano - b.ano || a.id - b.id);
+                    setHistoriasDaRua(historiasList);
+
+                    if (historiaId) {
+                        const historia = historiasList.find(h => h.id === parseInt(historiaId));
+                        if (historia) {
+                            setCurrentHistory(historia);
+                            const index = historiasList.findIndex(h => h.id === historia.id);
+                            setCurrentIndex(index);
+                        } else {
+                            setCurrentHistory(null);
+                        }
+                    } else {
+                        if (historiasList.length > 0) {
+                            const primeiraHistoria = historiasList[0];
+                            setCurrentHistory(primeiraHistoria);
+                            setCurrentIndex(0);
+                            history.replace(`/rua/${id}/historia/${primeiraHistoria.id}`);
+                        } else {
+                            setCurrentHistory(null);
+                        }
+                    }
+                }
+            }, [id, historiaId, history]);
+
+            useEffect(() => {
+                if (currentHistory) {
+                    // Update the page title
+                    document.title = `${currentHistory.titulo} - Historin`;
+
+                    // Update the meta description
+                    let metaDescription = document.querySelector('meta[name="description"]');
+                    if (metaDescription) {
+                        metaDescription.setAttribute('content', currentHistory.descricao.slice(0, 160));
+                    } else {
+                        metaDescription = document.createElement('meta');
+                        metaDescription.name = "description";
+                        metaDescription.content = currentHistory.descricao.slice(0, 160);
+                        document.head.appendChild(metaDescription);
+                    }
+
+                    // Remove existing JSON-LD script if any
+                    const existingScript = document.getElementById('structured-data');
+                    if (existingScript) {
+                        existingScript.remove();
+                    }
+
+                    // Add JSON-LD structured data
+                    const script = document.createElement('script');
+                    script.type = 'application/ld+json';
+                    script.id = 'structured-data';
+
+                    const structuredData = {
+                        "@context": "https://schema.org",
+                        "@type": "Article",
+                        "headline": currentHistory.titulo,
+                        "description": currentHistory.descricao.slice(0, 160),
+                        "image": currentHistory.fotos,
+                        "author": {
+                            "@type": "Person",
+                            "name": currentHistory.criador
+                        },
+                        "datePublished": currentHistory.ano,
+                        "publisher": {
+                            "@type": "Organization",
+                            "name": "Historin"
+                        }
+                    };
+
+                    script.text = JSON.stringify(structuredData);
+                    document.head.appendChild(script);
+                }
+            }, [currentHistory]);
+
+
+            const handleRuaClick = (rua) => {
+                history.push(`/rua/${rua.id}`);
+            };
+
+            return (
+                <main className="w-full lg:w-4/5 flex flex-col items-center flex-grow overflow-y-auto p-2">
+                    <RuaCarousel ruas={ruas} handleRuaClick={handleRuaClick} selectedRuaId={parseInt(id)} />
+                    <HistoriaContent
+                        currentHistory={currentHistory}
+                        historiasDaRua={historiasDaRua}
+                        currentIndex={currentIndex}
+                        setCurrentIndex={setCurrentIndex}
+                        setCurrentHistory={setCurrentHistory}
+                        showAllStories={showAllStories}
+                        setShowAllStories={setShowAllStories}
+                        selectedRuaId={parseInt(id)}
+                    />
+                </main>
+            );
+        };
+
+        // não encontrado 404
+        const NotFound = () => {
+            return (
+                <div className="p-4">
+                    <h1 className="text-3xl font-bold text-center">404 - Página Não Encontrada</h1>
+                    <p className="text-center">Desculpe, a página que você está procurando não existe.</p>
+                    <div className="flex justify-center mt-4">
+                        <Link to="/" className="bg-blue-500 text-white px-4 py-2 rounded-md">
+                            Voltar para Home
+                        </Link>
+                    </div>
+                </div>
+            );
+        };
+
+        // Componente FeedbackPopup
+        const FeedbackPopup = ({ isOpen, onClose }) => {
+            if (!isOpen) return null;
+
+            const [formData, setFormData] = useState({
+                nome: '',
+                email: '',
+                comentario: '',
+                estrelas: 0
+            });
+
+            const handleChange = (e) => {
+                const { id, value } = e.target;
+                setFormData({ ...formData, [id]: value });
+            };
+
+            const handleStarClick = (starValue) => {
+                setFormData({ ...formData, estrelas: starValue });
+            };
+
+            return (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-high" onClick={onClose}>
+                    <div
+                        className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative"
+                        onClick={(e) => e.stopPropagation()} // Evita fechar ao clicar dentro do modal
+                    >
+                        {/* Botão de Fechar */}
+                        <button
+                            className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+                            onClick={onClose}
+                            aria-label="Fechar formulário de feedback"
+                        >
+                            <i className="fas fa-times text-xl"></i>
+                        </button>
+                        <h3 className="text-xl font-bold mb-4 text-center">Envie seu Feedback</h3>
+
+                        <p className="text-gray-600 text-center mb-4">
+                            Estamos em fase de protótipo e sua opinião é muito importante para nós! Por favor, avalie nossa plataforma e nos ajude a melhorar.
+                        </p>
+
+                        <form action="https://formspree.io/f/manywvne" method="POST">
+                            {/* Avaliação com Estrelas */}
+                            <div className="mb-4 text-center">
+                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    Avaliação:
+                                </label>
+                                <div className="flex justify-center mb-2">
+                                    {[1, 2, 3, 4, 5].map((star) => (
+                                        <button
+                                            key={star}
+                                            type="button"
+                                            onClick={() => handleStarClick(star)}
+                                            className={`text-3xl ${formData.estrelas >= star ? 'text-yellow-400' : 'text-gray-300'}`}
+                                        >
+                                            ★
+                                        </button>
+                                    ))}
+                                </div>
+                                <p className="text-gray-500 text-sm">Sua avaliação: {formData.estrelas} estrela(s)</p>
+                                <input type="hidden" name="estrelas" value={formData.estrelas} />
+                            </div>
+
+                            {/* Nome opcional */}
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nome">
+                                    Nome (opcional):
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="nome"
+                                    type="text"
+                                    name="nome"
+                                    placeholder="Seu nome"
+                                    value={formData.nome}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            {/* Email opcional */}
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                                    E-mail (opcional):
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    placeholder="Seu e-mail"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            {/* Comentário obrigatório */}
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="comentario">
+                                    Comentário:
+                                </label>
+                                <textarea
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="comentario"
+                                    name="comentario"
+                                    rows="4"
+                                    placeholder="Escreva seu feedback sobre a plataforma"
+                                    value={formData.comentario}
+                                    onChange={handleChange}
+                                    required
+                                ></textarea>
+                            </div>
+
+                            <div className="flex items-center justify-center">
+                                <button
+                                    type="submit"
+                                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                >
+                                    Enviar Feedback
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        };
+
+
+        function App() {
+            const [menuOpen, setMenuOpen] = useState(false);
+            const [showMap, setShowMap] = useState(true);
+            const [previewContent, setPreviewContent] = useState(null);
+            const [selectedRuaId, setSelectedRuaId] = useState(null);
+            const [showPopup, setShowPopup] = useState(false);
+            const location = useLocation(); // useLocation hook
+            const [showFeedback, setShowFeedback] = useState(false);
+            const [showSteps, setShowSteps] = useState(false);
+
+            // Estados para os pop-ups
+            const [showOnboarding, setShowOnboarding] = useState(false);
+            const [showDonation, setShowDonation] = useState(false);
+
+            // Referência para rastrear o estado atual dos popups
+            const popupsRef = useRef({
+                showOnboarding: false,
+                showPopup: false,
+                showFeedback: false,
+                showDonation: false,
+            });
+
+            // Atualizar a referência sempre que algum estado de popup mudar
+            useEffect(() => {
+                popupsRef.current = {
+                    showOnboarding,
+                    showPopup,
+                    showFeedback,
+                    showDonation,
+                };
+            }, [showOnboarding, showPopup, showFeedback, showDonation]);
+
+            // Mapeando ruas com uma imagem aleatória das histórias associadas
+            const ruasWithImages = useMemo(() => {
+                return ruas.map(rua => {
+                    const historiasDaRua = historias.filter(historia => historia.rua_id === rua.id);
+                    const fotos = historiasDaRua.flatMap(historia => historia.fotos);
+                    const randomFoto = fotos.length > 0 ? fotos[Math.floor(Math.random() * fotos.length)] : null;
+                    return { ...rua, fotos: randomFoto };
+                });
+            }, [ruas, historias]);
+
+            const handlePreviewClose = () => {
+                setPreviewContent(null);
+            };
+
+            // Variáveis para a homepage
+            const filteredRuasWithImages = useMemo(() => {
+                return ruasWithImages.slice(0, 4);
+            }, [ruasWithImages]);
+
+            // IDs das histórias mais vistas
+            const mostViewedIds = [41, 5, 10, 21];
+
+            // Filtre as histórias com base nos IDs definidos
+            const filteredHistorias = useMemo(() => {
+                return historias.filter(historia => mostViewedIds.includes(historia.id));
+            }, [historias]);
+
+            // Função para lidar com cliques em ruas a partir da home
+            const handleRuaClick = (rua) => {
+                setSelectedRuaId(rua.id);
+                setPreviewContent({
+                    title: rua.nome,
+                    description: rua.descricao,
+                    images: historias.filter(h => h.rua_id === rua.id).flatMap(h => h.fotos)
+                });
+            };
+
+            // Função para lidar com cliques em histórias a partir da home
+            const handleHistoriaClick = (historia) => {
+                setSelectedRuaId(historia.rua_id);
+                setPreviewContent({
+                    title: historia.titulo,
+                    description: historia.descricao,
+                    images: historia.fotos
+                });
+            };
+
+            useEffect(() => {
+                // Onboarding Popup: Mostrar apenas na primeira visita
+                const hasVisited = localStorage.getItem('hasVisited');
+                if (!hasVisited) {
+                    const onboardingTimer = setTimeout(() => {
+                        setShowOnboarding(true);
+                        localStorage.setItem('hasVisited', 'true');
+                    }, 2000); // 2 segundos após o carregamento
+
+                    return () => clearTimeout(onboardingTimer);
+                }
+
+                // Donation Popup: Mostrar após 3 minutos se nenhum outro popup estiver aberto
+                const donationTimer = setTimeout(() => {
+                    if (
+                        !popupsRef.current.showOnboarding &&
+                        !popupsRef.current.showPopup &&
+                        !popupsRef.current.showFeedback
+                    ) {
+                        setShowDonation(true);
+                    }
+                }, 180000); // 3 minutos
+
+                return () => clearTimeout(donationTimer);
+            }, []);
+
+            useEffect(() => {
+                // Popup Carrossel: Mostrar após 1 minuto se a condição for satisfeita
+                if (shouldShowPopup()) {
+                    const popupTimer = setTimeout(() => {
+                        setShowPopup(true);
+                    }, 60000); // 60 segundos
+
+                    return () => clearTimeout(popupTimer);
+                }
+            }, []);
+
+            useEffect(() => {
+                // Feedback Popup: Mostrar automaticamente após 5 minutos se nenhum outro popup estiver aberto
+                const feedbackTimer = setTimeout(() => {
+                    if (
+                        !popupsRef.current.showOnboarding &&
+                        !popupsRef.current.showPopup &&
+                        !popupsRef.current.showDonation
+                    ) {
+                        setShowFeedback(true);
+                    }
+                }, 300000); // 5 minutos
+
+                return () => clearTimeout(feedbackTimer);
+            }, []);
+
+            useEffect(() => {
+                // Set default title and meta description for the home page
+                if (location.pathname === "/" || location.pathname === "/#") {
+                    document.title = "Historin - Histórias de Gramado";
+                    let metaDescription = document.querySelector('meta[name="description"]');
+                    if (metaDescription) {
+                        metaDescription.setAttribute('content', 'Descubra as histórias de Gramado através do Historin. Explore ruas, conheça eventos marcantes e contribua com suas próprias histórias.');
+                    } else {
+                        metaDescription = document.createElement('meta');
+                        metaDescription.name = "description";
+                        metaDescription.content = 'Descubra as histórias de Gramado através do Historin. Explore ruas, conheça eventos marcantes e contribua com suas próprias histórias.';
+                        document.head.appendChild(metaDescription);
+                    }
+                }
+            }, [location.pathname]);
+
+            // Adicionado no início do componente App
+            const prevLocation = useRef(location);
+
+            useEffect(() => {
+                // Comparar a localização atual com a anterior
+                if (location.pathname !== prevLocation.current.pathname || location.search !== prevLocation.current.search) {
+                    // Atualizar a localização anterior
+                    prevLocation.current = location;
+
+                    // Obter o caminho da rota atual
+                    const pagePath = location.pathname + location.search;
+
+                    // Evitar enviar 'page_view' para '/#'
+                    if (pagePath === '/#') return;
+
+                    // Enviar o evento de visualização de página para o GA4
+                    window.gtag('event', 'page_view', {
+                        page_title: document.title,
+                        page_path: pagePath,
+                    });
+                }
+            }, [location]);
+
+            return (
+                <div className="font-roboto bg-[#F4ECE1] text-[#3E3A33] min-h-screen flex flex-col">
+                    <Menu menuOpen={menuOpen} setMenuOpen={setMenuOpen} setShowMap={setShowMap} />
+
+                    <Header setMenuOpen={setMenuOpen} setShowFeedback={setShowFeedback} />
+
+                    {/* Renderizar popups condicionais */}
+                    {showPopup && <PopupCarrossel onClose={() => setShowPopup(false)} />}
+                    {showOnboarding && <OnboardingPopup onClose={() => setShowOnboarding(false)} />}
+                    {showDonation && <DonationPopup onClose={() => setShowDonation(false)} />}
+                    {showFeedback && <FeedbackPopup isOpen={showFeedback} onClose={() => setShowFeedback(false)} />}
+
+                    <Switch>
+                        <Route path="/sobre" component={Sobre} />
+                        <Route path="/apoio" component={Apoio} />
+                        <Route path="/adicionar-historia" component={AdicionarHistoria} />
+                        <Route path="/ruas-e-historias" component={RuasEHistorias} />
+                        <Route path="/legado-africano" component={LegadoAfricano} />
+                        <Route path="/rua/:id/historia/:historiaId" component={RuaHistoria} />
+                        <Route path="/rua/:id" component={RuaHistoria} />
+                        <Route exact path="/">
+                            {showMap ? (
+                                <div className="w-full lg:w-4/5 relative">
+                                    <MapView setSelectedRuaId={setSelectedRuaId} setPreviewContent={setPreviewContent} />
+                                    {previewContent && (
+                                        <Preview previewContent={previewContent} onClose={handlePreviewClose} selectedRuaId={selectedRuaId} />
+                                    )}
+
+                                    <div className="introduction p-4">
+                                        <h2>Bem-vindo ao Historin!</h2>
+                                        <button
+                                            onClick={() => setShowSteps(!showSteps)}
+                                            className="flex items-center justify-between mt-2 ml-auto"
+                                        >
+                                            <span>Ver mais</span>
+                                            <svg
+                                                className={`w-6 h-6 transform transition-transform ${showSteps ? 'rotate-180' : 'rotate-0'}`}
+                                                fill="none"
+                                                stroke="currentColor"
+                                                viewBox="0 0 24 24"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </button>
+
+                                        {showSteps && (
+                                            <div className="steps mt-4">
+                                                <div className="step">
+                                                    <span className="step-number">1</span>
+                                                    <p>Explore histórias pela geografia e descubra a história por trás dos lugares!</p>
+                                                </div>
+                                                <div className="step">
+                                                    <span className="step-number">2</span>
+                                                    <p>Navegue pela linha do tempo para reviver os eventos que moldaram nossa cidade!</p>
+                                                </div>
+                                                <div className="step">
+                                                    <span className="step-number">3</span>
+                                                    <p>Contribua com suas histórias e experiências e aproveite a jornada!</p>
+                                                </div>
+                                            </div>
+                                        )}
+                                    </div>
+
+
+                                    {/* Seção de Ruas Recomendadas */}
+                                    <div className="px-4">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <h2 className="text-lg font-semibold">Ruas Recomendadas</h2>
+                                            <Link to="/ruas-e-historias">
+                                                <button className="text-sm text-[#8A5A44] hover:underline">
+                                                    Ver tudo
+                                                </button>
+                                            </Link>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            {filteredRuasWithImages.map(rua => (
+                                                <Link
+                                                    key={rua.id}
+                                                    to={`/rua/${rua.id}`}
+                                                    className="bg-white p-2 rounded-lg shadow cursor-pointer block hover:shadow-lg transition-shadow duration-300"
+                                                >
+                                                    <img src={rua.fotos || 'https://placehold.co/300x200'} alt={rua.nome} className="rounded-lg mb-2 w-full h-40 object-cover" />
+                                                    <h3 className="font-semibold">{rua.nome}</h3>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Seção de Histórias Mais Vistas */}
+                                    <div className="px-4 mt-6">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <h2 className="text-lg font-semibold">Histórias Mais Vistas</h2>
+                                            <Link to="/ruas-e-historias">
+                                                <button className="text-sm text-[#8A5A44] hover:underline">
+                                                    Ver tudo
+                                                </button>
+                                            </Link>
+                                        </div>
+                                        {filteredHistorias.map(historia => (
+                                            <Link
+                                                key={historia.id}
+                                                to={`/rua/${historia.rua_id}/historia/${historia.id}`}
+                                                className="bg-white p-2 rounded-lg shadow mb-2 flex items-center cursor-pointer block hover:shadow-lg transition-shadow duration-300"
+                                            >
+                                                <img src={historia.fotos[0] || 'https://placehold.co/100x100'} alt={historia.titulo} className="rounded-lg mr-2 w-24 h-24 object-cover" />
+                                                <div>
+                                                    <h3 className="font-semibold">{historia.titulo}</h3>
+                                                    <p className="text-sm text-gray-600">{historia.descricao.slice(0, 60)}...</p>
+                                                </div>
+                                            </Link>
+                                        ))}
+
+                                        <LegadoAfricanoCard />
+
+                                        <div className="px-4 mt-8">
+                                            <div className="bg-white p-6 rounded-lg shadow-md flex flex-col md:flex-row items-center">
+                                                <img src="https://i.imgur.com/nav9mZa.jpeg" alt="Informações sobre a plataforma" className="w-full md:w-1/3 rounded-lg mb-4 md:mb-0 md:mr-6 object-cover" />
+                                                <div>
+                                                    <h2 className="text-xl font-bold mb-2">Estamos só começando!</h2>
+                                                    <p className="text-gray-700 mb-4">
+                                                        O Historin é mais do que uma plataforma de histórias. Nossa jornada está apenas começando, e em breve, traremos uma experiência imersiva com <strong>Realidade Aumentada</strong>. QR codes serão espalhados pelas ruas de Gramado, permitindo a todos explorar a história de maneira interativa, conectando o passado e o presente de forma inovadora. Fique atento às novidades!
+                                                    </p>
+                                                    <Link
+                                                        to="/sobre"
+                                                        className="bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition"
+                                                    >
+                                                        Saiba mais sobre o Historin
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            ) : (
+                                <RuaHistoria />
+                            )}
+                        </Route>
+                        <Route component={NotFound} />
+                    </Switch>
+
+                    {/* Rodapé Fixo para Computadores */}
+                    <footer className="fixed-footer">
+                        <p>Essa aplicação funciona melhor em dispositivos móveis</p>
+                    </footer>
+                </div>
+            );
+        }
+
+        // Renderização do App Envolto pelo HashRouter
+        ReactDOM.render(
+            <HashRouter>
+                <App />
+            </HashRouter>,
+            document.getElementById('root')
+        );
+    </script>
+
+</body>
+
+</html>
