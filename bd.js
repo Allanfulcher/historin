@@ -1,3 +1,34 @@
+const negocios = [
+  {
+      id: 1,
+      titulo: 'Super Benetti',
+      segmento: 'Mercado',
+      foto: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpuHf2dl5Neqqq6diUh8UKX84R-Jyv51JjgQ&s',
+      link: 'https://maps.app.goo.gl/XQ7CqDv14SgjExTa9'
+  },
+  {
+      id: 2,
+      titulo: 'Restaurante Kilo e Kilo',
+      segmento: 'Restaurante',
+      foto: 'https://rota-serra-gaucha.s3.sa-east-1.amazonaws.com/images/fdK5mHRVQUVrqmKE7MYCbwDho4aNqkX02B5q0vMk.png',
+      link: 'https://maps.app.goo.gl/qXep5f2He8KMXCsP6'
+  },
+  {
+      id: 3,
+      titulo: 'Arabella Couros do Sul',
+      segmento: 'Artesanato',
+      foto: '/fotos/locais/arabella.jpg',
+      link: 'https://maps.app.goo.gl/TgQzMyDhuxkgwCiY6'
+  },
+  {
+      id: 4,
+      titulo: 'Gramado Motorpark',
+      segmento: 'Glamping',
+      foto: 'https://d28l80gldsbf39.cloudfront.net/br/bushome-gramado-uma-casa-sobre-rodas-hospedagem-onibus1.webp',
+      link: 'https://maps.app.goo.gl/q3fWHHpkvfxiiRDp6'
+  }
+];
+
 const ruas = [
     {'id': 1, 'nome': 'Avenida Borges de Medeiros', 'descricao': 'A Avenida Borges de Medeiros é uma das principais e mais históricas vias de Gramado. Inicialmente, foi uma trilha usada pelos tropeiros que, ao longo do tempo, evoluiu para um caminho e depois para uma estrada. A rua recebeu o nome de Borges de Medeiros, uma homenagem a Antônio Augusto Borges de Medeiros, que foi um influente político gaúcho e governou o estado do Rio Grande do Sul por quase 25 anos, entre o final do século XIX e o início do século XX. Sua administração foi marcada pelo fortalecimento da economia e da política estadual.\\n\\nApós a emancipação de Gramado, em 1955, a via foi transformada em avenida, consolidando-se como a primeira e mais importante rua da cidade. Ao longo dos anos, a Avenida Borges de Medeiros passou por diversas revitalizações, incluindo a pavimentação e a instalação de cabos subterrâneos, preservando o charme de suas construções de estilo alemão e tornando-a um cartão-postal da cidade.\\n\\nAlém de sua importância histórica, a avenida é o coração do comércio e do turismo em Gramado. Ela abriga vários pontos turísticos, como o Palácio dos Festivais, e é palco de eventos importantes como o Natal Luz e o Festival de Cinema de Gramado', 'relevancia': 5, 'coordenadas': [-29.379848451898166, -50.8729358497256]},
     {'id': 2, 'nome': 'Rua Coronel João Corrêa', 'descricao': 'A Rua Coronel João Corrêa, localizada no centro de Gramado, é uma via importante tanto historicamente quanto culturalmente. Ela homenageia o Coronel João Corrêa Ferreira da Silva, uma figura pioneira na região. João Corrêa foi fundamental na construção da estrada de ferro que ligava Canela a Taquara, um projeto que teve início em 1913 e foi concluído em 1924. Esse empreendimento impulsionou o desenvolvimento econômico e a conectividade da região da Serra Gaúcha.\\n\\nAtualmente, a Rua Coronel João Corrêa é um ponto movimentado da cidade, conectando diversos locais e pontos turísticos importantes, como a Praça das Etnias e a famosa Rua Torta. A rua também abriga lojas, restaurantes e serviços, sendo um centro de convivência e comércio em Gramado\u200b', 'relevancia': 4, 'coordenadas': [-29.383856906907273, -50.87174287776105]},
