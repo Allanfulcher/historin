@@ -468,6 +468,7 @@
                 // Adicione mais membros conforme necessário
             ];
 
+
             return (
                 <div className="p-4 w-full lg:w-4/5">
                     {/* Cabeçalho */}
@@ -667,28 +668,34 @@
                     {/* Seção Apoio e Patrocínio */}
                     <section className="mb-6">
                         <h3 className="text-center text-xl font-bold mb-4">Apoio e Patrocínio</h3>
-                        <div className="flex justify-around mb-4">
+
+                        {/* Grid de 2 colunas */}
+                        <div className="grid grid-cols-2 gap-4 mb-4">
+
                             <div className="text-center">
-                                <i className="fas fa-city text-3xl mb-1"></i>
+                                <img
+                                    src="https://gramado.atende.net/static/portal/img/2024/08/30/img_79375C9ED9F9C9774D60D45812CF5EEEEBDB33F1.png"
+                                    alt="Prefeitura de Gramado"
+                                    className="mx-auto mb-1 h-12 w-auto"
+                                />
                                 <p className="text-sm">Prefeitura de Gramado</p>
                             </div>
+
                             <div className="text-center">
-                                <i className="fas fa-university text-3xl mb-1"></i>
+                                <img
+                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiUtFDFGcK3PvoitnOMwfhL_eXzF7ihu9Q_Q&s"
+                                    alt="Feevale"
+                                    className="mx-auto mb-1 h-12 w-auto"
+                                />
                                 <p className="text-sm">Feevale</p>
                             </div>
-                            <div className="text-center">
-                                <i className="fas fa-building text-3xl mb-1"></i>
-                                <p className="text-sm">Empresas</p>
-                            </div>
+                            {/* Adicione mais logos ou itens aqui se necessário */}
                         </div>
-                        <p className="text-center text-sm mb-2">Um projeto crowdfunding</p>
-                        <div className="bg-gray-200 rounded-full h-4 mb-2 relative">
-                            <div className="bg-yellow-400 h-4 rounded-full absolute" style={{ width: '20%' }}></div>
-                            <div className="absolute inset-0 flex justify-between text-xs px-2">
-                                <span>R$660,00</span>
-                                <span>R$25.000,00</span>
-                            </div>
+
+                        <div>
+                            <ProgressBar />
                         </div>
+
                         <Link to="/apoio">
                             <button className="w-full py-2 bg-yellow-400 rounded-full text-white font-bold">
                                 Apoie agora
@@ -696,10 +703,11 @@
                         </Link>
                     </section>
 
+
                     {/* Seção Entre em Contato */}
                     <section className="mb-6">
                         <h3 className="text-center text-xl font-bold mb-4">Entre em Contato Conosco</h3>
-                        <div className="flex justify-center space-x-6">
+                        <div className="flex justify-around space-x-6">
                             {/* Link para WhatsApp */}
                             <a
                                 href="https://wa.me/54993264627"
@@ -721,12 +729,46 @@
                                 <i className="fas fa-envelope text-3xl"></i>
                                 <span className="text-sm">E-mail</span>
                             </a>
+                            {/* Link para Instagram */}
+                            <a
+                                href="https://www.instagram.com/historin_ofc/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex flex-col items-center text-pink-500 hover:text-pink-600 transition"
+                            >
+                                <i className="fab fa-instagram text-3xl"></i>
+                                <span className="text-sm">Instagram</span>
+                            </a>
+
                         </div>
                     </section>
                 </div>
             );
         };
 
+        const ProgressBar = () => {
+            const valorAtual = 6587.0; // Valor atual arrecadado (fixo no componente)
+            const valorMeta = 50000.0; // Meta total (fixa no componente)
+
+            const porcentagem = (valorAtual / valorMeta) * 100; // Calcula a porcentagem do valor arrecadado
+
+            return (
+                <div className="text-center">
+                    <h3 className="font-bold mb-4 text-xl text-yellow-600">Apoie Nosso Projeto!</h3>
+                    <div className="relative w-full bg-gray-300 rounded-full h-6 mb-2 overflow-hidden shadow-lg">
+                        <div
+                            className="bg-yellow-400 h-full rounded-full transition-all duration-1000 ease-in-out"
+                            style={{ width: `${porcentagem}%` }}
+                        >
+                        </div>
+                        <div className="absolute inset-0 flex justify-between text-sm px-4 font-semibold text-gray-800">
+                            <span>R${valorAtual.toFixed(2)}</span>
+                            <span>Meta: R${valorMeta.toFixed(2)}</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
 
 
 
@@ -780,7 +822,38 @@
                         Ajude-nos a expandir essa iniciativa.
                     </p>
 
-                    <div className="mb-4">
+                    <div>
+                        <ProgressBar />
+                    </div>
+
+                    <div>
+                        <h3 className="font-bold mb-2 text-center">Apoie com Pix:</h3>
+                        <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
+                            <p className="mb-4 text-center">
+                                Clique no botão abaixo para copiar nossa chave Pix e realizar sua doação:
+                            </p>
+                            <button
+                                className="bg-[#8A5A44] text-white px-6 py-3 rounded-md hover:bg-[#D8A568] flex items-center space-x-2 transition-transform transform hover:scale-105"
+                                onClick={copyToClipboard}
+                            >
+                                <i className="fas fa-copy"></i>
+                                <span>Copiar Chave Pix</span>
+                            </button>
+                        </div>
+
+                        <DataModal
+                            isOpen={showAllDonors}
+                            onClose={() => setShowAllDonors(false)}
+                            title="Apoiadores"
+                            data={allDonors}
+                            columns={[
+                                { header: 'Nome', accessor: 'name' },
+                                { header: 'Valor', accessor: 'amount' },
+                            ]}
+                        />
+                    </div>
+
+                    <div className="mb-4 mt-4">
                         <h3 className="font-bold mb-2">Ranking de doações</h3>
                         {/* Aqui você pode mapear os doadores reais ou fictícios */}
                         <div className="bg-white p-2 rounded-lg flex justify-between items-center mb-2">
@@ -806,41 +879,21 @@
                     </div>
 
                     <div className="mb-4">
-                        <p className="text-center text-sm mb-2">Um projeto crowdfunding</p>
-                        <div className="bg-gray-200 rounded-full h-4 mb-2 relative">
-                            <div className="bg-yellow-400 h-4 rounded-full absolute" style={{ width: '20%' }}></div>
-                            <div className="absolute inset-0 flex justify-between text-xs px-2">
-                                <span>R$660,00</span>
-                                <span>R$25.000,00</span>
+                        <h3 className="font-bold mb-4">Empresas Parceiras</h3>
+                        <div className="grid grid-cols-3 gap-4">
+                            <div className="bg-white p-4 rounded-lg text-center">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPggvEFhQuIqwkCuCsVwhKNaByk_8S1UFKDg&s" alt="Empresa 1" className="mx-auto mb-2 h-16" />
+                                <p className="text-sm text-gray-600">Arabella Couros</p>
+                            </div>
+                            <div className="bg-white p-4 rounded-lg text-center">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfspyXMwfnpbnN4Oxqs-zpg6CfJ5G2hFvGYQ&s" alt="Empresa 2" className="mx-auto mb-2 h-16" />
+                                <p className="text-sm text-gray-600">Kilo e Kilo</p>
+                            </div>
+                            <div className="bg-white p-4 rounded-lg text-center">
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB4eApUVF8NZnGv-X4DU0cLuh3ofSqmTrN9A&s" alt="Empresa 3" className="mx-auto mb-2 h-16" />
+                                <p className="text-sm text-gray-600">Super Benetti</p>
                             </div>
                         </div>
-                    </div>
-
-                    <div>
-                        <h3 className="font-bold mb-2">Apoie com Pix:</h3>
-                        <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
-                            <p className="mb-4 text-center">
-                                Clique no botão abaixo para copiar nossa chave Pix e realizar sua doação:
-                            </p>
-                            <button
-                                className="bg-[#8A5A44] text-white px-6 py-3 rounded-md hover:bg-[#D8A568] flex items-center space-x-2 transition-transform transform hover:scale-105"
-                                onClick={copyToClipboard}
-                            >
-                                <i className="fas fa-copy"></i>
-                                <span>Copiar Chave Pix</span>
-                            </button>
-                        </div>
-
-                        <DataModal
-                            isOpen={showAllDonors}
-                            onClose={() => setShowAllDonors(false)}
-                            title="Apoiadores"
-                            data={allDonors}
-                            columns={[
-                                { header: 'Nome', accessor: 'name' },
-                                { header: 'Valor', accessor: 'amount' },
-                            ]}
-                        />
                     </div>
 
                 </div>
@@ -1378,401 +1431,436 @@
 
 
         // Componente de Conteúdo da História
-const HistoriaContent = ({
-    currentHistory,
-    historiasDaRua,
-    currentIndex,
-    setCurrentIndex,
-    setCurrentHistory,
-    showAllStories,
-    setShowAllStories,
-    selectedRuaId
-}) => {
-    const { useState, useEffect, useRef } = React;
+        const HistoriaContent = ({
+            currentHistory,
+            historiasDaRua,
+            currentIndex,
+            setCurrentIndex,
+            setCurrentHistory,
+            showAllStories,
+            setShowAllStories,
+            selectedRuaId
+        }) => {
+            const { useState, useEffect, useRef } = React;
 
-    // Estados para descrição da rua, modal de imagem, zoom e tradução
-    const [showRuaDescription, setShowRuaDescription] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [currentZoom, setCurrentZoom] = useState(1);
-    const [translateX, setTranslateX] = useState(0);
-    const [translateY, setTranslateY] = useState(0);
+            // Estados para descrição da rua, modal de imagem, zoom e tradução
+            const [showRuaDescription, setShowRuaDescription] = useState(false);
+            const [isModalOpen, setIsModalOpen] = useState(false);
+            const [selectedImage, setSelectedImage] = useState(null);
+            const [currentZoom, setCurrentZoom] = useState(1);
+            const [translateX, setTranslateX] = useState(0);
+            const [translateY, setTranslateY] = useState(0);
 
-    // Refs para gerenciar o estado de arrasto
-    const isDraggingRef = useRef(false);
-    const startXRef = useRef(0);
-    const startYRef = useRef(0);
-    const initialTranslateXRef = useRef(0);
-    const initialTranslateYRef = useRef(0);
+            // Refs para gerenciar o estado de arrasto
+            const isDraggingRef = useRef(false);
+            const startXRef = useRef(0);
+            const startYRef = useRef(0);
+            const initialTranslateXRef = useRef(0);
+            const initialTranslateYRef = useRef(0);
 
-    const modalImageRef = useRef(null);
+            const modalImageRef = useRef(null);
 
-    const history = useHistory();
+            const history = useHistory();
 
-    const rua = ruas.find(r => r.id === selectedRuaId) || {};
+            const rua = ruas.find(r => r.id === selectedRuaId) || {};
 
-    const handlePrev = () => {
-        if (currentIndex > 0) {
-            const newIndex = currentIndex - 1;
-            const newHistory = historiasDaRua[newIndex];
-            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
-            setCurrentHistory(newHistory);
-            setCurrentIndex(newIndex);
-        }
-    };
+            const handlePrev = () => {
+                if (currentIndex > 0) {
+                    const newIndex = currentIndex - 1;
+                    const newHistory = historiasDaRua[newIndex];
+                    history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+                    setCurrentHistory(newHistory);
+                    setCurrentIndex(newIndex);
+                }
+            };
 
-    const handleNext = () => {
-        if (currentIndex < historiasDaRua.length - 1) {
-            const newIndex = currentIndex + 1;
-            const newHistory = historiasDaRua[newIndex];
-            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
-            setCurrentHistory(newHistory);
-            setCurrentIndex(newIndex);
-        }
-    };
+            const handleNext = () => {
+                if (currentIndex < historiasDaRua.length - 1) {
+                    const newIndex = currentIndex + 1;
+                    const newHistory = historiasDaRua[newIndex];
+                    history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+                    setCurrentHistory(newHistory);
+                    setCurrentIndex(newIndex);
+                }
+            };
 
-    const handleRangeChange = (event) => {
-        const newIndex = parseInt(event.target.value);
-        if (newIndex >= 0 && newIndex < historiasDaRua.length) {
-            const newHistory = historiasDaRua[newIndex];
-            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
-            setCurrentHistory(newHistory);
-            setCurrentIndex(newIndex);
-        }
-    };
+            const handleRangeChange = (event) => {
+                const newIndex = parseInt(event.target.value);
+                if (newIndex >= 0 && newIndex < historiasDaRua.length) {
+                    const newHistory = historiasDaRua[newIndex];
+                    history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+                    setCurrentHistory(newHistory);
+                    setCurrentIndex(newIndex);
+                }
+            };
 
-    const openModal = (image) => {
-        setSelectedImage(image);
-        setIsModalOpen(true);
-        setCurrentZoom(1); // Resetar o zoom ao abrir o modal
-        setTranslateX(0);  // Resetar a tradução ao abrir o modal
-        setTranslateY(0);
-    };
+            const openModal = (image) => {
+                setSelectedImage(image);
+                setIsModalOpen(true);
+                setCurrentZoom(1); // Resetar o zoom ao abrir o modal
+                setTranslateX(0);  // Resetar a tradução ao abrir o modal
+                setTranslateY(0);
+            };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setSelectedImage(null);
-        setCurrentZoom(1); // Resetar o zoom ao fechar o modal
-        setTranslateX(0);  // Resetar a tradução ao fechar o modal
-        setTranslateY(0);
-    };
+            const closeModal = () => {
+                setIsModalOpen(false);
+                setSelectedImage(null);
+                setCurrentZoom(1); // Resetar o zoom ao fechar o modal
+                setTranslateX(0);  // Resetar a tradução ao fechar o modal
+                setTranslateY(0);
+            };
 
-    // Fechar modal ao pressionar a tecla Esc
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            if (e.key === 'Escape') {
-                closeModal();
-            }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, []);
+            // Fechar modal ao pressionar a tecla Esc
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (e.key === 'Escape') {
+                        closeModal();
+                    }
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, []);
 
-    // Funções para lidar com arrastar a imagem (Panning) - Desktop
-    const handleMouseDown = (e) => {
-        if (currentZoom <= 1) return; // Não permitir arrastar se não houver zoom
+            // Funções para lidar com arrastar a imagem (Panning) - Desktop
+            const handleMouseDown = (e) => {
+                if (currentZoom <= 1) return; // Não permitir arrastar se não houver zoom
 
-        isDraggingRef.current = true;
-        startXRef.current = e.clientX;
-        startYRef.current = e.clientY;
-        initialTranslateXRef.current = translateX;
-        initialTranslateYRef.current = translateY;
+                isDraggingRef.current = true;
+                startXRef.current = e.clientX;
+                startYRef.current = e.clientY;
+                initialTranslateXRef.current = translateX;
+                initialTranslateYRef.current = translateY;
 
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseup', handleMouseUp);
-    };
+                window.addEventListener('mousemove', handleMouseMove);
+                window.addEventListener('mouseup', handleMouseUp);
+            };
 
-    const handleMouseMove = (e) => {
-        if (!isDraggingRef.current) return;
+            const handleMouseMove = (e) => {
+                if (!isDraggingRef.current) return;
 
-        const deltaX = e.clientX - startXRef.current;
-        const deltaY = e.clientY - startYRef.current;
+                const deltaX = e.clientX - startXRef.current;
+                const deltaY = e.clientY - startYRef.current;
 
-        setTranslateX(initialTranslateXRef.current + deltaX);
-        setTranslateY(initialTranslateYRef.current + deltaY);
-    };
+                setTranslateX(initialTranslateXRef.current + deltaX);
+                setTranslateY(initialTranslateYRef.current + deltaY);
+            };
 
-    const handleMouseUp = () => {
-        isDraggingRef.current = false;
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('mouseup', handleMouseUp);
-    };
+            const handleMouseUp = () => {
+                isDraggingRef.current = false;
+                window.removeEventListener('mousemove', handleMouseMove);
+                window.removeEventListener('mouseup', handleMouseUp);
+            };
 
-    // Funções para lidar com arrastar a imagem (Panning) - Mobile
-    const handleTouchStartPan = (e) => {
-        if (currentZoom <= 1 || e.touches.length !== 1) return;
+            // Funções para lidar com arrastar a imagem (Panning) - Mobile
+            const handleTouchStartPan = (e) => {
+                if (currentZoom <= 1 || e.touches.length !== 1) return;
 
-        isDraggingRef.current = true;
-        startXRef.current = e.touches[0].clientX;
-        startYRef.current = e.touches[0].clientY;
-        initialTranslateXRef.current = translateX;
-        initialTranslateYRef.current = translateY;
+                isDraggingRef.current = true;
+                startXRef.current = e.touches[0].clientX;
+                startYRef.current = e.touches[0].clientY;
+                initialTranslateXRef.current = translateX;
+                initialTranslateYRef.current = translateY;
 
-        window.addEventListener('touchmove', handleTouchMovePan);
-        window.addEventListener('touchend', handleTouchEndPan);
-    };
+                window.addEventListener('touchmove', handleTouchMovePan);
+                window.addEventListener('touchend', handleTouchEndPan);
+            };
 
-    const handleTouchMovePan = (e) => {
-        if (!isDraggingRef.current || e.touches.length !== 1) return;
+            const handleTouchMovePan = (e) => {
+                if (!isDraggingRef.current || e.touches.length !== 1) return;
 
-        const deltaX = e.touches[0].clientX - startXRef.current;
-        const deltaY = e.touches[0].clientY - startYRef.current;
+                const deltaX = e.touches[0].clientX - startXRef.current;
+                const deltaY = e.touches[0].clientY - startYRef.current;
 
-        setTranslateX(initialTranslateXRef.current + deltaX);
-        setTranslateY(initialTranslateYRef.current + deltaY);
-    };
+                setTranslateX(initialTranslateXRef.current + deltaX);
+                setTranslateY(initialTranslateYRef.current + deltaY);
+            };
 
-    const handleTouchEndPan = () => {
-        isDraggingRef.current = false;
-        window.removeEventListener('touchmove', handleTouchMovePan);
-        window.removeEventListener('touchend', handleTouchEndPan);
-    };
+            const handleTouchEndPan = () => {
+                isDraggingRef.current = false;
+                window.removeEventListener('touchmove', handleTouchMovePan);
+                window.removeEventListener('touchend', handleTouchEndPan);
+            };
 
-    if (!currentHistory) {
-        return (
-            <div className="w-full py-4">
-                <h2 className="text-xl font-bold">Nenhuma história disponível para esta rua.</h2>
-            </div>
-        );
-    }
-
-    return (
-        <div className="main-content w-full flex flex-col items-center flex-grow overflow-y-auto">
-            <div className="w-full lg:py-4 flex justify-between items-center">
-                <button
-                    onClick={() => history.push('/')}
-                    className="flex items-center text-sm text-blue-600 mr-4"
-                    aria-label="Abrir Mapa"
-                >
-                    <i className="fas fa-map"></i>
-                    <span className="ml-1">Mapa</span>
-                </button>
-
-                <h2 className="text-sm font-medium">{rua.cidade_id}</h2>
-                <button
-                    onClick={() => setShowRuaDescription(!showRuaDescription)}
-                    className="flex items-center text-sm text-blue-600"
-                >
-                    Sobre a rua
-                    <i className={`ml-1 fas fa-chevron-${showRuaDescription ? 'up' : 'down'}`}></i>
-                </button>
-            </div>
-            {/* Descrição da Rua */}
-            {showRuaDescription && (
-                <div className="w-full py-2 lg:py-4">
-                    <div className="border border-black p-3 rounded-md max-h-32 overflow-y-scroll bg-[#f5f1e8]">
-                        <p className="text-sm">{rua.descricao}</p>
+            if (!currentHistory) {
+                return (
+                    <div className="w-full py-4">
+                        <h2 className="text-xl font-bold">Nenhuma história disponível para esta rua.</h2>
                     </div>
-                </div>
-            )}
+                );
+            }
 
-            {/* Mostrar todas as histórias em lista vertical */}
-            {showAllStories ? (
-                <div className="w-full py-2 md:py-4">
-                    {historiasDaRua.map((historia, index) => (
-                        <div key={historia.id} className="w-full mb-4 bg-white p-4 rounded-lg shadow-md">
-                            <h3 className="text-xl font-bold">{historia.titulo}</h3>
-                            <p className="text-sm text-gray-600">Por: {historia.criador}</p>
-                            <p className="text-sm text-gray-600">Ano: {historia.ano}</p>
-                            {historia.fotos && historia.fotos.length > 0 && (
-                                <div className="mt-2 grid grid-cols-2 gap-2">
-                                    {historia.fotos.map((foto, fotoIndex) => (
+            return (
+                <div className="main-content w-full flex flex-col items-center flex-grow overflow-y-auto">
+                    <div className="w-full lg:py-4 flex justify-between items-center">
+                        <button
+                            onClick={() => history.push('/')}
+                            className="flex items-center text-sm text-blue-600 mr-4"
+                            aria-label="Abrir Mapa"
+                        >
+                            <i className="fas fa-map"></i>
+                            <span className="ml-1">Mapa</span>
+                        </button>
+
+                        <h2 className="text-sm font-medium">{rua.cidade_id}</h2>
+                        <button
+                            onClick={() => setShowRuaDescription(!showRuaDescription)}
+                            className="flex items-center text-sm text-blue-600"
+                        >
+                            Sobre a rua
+                            <i className={`ml-1 fas fa-chevron-${showRuaDescription ? 'up' : 'down'}`}></i>
+                        </button>
+                    </div>
+                    {/* Descrição da Rua */}
+                    {showRuaDescription && (
+                        <div className="w-full py-2 lg:py-4">
+                            <div className="border border-black p-3 rounded-md max-h-32 overflow-y-scroll bg-[#f5f1e8]">
+                                <p className="text-sm">{rua.descricao}</p>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Mostrar todas as histórias em lista vertical */}
+                    {showAllStories ? (
+                        <div className="w-full py-2 md:py-4">
+                            {historiasDaRua.map((historia, index) => (
+                                <div key={historia.id} className="w-full mb-4 bg-white p-4 rounded-lg shadow-md">
+                                    <h3 className="text-xl font-bold">{historia.titulo}</h3>
+                                    <p className="text-sm text-gray-600">Por: {historia.criador}</p>
+                                    <p className="text-sm text-gray-600">Ano: {historia.ano}</p>
+                                    {historia.fotos && historia.fotos.length > 0 && (
+                                        <div className="mt-2 grid grid-cols-2 gap-2">
+                                            {historia.fotos.map((foto, fotoIndex) => (
+                                                <img
+                                                    key={fotoIndex}
+                                                    src={foto}
+                                                    alt={`Foto de ${historia.titulo} ${fotoIndex + 1}`}
+                                                    className="w-full h-32 object-cover rounded-md cursor-pointer"
+                                                    onClick={() => openModal(foto)}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                    <div className="mt-2 max-h-40 overflow-y-scroll">
+                                        <p>{historia.descricao}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <>
+                            {/* Conteúdo da História Atual */}
+                            <div className="w-full py-2 md:py-4">
+                                {/* Caixa com altura ajustada e cabeçalho fixo */}
+                                <div className="border border-black px-2 rounded-md max-h-60 overflow-y-scroll bg-[#f5f1e8]">
+                                    {/* Cabeçalho fixo com título, criador, ano e link para Google Maps */}
+                                    <div className="sticky top-0 bg-[#f5f1e8] pb-2">
+                                        <h3 className="text-xl pt-2 md:text-2xl font-bold mb-1">{currentHistory.titulo}</h3>
+                                        <div className="flex justify-between items-center text-sm text-gray-600">
+                                            <span>Por: {currentHistory.criador}</span>
+                                            <span>Ano: {currentHistory.ano}</span>
+                                            {/* Verificação se há coordenadas e criação do link para o Google Maps */}
+                                            {currentHistory.coordenadas && currentHistory.coordenadas.length === 2 && (
+                                                <a
+                                                    href={`https://www.google.com/maps?q=${currentHistory.coordenadas[0]},${currentHistory.coordenadas[1]}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-600 hover:underline"
+                                                >
+                                                    Ver no Maps
+                                                </a>
+                                            )}
+                                        </div>
+                                    </div>
+                                    {/* Descrição da história */}
+                                    <p>{currentHistory.descricao}</p>
+                                </div>
+                            </div>
+
+                            {/* Carousel de fotos */}
+                            <div className="w-full border-b border-black py-4 md:py-8 text-center">
+                                <div className="carousel grid grid-cols-1 gap-2">
+                                    {currentHistory.fotos && currentHistory.fotos.map((image, index) => (
                                         <img
-                                            key={fotoIndex}
-                                            src={foto}
-                                            alt={`Foto de ${historia.titulo} ${fotoIndex + 1}`}
-                                            className="w-full h-32 object-cover rounded-md cursor-pointer"
-                                            onClick={() => openModal(foto)}
+                                            key={index}
+                                            src={image}
+                                            alt={`Foto de ${currentHistory.ano} ${index + 1}`}
+                                            className="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer"
+                                            onClick={() => openModal(image)}
                                         />
                                     ))}
                                 </div>
-                            )}
-                            <div className="mt-2 max-h-40 overflow-y-scroll">
-                                <p>{historia.descricao}</p>
+                            </div>
+                        </>
+                    )}
+
+                    {/* Modal de imagem em tela cheia com zoom e panning */}
+                    {isModalOpen && selectedImage && (
+                        <div
+                            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
+                            onClick={closeModal}
+                        >
+                            <img
+                                ref={modalImageRef}
+                                src={selectedImage}
+                                alt="Imagem ampliada"
+                                className="max-w-[90%] max-h-[90%] object-contain cursor-grab"
+                                style={{
+                                    transform: `scale(${currentZoom}) translate(${translateX}px, ${translateY}px)`,
+                                    transition: 'transform 0.3s ease',
+                                    cursor: currentZoom > 1 ? 'grab' : 'default'
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                                onMouseDown={handleMouseDown}
+                                onTouchStartPan={handleTouchStartPan} // Custom handler para panning em touch
+                                draggable="false"
+                            />
+                            {/* Botão de fechar com destaque */}
+                            <button
+                                className="absolute top-4 right-4 text-white text-2xl bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 focus:outline-none"
+                                onClick={closeModal}
+                                aria-label="Fechar modal"
+                            >
+                                &times;
+                            </button>
+                            {/* Botões de zoom */}
+                            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
+                                <button
+                                    className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCurrentZoom(prevZoom => Math.min(prevZoom + 0.2, 3));
+                                    }}
+                                    aria-label="Aumentar zoom"
+                                >
+                                    <i className="fas fa-search-plus"></i>
+                                </button>
+                                <button
+                                    className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCurrentZoom(prevZoom => Math.max(prevZoom - 0.2, 1));
+                                    }}
+                                    aria-label="Diminuir zoom"
+                                >
+                                    <i className="fas fa-search-minus"></i>
+                                </button>
                             </div>
                         </div>
-                    ))}
-                </div>
-            ) : (
-                <>
-                    {/* Conteúdo da História Atual */}
-                    <div className="w-full py-2 md:py-4">
-                        {/* Caixa com altura ajustada e cabeçalho fixo */}
-                        <div className="border border-black px-2 rounded-md max-h-60 overflow-y-scroll bg-[#f5f1e8]">
-                            {/* Cabeçalho fixo com título, criador, ano e link para Google Maps */}
-                            <div className="sticky top-0 bg-[#f5f1e8] pb-2">
-                                <h3 className="text-xl pt-2 md:text-2xl font-bold mb-1">{currentHistory.titulo}</h3>
-                                <div className="flex justify-between items-center text-sm text-gray-600">
-                                    <span>Por: {currentHistory.criador}</span>
-                                    <span>Ano: {currentHistory.ano}</span>
-                                    {/* Verificação se há coordenadas e criação do link para o Google Maps */}
-                                    {currentHistory.coordenadas && currentHistory.coordenadas.length === 2 && (
-                                        <a
-                                            href={`https://www.google.com/maps?q=${currentHistory.coordenadas[0]},${currentHistory.coordenadas[1]}`}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 hover:underline"
+                    )}
+
+                    {/* Renderização Condicional da Parte Inferior */}
+                    {showAllStories ? (
+                        // Botão "Ver Histórias" fixado quando showAllStories está ativo
+                        <div className="w-full fixed bottom-0 left-0 py-2 m-0">
+                            <div className="w-full lg:py-8 flex justify-center">
+                                <button
+                                    onClick={() => setShowAllStories(false)}
+                                    className="w-[90%] bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
+                                >
+                                    Ver Linha do Tempo
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        // Controles de Navegação fixados quando showAllStories está inativo
+                        <div className="w-full fixed bottom-0 left-0 m-0">
+                            <div className="w-full lg:py-4">
+                                <div className="border border-black p-2 mb-2 sm:mb-0 lg:mb-8 rounded-md bg-[#f5f1e8]">
+                                    {/* Ano Centralizado Acima */}
+                                    <p className="text-center text-lg font-bold -mb-4">
+                                        Ano <strong>{currentHistory.ano}</strong>
+                                    </p>
+
+                                    <div className="flex items-center space-x-4 justify-center">
+                                        <button
+                                            onClick={handlePrev}
+                                            className="p-2 bg-[#8A5A44] text-white rounded-full hover:bg-[#D8A568] focus:outline-none"
+                                            disabled={currentIndex === 0}
+                                            aria-label="História Anterior"
                                         >
-                                            Ver no Maps
-                                        </a>
-                                    )}
+                                            <i className="fas fa-chevron-left"></i>
+                                        </button>
+
+                                        {/* Input Range com Largura Ajustada */}
+                                        <input
+                                            type="range"
+                                            min={0}
+                                            max={historiasDaRua.length - 1}
+                                            value={currentIndex}
+                                            onChange={handleRangeChange}
+                                            className="w-1/2"
+                                            step="1"
+                                            aria-label="Selecionar história"
+                                        />
+
+                                        <button
+                                            onClick={handleNext}
+                                            className="p-2 bg-[#8A5A44] text-white rounded-full hover:bg-[#D8A568] focus:outline-none"
+                                            disabled={currentIndex === historiasDaRua.length - 1}
+                                            aria-label="Próxima História"
+                                        >
+                                            <i className="fas fa-chevron-right"></i>
+                                        </button>
+                                    </div>
+
+                                    {/* Texto de 'história X de Y' Centralizado Abaixo */}
+                                    <p className="text-center text-sm -mt-2">
+                                        História {currentIndex + 1} de {historiasDaRua.length}
+                                    </p>
                                 </div>
                             </div>
-                            {/* Descrição da história */}
-                            <p>{currentHistory.descricao}</p>
                         </div>
-                    </div>
+                    )}
 
-                    {/* Carousel de fotos */}
-                    <div className="w-full border-b border-black py-4 md:py-8 text-center">
-                        <div className="carousel grid grid-cols-1 gap-2">
-                            {currentHistory.fotos && currentHistory.fotos.map((image, index) => (
-                                <img
-                                    key={index}
-                                    src={image}
-                                    alt={`Foto de ${currentHistory.ano} ${index + 1}`}
-                                    className="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer"
-                                    onClick={() => openModal(image)}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </>
-            )}
 
-            {/* Modal de imagem em tela cheia com zoom e panning */}
-            {isModalOpen && selectedImage && (
-                <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
-                    onClick={closeModal}
-                >
-                    <img
-                        ref={modalImageRef}
-                        src={selectedImage}
-                        alt="Imagem ampliada"
-                        className="max-w-[90%] max-h-[90%] object-contain cursor-grab"
-                        style={{
-                            transform: `scale(${currentZoom}) translate(${translateX}px, ${translateY}px)`,
-                            transition: 'transform 0.3s ease',
-                            cursor: currentZoom > 1 ? 'grab' : 'default'
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                        onMouseDown={handleMouseDown}
-                        onTouchStartPan={handleTouchStartPan} // Custom handler para panning em touch
-                        draggable="false"
-                    />
-                    {/* Botão de fechar com destaque */}
-                    <button
-                        className="absolute top-4 right-4 text-white text-2xl bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 focus:outline-none"
-                        onClick={closeModal}
-                        aria-label="Fechar modal"
-                    >
-                        &times;
-                    </button>
-                    {/* Botões de zoom */}
-                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
-                        <button
-                            className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setCurrentZoom(prevZoom => Math.min(prevZoom + 0.2, 3));
-                            }}
-                            aria-label="Aumentar zoom"
-                        >
-                            <i className="fas fa-search-plus"></i>
-                        </button>
-                        <button
-                            className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setCurrentZoom(prevZoom => Math.max(prevZoom - 0.2, 1));
-                            }}
-                            aria-label="Diminuir zoom"
-                        >
-                            <i className="fas fa-search-minus"></i>
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {/* Renderização Condicional da Parte Inferior */}
-            {showAllStories ? (
-                // Botão "Ver Histórias" fixado quando showAllStories está ativo
-                <div className="w-full fixed bottom-0 left-0 py-2 m-0">
-                    <div className="w-full lg:py-8 flex justify-center">
-                        <button
-                            onClick={() => setShowAllStories(false)}
-                            className="w-[90%] bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
-                        >
-                            Ver Linha do Tempo
-                        </button>
-                    </div>
-                </div>
-            ) : (
-                // Controles de Navegação fixados quando showAllStories está inativo
-                <div className="w-full fixed bottom-0 left-0 m-0">
-                    <div className="w-full lg:py-4">
-                        <div className="border border-black p-2 mb-2 sm:mb-0 lg:mb-8 rounded-md bg-[#f5f1e8]">
-                            {/* Ano Centralizado Acima */}
-                            <p className="text-center text-lg font-bold -mb-4">
-                                Ano <strong>{currentHistory.ano}</strong>
-                            </p>
-
-                            <div className="flex items-center space-x-4 justify-center">
-                                <button
-                                    onClick={handlePrev}
-                                    className="p-2 bg-[#8A5A44] text-white rounded-full hover:bg-[#D8A568] focus:outline-none"
-                                    disabled={currentIndex === 0}
-                                    aria-label="História Anterior"
-                                >
-                                    <i className="fas fa-chevron-left"></i>
-                                </button>
-
-                                {/* Input Range com Largura Ajustada */}
-                                <input
-                                    type="range"
-                                    min={0}
-                                    max={historiasDaRua.length - 1}
-                                    value={currentIndex}
-                                    onChange={handleRangeChange}
-                                    className="w-1/2"
-                                    step="1"
-                                    aria-label="Selecionar história"
-                                />
-
-                                <button
-                                    onClick={handleNext}
-                                    className="p-2 bg-[#8A5A44] text-white rounded-full hover:bg-[#D8A568] focus:outline-none"
-                                    disabled={currentIndex === historiasDaRua.length - 1}
-                                    aria-label="Próxima História"
-                                >
-                                    <i className="fas fa-chevron-right"></i>
-                                </button>
+                    {/* Carrossel de Locais Recomendados */}
+                    <div className="w-full py-4">
+                        <h3 className="text-xl p-2 md:text-2xl font-bold">Locais Recomendados</h3>
+                        <div className="w-full overflow-x-auto">
+                            <div className="flex space-x-4 px-4">
+                                {negocios.map((negocio, index) => (
+                                    <div key={index} className="min-w-[200px] bg-white p-2 rounded-lg shadow cursor-pointer flex-shrink-0 hover:shadow-lg transition-shadow duration-300">
+                                        <img
+                                            src={negocio.foto || 'https://placehold.co/250x150'}
+                                            alt={negocio.titulo}
+                                            className="w-full h-32 object-cover rounded-lg mb-2"
+                                        />
+                                        <h4 className="font-semibold mb-1">{negocio.titulo}</h4>
+                                        <p className="text-sm text-gray-600 mb-2 flex items-center justify-between">
+                                            {negocio.segmento}
+                                            <a
+                                                href={negocio.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-600 hover:text-blue-800 flex items-center ml-auto"
+                                            >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2c4.418 0 8 3.582 8 8 0 3.255-1.938 6.062-4.707 7.456L12 22l-3.293-4.544C6.938 16.062 5 13.255 5 10c0-4.418 3.582-8 8-8z" />
+                                                </svg>
+                                                Ver no Google
+                                            </a>
+                                        </p>
+                                    </div>
+                                ))}
                             </div>
-
-                            {/* Texto de 'história X de Y' Centralizado Abaixo */}
-                            <p className="text-center text-sm -mt-2">
-                                História {currentIndex + 1} de {historiasDaRua.length}
-                            </p>
                         </div>
                     </div>
-                </div>
-            )}
 
-            {/* Botão para alternar entre "Ver Histórias" e "Tudo desta rua" */}
-            {!showAllStories && (
-                <div className="w-full py-2 md:py-4 mb-12 lg:mb-20">
-                    <button
-                        onClick={() => setShowAllStories(true)}
-                        className="w-full bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
-                    >
-                        Tudo desta rua
-                    </button>
+
+                    {/* Botão para alternar entre "Ver Histórias" e "Tudo desta rua" */}
+                    {!showAllStories && (
+                        <div className="w-full py-2 md:py-4 mb-12 lg:mb-20">
+                            <button
+                                onClick={() => setShowAllStories(true)}
+                                className="w-full bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
+                            >
+                                Todas Histórias desta rua
+                            </button>
+                        </div>
+                    )}
                 </div>
-            )}
-        </div>
-    );
-};
+            );
+        };
         // Componente Legado Africano (Atualizado)
         const LegadoAfricano = () => {
             useEffect(() => {
