@@ -7,6 +7,13 @@ const negocios = [
       link: 'https://maps.app.goo.gl/XQ7CqDv14SgjExTa9'
   },
   {
+    id: 6,
+    titulo: 'Museu do trem',
+    segmento: 'Museu',
+    foto: 'https://static.wixstatic.com/media/4f54af_970a18bb978348bf9060d6486e4580b7~mv2.jpg/v1/fill/w_980,h_653,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/4f54af_970a18bb978348bf9060d6486e4580b7~mv2.jpg',
+    link: 'https://maps.app.goo.gl/dPoE7c1UxxQtVYaQA'
+},
+  {
       id: 2,
       titulo: 'Restaurante Kilo e Kilo',
       segmento: 'Restaurante',
@@ -26,6 +33,20 @@ const negocios = [
       segmento: 'Glamping',
       foto: 'https://d28l80gldsbf39.cloudfront.net/br/bushome-gramado-uma-casa-sobre-rodas-hospedagem-onibus1.webp',
       link: 'https://maps.app.goo.gl/q3fWHHpkvfxiiRDp6'
+  },
+  {
+      id: 5,
+      titulo: 'Museu Hugo Daros',
+      segmento: 'Museu',
+      foto: 'https://static.wixstatic.com/media/4f54af_ee23c1a94de844448b9934fe54bfe18d~mv2.jpg/v1/fill/w_980,h_653,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/4f54af_ee23c1a94de844448b9934fe54bfe18d~mv2.jpg',
+      link: 'https://maps.app.goo.gl/HPF9eFBTHpMu7Zj9A'
+  },
+  {
+      id: 7,
+      titulo: 'Cyro Martins Gramado',
+      segmento: 'Biblioteca',
+      foto: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdkOZMgdU950_YayulK_PXUfkq5CrNYIGh9ugWfV-Xn075HKsSGwbofb9JxdcLRnDf6oaKbXQITroeE3p65inGx0M6PgGUZSFGK5CkBFHNTxWw3yumIWiOax-MGRt3ipYqs_pvl1e-4Pz8/s1600/20190502_104307.jpg',
+      link: 'https://maps.app.goo.gl/vQdYLhaYBgrsVoio9'
   }
 ];
 
@@ -104,7 +125,7 @@ const ruas = [
     {'id': 59, 'rua_id': 5, 'criador': 'Mateus Canova', 'fotos': ['https://i.imgur.com/Bx2zwuV.png'], 'titulo': 'A sociedade e um lugar renomado', 'descricao': 'Alguns anos se passaram e a sociedade recreio gramadense se torna um local renomado para festas e eventos', 'ano': 1980, 'coordenadas': [-29.378194109472847, -50.872120310317705]},
     {'id': 60, 'rua_id': 5, 'criador': 'Allan', 'fotos': ['/fotos/historias/1917-vila.jpg'], 'titulo': 'O Crescimento da Vila de Gramado', 'descricao': 'Esta imagem capturada em 1917 oferece uma vista parcial da pequena vila de Gramado, que começava a se expandir. A fotografia foi tirada do Morro do Tristão, atualmente conhecido como Morro Nelz. Destacam-se, à esquerda, a capela e a casa canônica, além do prédio escuro de Pedro Benetti. À direita, a casa do Dr. Stürmhoeffel, com seus característicos dois ciprestes na frente e um telhado único, diferente da tradicional arquitetura italiana predominante na época. Tudo era construído em madeira, refletindo a simplicidade e os recursos disponíveis no início do desenvolvimento da vila. Ao fundo, pode-se ver a área que pertencia à família Lorenzoni, onde hoje se encontra o Hotel Serrano. Esta imagem marca um momento crucial da história de Gramado, quando a cidade começava a crescer e tomar forma.', 'ano': 1917, 'coordenadas': [-29.37540564786676, -50.87318208771154]},
     {'id': 61, 'rua_id': 1, 'criador': 'Allan', 'fotos': ['/fotos/historias/1918-borges.jpg'], 'titulo': 'A Simplicidade da Avenida Borges de Medeiros', 'descricao': 'Em 1918, a cidade de Gramado ainda exalava a simplicidade de uma vila em crescimento. Esta imagem histórica, capturada na Avenida Borges de Medeiros, retrata as ruas de terra e as modestas construções de madeira que abrigavam os estabelecimentos locais. À direita, destaca-se a "Casa Prinz", uma das lojas tradicionais da época, já movimentada com cavalos amarrados em frente, revelando o cotidiano dos moradores e comerciantes. Ao longo da avenida, o crescimento e a urbanização eram visíveis, mas o ambiente tranquilo da pequena cidade interiorana ainda prevalecia. Essa cena encapsula um momento crucial na formação da identidade de Gramado, com suas ruas ainda em desenvolvimento e o comércio local em expansão.', 'ano': 1918, 'coordenadas': [-29.380643379872694, -50.87225981497985]},
-    {'id': 62, 'rua_id': 1, 'criador': 'Allan', 'fotos': ['/fotos/historias/1917-igreja.jpg', '/fotos/historias/1917-igreja2'], 'titulo': 'O Encontro Dominical em Frente à Igreja de Gramado', 'descricao': 'Em 1917, a cidade de Gramado era palco de encontros comunitários aos domingos pela manhã. Nesta foto histórica, uma multidão de moradores se reúne em frente à antiga igreja da cidade, no centro de Gramado. A simplicidade da arquitetura, toda em madeira, reflete a humildade e o caráter acolhedor da comunidade local. Ao lado da igreja, pode-se ver o prédio que abrigava o "Tiro de Guerra", uma instituição importante para a formação dos jovens da época. Esses encontros dominicais reforçavam os laços sociais e religiosos em uma vila que ainda estava em seus primeiros estágios de desenvolvimento. A foto captura o espírito comunitário e religioso que moldou Gramado nos primórdios de sua história.', 'ano': 1917, 'coordenadas': [-29.379273826997135, -50.87385145235514]},
+    {'id': 62, 'rua_id': 1, 'criador': 'Allan', 'fotos': ['/fotos/historias/1917-igreja.jpg'], 'titulo': 'O Encontro Dominical em Frente à Igreja de Gramado', 'descricao': 'Em 1917, a cidade de Gramado era palco de encontros comunitários aos domingos pela manhã. Nesta foto histórica, uma multidão de moradores se reúne em frente à antiga igreja da cidade, no centro de Gramado. A simplicidade da arquitetura, toda em madeira, reflete a humildade e o caráter acolhedor da comunidade local. Ao lado da igreja, pode-se ver o prédio que abrigava o "Tiro de Guerra", uma instituição importante para a formação dos jovens da época. Esses encontros dominicais reforçavam os laços sociais e religiosos em uma vila que ainda estava em seus primeiros estágios de desenvolvimento. A foto captura o espírito comunitário e religioso que moldou Gramado nos primórdios de sua história.', 'ano': 1917, 'coordenadas': [-29.379273826997135, -50.87385145235514]},
     {'id': 63, 'rua_id': 5, 'criador': 'Allan', 'fotos': ['/fotos/historias/tiro-guerra.jpg', '/fotos/historias/tiro-guerra-gramado.jpg'], 'titulo': 'A Primeira Turma do Tiro de Guerra de Gramado', 'descricao': 'Em 1918, a cidade de Gramado formava a sua primeira turma do Tiro de Guerra, uma instituição militar que treinava jovens para o serviço de defesa local. A fotografia histórica, tirada em frente à casa do Tiro de Guerra, mostra o Major Nicoletti, subintendente da época, cercado pelos recrutas e membros da comunidade. Este edifício, localizado na esquina das ruas Garibaldi e Madre Verônica, foi um marco na formação dos jovens gramadenses, contribuindo para o fortalecimento do civismo e da ordem na região. A imagem também revela o orgulho da população local, com suas roupas formais, chapéus e expressões de seriedade, refletindo a importância dessa ocasião para a vila.', 'ano': 1918, 'coordenadas': [-29.377922445614313, -50.8723608490952]},
     {'id': 64, 'rua_id': 1, 'criador': 'Allan', 'fotos': ['/fotos/historias/comissio.jpg'], 'titulo': 'O Comício do Partido Libertador em Gramado', 'descricao': 'Esta fotografia, datada entre 1920 e 1925, registra um comício do extinto Partido Libertador, realizado na Avenida Borges de Medeiros, em Gramado. Na imagem, é possível ver uma grande cavalgada de participantes e apoiadores, todos com lenços vermelhos no pescoço, um símbolo característico do partido na época. As ruas de terra e as construções de madeira refletem o início do desenvolvimento urbano de Gramado. Este evento político mostra como as pequenas cidades do interior também estavam conectadas aos movimentos políticos nacionais, e como a população participava ativamente, demonstrando o seu engajamento cívico. Essa fotografia não apenas captura um momento específico da história política de Gramado, mas também a atmosfera comunitária que cercava os acontecimentos públicos.', 'ano': 1920, 'coordenadas': [-29.3794100079194, -50.87330572423264]},
     {'id': 65, 'rua_id': 1, 'criador': 'Allan', 'fotos': ['/fotos/historias/desfile-1920.jpg'], 'titulo': 'Parada Cívica de 7 de Setembro em Gramado', 'descricao': 'Esta fotografia, tirada no dia 7 de setembro de 1920, registra a concentração de crianças e soldados do Tiro de Guerra em frente à Igreja São Pedro, em Gramado, após uma parada cívica em comemoração ao Dia da Independência. À direita, em terno escuro, estão Oscar Fisch e Rodolfo Schlieper, personalidades influentes da época. A icônica Igreja São Pedro, em madeira, domina a cena, com a casa do padre ("canônica") ao lado direito e, à esquerda, a pensão dos Manéias, tradicional estabelecimento local. O evento cívico, uma demonstração de patriotismo e união, envolvia toda a comunidade, simbolizando o espírito de coesão e respeito às tradições nacionais que marcou a história de Gramado nos anos iniciais de seu desenvolvimento.', 'ano': 1920, 'coordenadas': [-29.379418493973965, -50.87390644132891]},

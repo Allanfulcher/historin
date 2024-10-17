@@ -1600,11 +1600,9 @@
                             <i className="fas fa-map"></i>
                             <span className="ml-1">Mapa</span>
                         </button>
-
-                        <h2 className="text-sm font-medium">{rua.cidade_id}</h2>
                         <button
                             onClick={() => setShowRuaDescription(!showRuaDescription)}
-                            className="flex items-center text-sm text-blue-600"
+                            className="flex items-center text-blue-600"
                         >
                             Sobre a rua
                             <i className={`ml-1 fas fa-chevron-${showRuaDescription ? 'up' : 'down'}`}></i>
@@ -1614,7 +1612,7 @@
                     {showRuaDescription && (
                         <div className="w-full py-2 lg:py-4">
                             <div className="border border-black p-3 rounded-md max-h-32 overflow-y-scroll bg-[#f5f1e8]">
-                                <p className="text-sm">{rua.descricao}</p>
+                                <p>{rua.descricao}</p>
                             </div>
                         </div>
                     )}
@@ -1814,12 +1812,12 @@
 
 
                     {/* Carrossel de Locais Recomendados */}
-                    <div className="w-full py-4">
+                    <div className="w-full py-2">
                         <h3 className="text-xl p-2 md:text-2xl font-bold">Locais Recomendados</h3>
                         <div className="w-full overflow-x-auto">
                             <div className="flex space-x-4 px-4">
                                 {negocios.map((negocio, index) => (
-                                    <div key={index} className="min-w-[200px] bg-white p-2 rounded-lg shadow cursor-pointer flex-shrink-0 hover:shadow-lg transition-shadow duration-300">
+                                    <div key={index} className="border border-black min-w-[200px] bg-[#f5f1e8] p-2 rounded-lg shadow cursor-pointer flex-shrink-0 hover:shadow-lg transition-shadow duration-300">
                                         <img
                                             src={negocio.foto || 'https://placehold.co/250x150'}
                                             alt={negocio.titulo}
@@ -1950,7 +1948,7 @@
                     {/* Explicação sobre o Artigo Completo */}
                     <div className="text-justify mb-4">
                         <p>
-                            O artigo "A Inexistência dos Negros na História de Gramado" de Alex Juarez Müller e Raimundo Nonato Wanderley de Souza Cavalcante, publicado na revista "Em Tempo de Histórias", faz um levantamento preliminar sobre a participação dos afro-brasileiros na história de Gramado. Ele destaca a invisibilização histórica dessa população e a ausência de estudos acadêmicos que abordem o tema, buscando recuperar essas memórias essenciais para uma compreensão mais ampla da história local.
+                            O artigo "A Invisibilidade dos Negros na História de Gramado" de Alex Juarez Müller e Raimundo Nonato Wanderley de Souza Cavalcante, publicado na revista "Em Tempo de Histórias", faz um levantamento preliminar sobre a participação dos afro-brasileiros na história de Gramado. Ele destaca a invisibilização histórica dessa população e a ausência de estudos acadêmicos que abordem o tema, buscando recuperar essas memórias essenciais para uma compreensão mais ampla da história local.
                         </p>
                     </div>
 
