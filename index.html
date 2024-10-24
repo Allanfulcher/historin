@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historin - Histórias de Gramado</title>
+    <title>Historin - Entre o tempo e a memória</title>
     <meta name="theme-color" content="#E6D3B4">
     <link rel="icon" href="fotos/historin.ico" />
     <!-- Banco de Dados -->
@@ -1045,7 +1045,7 @@
         // Página Ruas e Histórias (Atualizada com seção "Destaque")
         const RuasEHistorias = () => {
             useEffect(() => {
-                document.title = "Ruas e Histórias de Gramado - Explore o Historin";
+                document.title = "Ruas e Histórias do RS - Explore o Historin";
 
                 // Atualizar a meta descrição
                 let metaDescription = document.querySelector('meta[name="description"]');
@@ -1214,7 +1214,7 @@
 
             useEffect(() => {
                 // Inicializa o mapa apenas uma vez, centrado nas coordenadas fornecidas
-                mapRef.current = L.map('map').setView([-29.379372524074153, -50.87327704684197], 14);
+                mapRef.current = L.map('map').setView([-29.368110031921475, -50.83614840951764], 12);
                 // Adiciona as tiles do OpenStreetMap com a devida atribuição
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '© OpenStreetMap contributors'
@@ -1386,6 +1386,60 @@
             );
         };
 
+        // Componente de Seleção de Cidade com Botão "Voltar ao Mapa"
+const CityCarousel = ({ cidades, handleCityClick, selectedCityId }) => {
+    const carouselRef = useRef(null);
+
+    useEffect(() => {
+        if (carouselRef.current && selectedCityId) {
+            const selectedElement = carouselRef.current.querySelector(`[data-id='${selectedCityId}']`);
+            if (selectedElement) {
+                const carouselWidth = carouselRef.current.offsetWidth;
+                const selectedElementOffset = selectedElement.offsetLeft;
+                const selectedElementWidth = selectedElement.offsetWidth;
+
+                const scrollPosition = selectedElementOffset - (carouselWidth / 2) + (selectedElementWidth / 2);
+                window.requestAnimationFrame(() => {
+                    carouselRef.current.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+                });
+            }
+        }
+    }, [selectedCityId]);
+
+    return (
+        <div className="w-full flex items-center">
+            {/* Botão de Voltar ao Mapa */}
+            <Link
+                to="/"
+                className="flex items-center px-4 py-2 mr-4 bg-gray-300 hover:bg-gray-400 rounded-full cursor-pointer transition-colors"
+                aria-label="Voltar ao Mapa"
+            >
+                <i className="fas fa-arrow-left mr-2"></i>
+                <span>Voltar ao Mapa</span>
+            </Link>
+
+            {/* Carrossel de Cidades */}
+            <div ref={carouselRef} className="overflow-x-auto whitespace-nowrap py-2 flex-grow">
+                <div className="flex space-x-2 inline-flex">
+                    {cidades.map(cidade => (
+                        <span
+                            key={cidade.id}
+                            data-id={cidade.id}
+                            className={`px-4 py-2 rounded-full cursor-pointer whitespace-nowrap 
+                            ${cidade.id === selectedCityId ? 'bg-[#8A5A44] text-white' : 'bg-gray-200'}`}
+                            onClick={() => handleCityClick(cidade)}
+                        >
+                            {cidade.nome}
+                        </span>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
+
 
         // Componente de Seleção de Rua
         const RuaCarousel = ({ ruas, handleRuaClick, selectedRuaId }) => {
@@ -1445,12 +1499,14 @@
 
             // Estados para descrição da rua, modal de imagem, zoom e tradução
             const [showRuaDescription, setShowRuaDescription] = useState(false);
+            const [activeRuaTab, setActiveRuaTab] = useState('descricao'); // Definir 'fotos' como padrão
             const [isModalOpen, setIsModalOpen] = useState(false);
             const [selectedImage, setSelectedImage] = useState(null);
             const [currentZoom, setCurrentZoom] = useState(1);
             const [translateX, setTranslateX] = useState(0);
             const [translateY, setTranslateY] = useState(0);
-
+            const [showLocaisRecomendados, setShowLocaisRecomendados] = useState(true);
+            
             // Refs para gerenciar o estado de arrasto
             const isDraggingRef = useRef(false);
             const startXRef = useRef(0);
@@ -1471,8 +1527,12 @@
                     history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
                     setCurrentHistory(newHistory);
                     setCurrentIndex(newIndex);
+                    setShowRuaDescription(false); // Oculta a descrição da rua
+                    setActiveRuaTab('fotos'); // Resetar a aba para fotos
                 }
             };
+
+
 
             const handleNext = () => {
                 if (currentIndex < historiasDaRua.length - 1) {
@@ -1481,6 +1541,8 @@
                     history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
                     setCurrentHistory(newHistory);
                     setCurrentIndex(newIndex);
+                    setShowRuaDescription(false); // Oculta a descrição da rua
+                    setActiveRuaTab('fotos'); // Resetar a aba para fotos
                 }
             };
 
@@ -1491,6 +1553,8 @@
                     history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
                     setCurrentHistory(newHistory);
                     setCurrentIndex(newIndex);
+                    setShowRuaDescription(false); // Oculta a descrição da rua
+                    setActiveRuaTab('fotos'); // Resetar a aba para fotos
                 }
             };
 
@@ -1591,28 +1655,81 @@
 
             return (
                 <div className="main-content w-full flex flex-col items-center flex-grow overflow-y-auto">
+                    
                     <div className="w-full lg:py-4 flex justify-between items-center">
-                        <button
-                            onClick={() => history.push('/')}
-                            className="flex items-center text-sm text-blue-600 mr-4"
-                            aria-label="Abrir Mapa"
-                        >
-                            <i className="fas fa-map"></i>
-                            <span className="ml-1">Mapa</span>
-                        </button>
-                        <button
-                            onClick={() => setShowRuaDescription(!showRuaDescription)}
-                            className="flex items-center text-blue-600"
-                        >
-                            Sobre a rua
-                            <i className={`ml-1 fas fa-chevron-${showRuaDescription ? 'up' : 'down'}`}></i>
-                        </button>
+                        <div className="flex items-center ">
+                            <h3 className="text-xl font-bold mr-2">{rua.nome}</h3>
+                            <button
+                                onClick={() => setShowRuaDescription(!showRuaDescription)}
+                                className="flex items-center text-blue-600"
+                                aria-expanded={showRuaDescription}
+                                aria-controls="sobreRuaContent"
+                            >
+                                Sobre a rua
+                                <i className={`ml-1 fas fa-chevron-${showRuaDescription ? 'up' : 'down'}`}></i>
+                            </button>
+                        </div>
                     </div>
-                    {/* Descrição da Rua */}
+                    {/* Descrição da Rua com Abas */}
                     {showRuaDescription && (
-                        <div className="w-full py-2 lg:py-4">
-                            <div className="border border-black p-3 rounded-md max-h-32 overflow-y-scroll bg-[#f5f1e8]">
-                                <p>{rua.descricao}</p>
+                        <div className="w-full py-2 lg:py-4" id="sobreRuaContent">
+                            {/* Abas */}
+                            <div className="flex border-b border-gray-300">
+                                <button
+                                    className={`px-4 py-2 -mb-px font-semibold text-sm ${activeRuaTab === 'descricao'
+                                        ? 'border-b-2 border-blue-500 text-blue-500'
+                                        : 'text-gray-600 hover:text-blue-500'
+                                        }`}
+                                    onClick={() => setActiveRuaTab('descricao')}
+                                    aria-label="Mostrar descrição da rua"
+                                >
+                                    Descrição
+                                </button>
+                                <button
+                                    className={`px-4 py-2 -mb-px font-semibold text-sm ${activeRuaTab === 'fotos'
+                                        ? 'border-b-2 border-blue-500 text-blue-500'
+                                        : 'text-gray-600 hover:text-blue-500'
+                                        }`}
+                                    onClick={() => setActiveRuaTab('fotos')}
+                                    aria-label="Mostrar fotos da rua"
+                                >
+                                    Fotos
+                                </button>
+                            </div>
+                            {/* Conteúdo das Abas */}
+                            <div className="mt-4">
+                                {activeRuaTab === 'descricao' && (
+                                    <div className="border border-black p-3 rounded-md max-h-64 overflow-y-scroll bg-[#f5f1e8]">
+                                        <p>{rua.descricao}</p>
+                                    </div>
+                                )}
+                                {activeRuaTab === 'fotos' && (
+                                    <div className="border-b border-black pb-2 mt-2 grid grid-cols-2 gap-2">
+                                        {rua.fotos && rua.fotos.length > 0 ? (
+                                            rua.fotos.map((foto, index) => (
+                                                <img
+                                                    key={index}
+                                                    src={foto}
+                                                    alt={`Foto da rua ${index + 1}`}
+                                                    className="w-full h-auto object-cover rounded-md cursor-pointer"
+                                                    onClick={() => openModal(foto)}
+                                                />
+                                            ))
+                                        ) : (
+                                            <p className="text-gray-600">Nenhuma foto disponível.</p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+                            {/* Botão "Ocultar" centralizado abaixo das abas */}
+                            <div className="flex justify-center mt-4">
+                                <button
+                                    onClick={() => setShowRuaDescription(false)}
+                                    className="text-blue-600 hover:underline"
+                                >
+                                    Ocultar
+                                    <i className={`ml-1 fas fa-chevron-${showRuaDescription ? 'up' : 'down'}`}></i>
+                                </button>
                             </div>
                         </div>
                     )}
@@ -1709,7 +1826,7 @@
                                 }}
                                 onClick={(e) => e.stopPropagation()}
                                 onMouseDown={handleMouseDown}
-                                onTouchStartPan={handleTouchStartPan} // Custom handler para panning em touch
+                                onTouchStart={handleTouchStartPan} // Custom handler para panning em touch
                                 draggable="false"
                             />
                             {/* Botão de fechar com destaque */}
@@ -1810,40 +1927,64 @@
                         </div>
                     )}
 
-
                     {/* Carrossel de Locais Recomendados */}
-                    <div className="w-full py-2">
-                        <h3 className="text-xl p-2 md:text-2xl font-bold">Locais Recomendados</h3>
-                        <div className="w-full overflow-x-auto">
-                            <div className="flex space-x-4 px-4">
-                                {negocios.map((negocio, index) => (
-                                    <div key={index} className="border border-black min-w-[200px] bg-[#f5f1e8] p-2 rounded-lg shadow cursor-pointer flex-shrink-0 hover:shadow-lg transition-shadow duration-300">
-                                        <img
-                                            src={negocio.foto || 'https://placehold.co/250x150'}
-                                            alt={negocio.titulo}
-                                            className="w-full h-32 object-cover rounded-lg mb-2"
-                                        />
-                                        <h4 className="font-semibold mb-1">{negocio.titulo}</h4>
-                                        <p className="text-sm text-gray-600 mb-2 flex items-center justify-between">
-                                            {negocio.segmento}
-                                            <a
-                                                href={negocio.link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-blue-600 hover:text-blue-800 flex items-center ml-auto"
-                                            >
-                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 2c4.418 0 8 3.582 8 8 0 3.255-1.938 6.062-4.707 7.456L12 22l-3.293-4.544C6.938 16.062 5 13.255 5 10c0-4.418 3.582-8 8-8z" />
-                                                </svg>
-                                                Ver no Google
-                                            </a>
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
+                    <div className=" p-2 w-full py-2">
+                        <div className="flex items-center justify-between"> {/* Altere a classe aqui */}
+                            <h3 className="text-xl pb-2 md:text-2xl font-bold">Locais Recomendados</h3>
+                            <button
+                                onClick={() => setShowLocaisRecomendados(!showLocaisRecomendados)}
+                                className="flex items-center text-blue-600"
+                            >
+                                {showLocaisRecomendados ? 'Ocultar' : 'Mostrar'}
+                                <i className={`ml-1 fas fa-chevron-${showLocaisRecomendados ? 'up' : 'down'}`}></i>
+                            </button>
                         </div>
+                        {/* Renderizar condicionalmente o carrossel */}
+                        {showLocaisRecomendados && (
+                            <div className="w-full overflow-x-auto">
+                                <div className="flex space-x-4 px-4">
+                                    {negocios.map((negocio, index) => (
+                                        <div
+                                            key={index}
+                                            className="border border-black min-w-[200px] bg-[#f5f1e8] p-2 rounded-lg shadow cursor-pointer flex-shrink-0 hover:shadow-lg transition-shadow duration-300"
+                                        >
+                                            <img
+                                                src={negocio.foto || 'https://placehold.co/250x150'}
+                                                alt={negocio.titulo}
+                                                className="w-full h-32 object-cover rounded-lg mb-2"
+                                            />
+                                            <h4 className="font-semibold mb-1">{negocio.titulo}</h4>
+                                            <p className="text-sm text-gray-600 mb-2 flex items-center justify-between">
+                                                {negocio.segmento}
+                                                <a
+                                                    href={negocio.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-600 hover:text-blue-800 flex items-center ml-auto"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="h-4 w-4 mr-1"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M12 2c4.418 0 8 3.582 8 8 0 3.255-1.938 6.062-4.707 7.456L12 22l-3.293-4.544C6.938 16.062 5 13.255 5 10c0-4.418 3.582-8 8-8z"
+                                                        />
+                                                    </svg>
+                                                    Ver no Google
+                                                </a>
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
-
 
                     {/* Botão para alternar entre "Ver Histórias" e "Tudo desta rua" */}
                     {!showAllStories && (
@@ -1859,6 +2000,9 @@
                 </div>
             );
         };
+
+
+
         // Componente Legado Africano (Atualizado)
         const LegadoAfricano = () => {
             useEffect(() => {
@@ -2007,114 +2151,93 @@
 
 
         // Componente de Página de Rua e História (Atualizado)
-        const RuaHistoria = () => {
-            const { id, historiaId } = useParams();
-            const history = useHistory();
-            const [currentHistory, setCurrentHistory] = useState(null);
-            const [historiasDaRua, setHistoriasDaRua] = useState([]);
-            const [currentIndex, setCurrentIndex] = useState(0);
-            const [showAllStories, setShowAllStories] = useState(false);
+const RuaHistoria = () => {
+    const { id, historiaId } = useParams();
+    const history = useHistory();
+    const [currentHistory, setCurrentHistory] = useState(null);
+    const [historiasDaRua, setHistoriasDaRua] = useState([]);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [showAllStories, setShowAllStories] = useState(false);
 
-            useEffect(() => {
-                const rua = ruas.find(r => r.id === parseInt(id));
-                if (rua) {
-                    const historiasList = historias
-                        .filter(h => h.rua_id === rua.id)
-                        .sort((a, b) => a.ano - b.ano || a.id - b.id);
-                    setHistoriasDaRua(historiasList);
+    // Novos estados para cidade selecionada e ruas filtradas
+    const [selectedCityId, setSelectedCityId] = useState(null);
+    const [filteredRuas, setFilteredRuas] = useState([]);
 
-                    if (historiaId) {
-                        const historia = historiasList.find(h => h.id === parseInt(historiaId));
-                        if (historia) {
-                            setCurrentHistory(historia);
-                            const index = historiasList.findIndex(h => h.id === historia.id);
-                            setCurrentIndex(index);
-                        } else {
-                            setCurrentHistory(null);
-                        }
-                    } else {
-                        if (historiasList.length > 0) {
-                            const primeiraHistoria = historiasList[0];
-                            setCurrentHistory(primeiraHistoria);
-                            setCurrentIndex(0);
-                            history.replace(`/rua/${id}/historia/${primeiraHistoria.id}`);
-                        } else {
-                            setCurrentHistory(null);
-                        }
-                    }
+    useEffect(() => {
+        const rua = ruas.find(r => r.id === parseInt(id));
+        if (rua) {
+            const historiasList = historias
+                .filter(h => h.rua_id === rua.id)
+                .sort((a, b) => a.ano - b.ano || a.id - b.id);
+            setHistoriasDaRua(historiasList);
+
+            if (historiaId) {
+                const historia = historiasList.find(h => h.id === parseInt(historiaId));
+                if (historia) {
+                    setCurrentHistory(historia);
+                    const index = historiasList.findIndex(h => h.id === historia.id);
+                    setCurrentIndex(index);
+                } else {
+                    setCurrentHistory(null);
                 }
-            }, [id, historiaId, history]);
-
-            useEffect(() => {
-                if (currentHistory) {
-                    // Update the page title
-                    document.title = `${currentHistory.titulo} - Historin`;
-
-                    // Update the meta description
-                    let metaDescription = document.querySelector('meta[name="description"]');
-                    if (metaDescription) {
-                        metaDescription.setAttribute('content', currentHistory.descricao.slice(0, 160));
-                    } else {
-                        metaDescription = document.createElement('meta');
-                        metaDescription.name = "description";
-                        metaDescription.content = currentHistory.descricao.slice(0, 160);
-                        document.head.appendChild(metaDescription);
-                    }
-
-                    // Remove existing JSON-LD script if any
-                    const existingScript = document.getElementById('structured-data');
-                    if (existingScript) {
-                        existingScript.remove();
-                    }
-
-                    // Add JSON-LD structured data
-                    const script = document.createElement('script');
-                    script.type = 'application/ld+json';
-                    script.id = 'structured-data';
-
-                    const structuredData = {
-                        "@context": "https://schema.org",
-                        "@type": "Article",
-                        "headline": currentHistory.titulo,
-                        "description": currentHistory.descricao.slice(0, 160),
-                        "image": currentHistory.fotos,
-                        "author": {
-                            "@type": "Person",
-                            "name": currentHistory.criador
-                        },
-                        "datePublished": currentHistory.ano,
-                        "publisher": {
-                            "@type": "Organization",
-                            "name": "Historin"
-                        }
-                    };
-
-                    script.text = JSON.stringify(structuredData);
-                    document.head.appendChild(script);
+            } else {
+                if (historiasList.length > 0) {
+                    const primeiraHistoria = historiasList[0];
+                    setCurrentHistory(primeiraHistoria);
+                    setCurrentIndex(0);
+                    history.replace(`/rua/${id}/historia/${primeiraHistoria.id}`);
+                } else {
+                    setCurrentHistory(null);
                 }
-            }, [currentHistory]);
+            }
 
+            // Definir a cidade selecionada como a cidade da rua atual
+            setSelectedCityId(rua.cidade_id);
+        }
+    }, [id, historiaId, history]);
 
-            const handleRuaClick = (rua) => {
-                history.push(`/rua/${rua.id}`);
-            };
+    // Filtrar ruas com base na cidade selecionada
+    useEffect(() => {
+        const filtered = selectedCityId ? ruas.filter(r => r.cidade_id === selectedCityId) : ruas;
+        setFilteredRuas(filtered);
+    }, [selectedCityId]);
 
-            return (
-                <main className="w-full lg:w-4/5 flex flex-col items-center flex-grow overflow-y-auto p-2">
-                    <RuaCarousel ruas={ruas} handleRuaClick={handleRuaClick} selectedRuaId={parseInt(id)} />
-                    <HistoriaContent
-                        currentHistory={currentHistory}
-                        historiasDaRua={historiasDaRua}
-                        currentIndex={currentIndex}
-                        setCurrentIndex={setCurrentIndex}
-                        setCurrentHistory={setCurrentHistory}
-                        showAllStories={showAllStories}
-                        setShowAllStories={setShowAllStories}
-                        selectedRuaId={parseInt(id)}
-                    />
-                </main>
-            );
-        };
+    // Verificar se a rua selecionada está nas ruas filtradas
+    useEffect(() => {
+        const selectedRuaInFiltered = filteredRuas.find(r => r.id === parseInt(id));
+        if (!selectedRuaInFiltered && filteredRuas.length > 0) {
+            // Redirecionar para a primeira rua nas ruas filtradas
+            history.push(`/rua/${filteredRuas[0].id}`);
+        }
+    }, [filteredRuas, id, history]);
+
+    const handleRuaClick = (rua) => {
+        history.push(`/rua/${rua.id}`);
+    };
+
+    // Nova função para lidar com o clique na cidade
+    const handleCityClick = (cidade) => {
+        setSelectedCityId(cidade.id);
+    };
+
+    return (
+        <main className="w-full lg:w-4/5 flex flex-col items-center flex-grow overflow-y-auto p-2">
+            {/* Renderizar o CityCarousel acima do RuaCarousel */}
+            <CityCarousel cidades={cidades} handleCityClick={handleCityClick} selectedCityId={selectedCityId} />
+            <RuaCarousel ruas={filteredRuas} handleRuaClick={handleRuaClick} selectedRuaId={parseInt(id)} />
+            <HistoriaContent
+                currentHistory={currentHistory}
+                historiasDaRua={historiasDaRua}
+                currentIndex={currentIndex}
+                setCurrentIndex={setCurrentIndex}
+                setCurrentHistory={setCurrentHistory}
+                showAllStories={showAllStories}
+                setShowAllStories={setShowAllStories}
+                selectedRuaId={parseInt(id)}
+            />
+        </main>
+    );
+};
 
         // não encontrado 404
         const NotFound = () => {
@@ -2391,7 +2514,7 @@
             useEffect(() => {
                 // Set default title and meta description for the home page
                 if (location.pathname === "/" || location.pathname === "/#") {
-                    document.title = "Historin - Histórias de Gramado";
+                    document.title = "Historin - Histórias do RS";
                     let metaDescription = document.querySelector('meta[name="description"]');
                     if (metaDescription) {
                         metaDescription.setAttribute('content', 'Descubra as histórias de Gramado através do Historin. Explore ruas, conheça eventos marcantes e contribua com suas próprias histórias.');
