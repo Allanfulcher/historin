@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Historin - Entre o tempo e a memória</title>
+    <title>Historin - Histórias das cidades</title>
     <meta name="theme-color" content="#E6D3B4">
     <link rel="icon" href="fotos/historin.ico" />
     <!-- Banco de Dados -->
@@ -299,24 +299,48 @@
             );
         };
 
-        // Componente Header modificado
-        const Header = ({ setMenuOpen, setShowFeedback }) => (
-            <header className="flex justify-between items-center p-4 bg-[#E6D3B4]">
-                <div className="flex items-center">
-                    <Link to="/" className="ml-2 text-2xl font-bold logo">
-                        HISTORIN
-                    </Link>
-                </div>
-                <div className="flex items-center space-x-4">
-                    <button onClick={() => setShowFeedback(true)} aria-label="Feedback" className="text-2xl pr-2">
-                        <i className="fas fa-comment-dots"></i>
-                    </button>
-                    <div className="text-2xl cursor-pointer" onClick={() => setMenuOpen(true)}>
-                        <i className="fas fa-bars"></i>
+        // Componente Header modificado com botão de Compartilhar
+        const Header = ({ setMenuOpen, setShowFeedback }) => {
+            // Função para lidar com a ação de compartilhar
+            const handleShare = () => {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Historin - Histórias de Gramado',
+                        text: 'Descubra as histórias de Gramado através do Historin!',
+                        url: window.location.href
+                    }).catch((error) => console.error('Erro ao compartilhar:', error));
+                } else {
+                    alert('Compartilhamento não suportado neste navegador.');
+                }
+            };
+
+            return (
+                <header className="flex justify-between items-center p-4 bg-[#E6D3B4]">
+                    <div className="flex items-center">
+                        <Link to="/" className="ml-2 text-2xl font-bold logo">
+                            HISTORIN
+                        </Link>
                     </div>
-                </div>
-            </header>
-        );
+                    <div className="flex items-center space-x-4">
+                        {/* Botão de Compartilhar */}
+                        <button onClick={handleShare} aria-label="Compartilhar" className="text-2xl pr-2">
+                            <i className="fas fa-share-alt"></i>
+                        </button>
+
+                        {/* Botão de Feedback */}
+                        <button onClick={() => setShowFeedback(true)} aria-label="Feedback" className="text-2xl pr-2">
+                            <i className="fas fa-comment-dots"></i>
+                        </button>
+
+                        {/* Botão de Menu */}
+                        <div className="text-2xl cursor-pointer" onClick={() => setMenuOpen(true)}>
+                            <i className="fas fa-bars"></i>
+                        </div>
+                    </div>
+                </header>
+            );
+        };
+
 
 
 
@@ -333,6 +357,7 @@
                     alert('Nenhuma história disponível.');
                 }
             };
+
 
             return (
                 <>
@@ -385,14 +410,13 @@
                                 SOBRE
                             </Link>
 
-                            {/* Botão Surpreenda-me */}
-                            <button
-                                className="menu-item px-4 py-3 hover:bg-gray-100 rounded-md text-lg font-semibold text-left mt-4 flex justify-between items-center"
-                                onClick={handleSurpriseMe}
+                            <Link
+                                to="/legado-africano"
+                                className="menu-item px-4 py-3 hover:bg-gray-100 rounded-md text-lg font-semibold"
+                                onClick={() => setMenuOpen(false)}
                             >
-                                ALEATÓRIA
-                                <i className="fas fa-random text-gray-500"></i>
-                            </button>
+                                Legado Afro no RS
+                            </Link>
 
                         </div>
 
@@ -1045,7 +1069,7 @@
         // Página Ruas e Histórias (Atualizada com seção "Destaque")
         const RuasEHistorias = () => {
             useEffect(() => {
-                document.title = "Ruas e Histórias do RS - Explore o Historin";
+                document.title = "Ruas e Histórias de Gramado - Explore o Historin";
 
                 // Atualizar a meta descrição
                 let metaDescription = document.querySelector('meta[name="description"]');
@@ -1387,56 +1411,56 @@
         };
 
         // Componente de Seleção de Cidade com Botão "Voltar ao Mapa"
-const CityCarousel = ({ cidades, handleCityClick, selectedCityId }) => {
-    const carouselRef = useRef(null);
+        const CityCarousel = ({ cidades, handleCityClick, selectedCityId }) => {
+            const carouselRef = useRef(null);
 
-    useEffect(() => {
-        if (carouselRef.current && selectedCityId) {
-            const selectedElement = carouselRef.current.querySelector(`[data-id='${selectedCityId}']`);
-            if (selectedElement) {
-                const carouselWidth = carouselRef.current.offsetWidth;
-                const selectedElementOffset = selectedElement.offsetLeft;
-                const selectedElementWidth = selectedElement.offsetWidth;
+            useEffect(() => {
+                if (carouselRef.current && selectedCityId) {
+                    const selectedElement = carouselRef.current.querySelector(`[data-id='${selectedCityId}']`);
+                    if (selectedElement) {
+                        const carouselWidth = carouselRef.current.offsetWidth;
+                        const selectedElementOffset = selectedElement.offsetLeft;
+                        const selectedElementWidth = selectedElement.offsetWidth;
 
-                const scrollPosition = selectedElementOffset - (carouselWidth / 2) + (selectedElementWidth / 2);
-                window.requestAnimationFrame(() => {
-                    carouselRef.current.scrollTo({ left: scrollPosition, behavior: 'smooth' });
-                });
-            }
-        }
-    }, [selectedCityId]);
+                        const scrollPosition = selectedElementOffset - (carouselWidth / 2) + (selectedElementWidth / 2);
+                        window.requestAnimationFrame(() => {
+                            carouselRef.current.scrollTo({ left: scrollPosition, behavior: 'smooth' });
+                        });
+                    }
+                }
+            }, [selectedCityId]);
 
-    return (
-        <div className="w-full flex items-center">
-            {/* Botão de Voltar ao Mapa */}
-            <Link
-                to="/"
-                className="flex items-center px-4 py-2 mr-4 bg-gray-300 hover:bg-gray-400 rounded-full cursor-pointer transition-colors"
-                aria-label="Voltar ao Mapa"
-            >
-                <i className="fas fa-arrow-left mr-2"></i>
-                <span>Voltar ao Mapa</span>
-            </Link>
+            return (
+                <div className="w-full flex items-center">
+                    {/* Botão de Voltar ao Mapa */}
+                    <Link
+                        to="/"
+                        className="flex items-center px-4 py-2 mr-4 bg-gray-300 hover:bg-gray-400 rounded-full cursor-pointer transition-colors"
+                        aria-label="Voltar ao Mapa"
+                    >
+                        <i className="fas fa-arrow-left mr-2"></i>
+                        <span>Voltar ao Mapa</span>
+                    </Link>
 
-            {/* Carrossel de Cidades */}
-            <div ref={carouselRef} className="overflow-x-auto whitespace-nowrap py-2 flex-grow">
-                <div className="flex space-x-2 inline-flex">
-                    {cidades.map(cidade => (
-                        <span
-                            key={cidade.id}
-                            data-id={cidade.id}
-                            className={`px-4 py-2 rounded-full cursor-pointer whitespace-nowrap 
+                    {/* Carrossel de Cidades */}
+                    <div ref={carouselRef} className="overflow-x-auto whitespace-nowrap py-2 flex-grow">
+                        <div className="flex space-x-2 inline-flex">
+                            {cidades.map(cidade => (
+                                <span
+                                    key={cidade.id}
+                                    data-id={cidade.id}
+                                    className={`px-4 py-2 rounded-full cursor-pointer whitespace-nowrap 
                             ${cidade.id === selectedCityId ? 'bg-[#8A5A44] text-white' : 'bg-gray-200'}`}
-                            onClick={() => handleCityClick(cidade)}
-                        >
-                            {cidade.nome}
-                        </span>
-                    ))}
+                                    onClick={() => handleCityClick(cidade)}
+                                >
+                                    {cidade.nome}
+                                </span>
+                            ))}
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-    );
-};
+            );
+        };
 
 
 
@@ -1506,7 +1530,7 @@ const CityCarousel = ({ cidades, handleCityClick, selectedCityId }) => {
             const [translateX, setTranslateX] = useState(0);
             const [translateY, setTranslateY] = useState(0);
             const [showLocaisRecomendados, setShowLocaisRecomendados] = useState(true);
-            
+
             // Refs para gerenciar o estado de arrasto
             const isDraggingRef = useRef(false);
             const startXRef = useRef(0);
@@ -1655,7 +1679,7 @@ const CityCarousel = ({ cidades, handleCityClick, selectedCityId }) => {
 
             return (
                 <div className="main-content w-full flex flex-col items-center flex-grow overflow-y-auto">
-                    
+
                     <div className="w-full lg:py-4 flex justify-between items-center">
                         <div className="flex items-center ">
                             <h3 className="text-xl font-bold mr-2">{rua.nome}</h3>
@@ -2150,94 +2174,110 @@ const CityCarousel = ({ cidades, handleCityClick, selectedCityId }) => {
 
 
 
-        // Componente de Página de Rua e História (Atualizado)
-const RuaHistoria = () => {
-    const { id, historiaId } = useParams();
-    const history = useHistory();
-    const [currentHistory, setCurrentHistory] = useState(null);
-    const [historiasDaRua, setHistoriasDaRua] = useState([]);
-    const [currentIndex, setCurrentIndex] = useState(0);
-    const [showAllStories, setShowAllStories] = useState(false);
+        // Página de Rua e História (Atualizado)
+        const RuaHistoria = () => {
+            const { id, historiaId } = useParams();
+            const history = useHistory();
+            const [currentHistory, setCurrentHistory] = useState(null);
+            const [historiasDaRua, setHistoriasDaRua] = useState([]);
+            const [currentIndex, setCurrentIndex] = useState(0);
+            const [showAllStories, setShowAllStories] = useState(false);
+            const [selectedCityId, setSelectedCityId] = useState(null);
+            const [filteredRuas, setFilteredRuas] = useState([]);
 
-    // Novos estados para cidade selecionada e ruas filtradas
-    const [selectedCityId, setSelectedCityId] = useState(null);
-    const [filteredRuas, setFilteredRuas] = useState([]);
-
-    useEffect(() => {
-        const rua = ruas.find(r => r.id === parseInt(id));
-        if (rua) {
-            const historiasList = historias
-                .filter(h => h.rua_id === rua.id)
-                .sort((a, b) => a.ano - b.ano || a.id - b.id);
-            setHistoriasDaRua(historiasList);
-
-            if (historiaId) {
-                const historia = historiasList.find(h => h.id === parseInt(historiaId));
-                if (historia) {
-                    setCurrentHistory(historia);
-                    const index = historiasList.findIndex(h => h.id === historia.id);
-                    setCurrentIndex(index);
-                } else {
-                    setCurrentHistory(null);
+            useEffect(() => {
+                if (currentHistory) {
+                    // Atualiza título e metas quando a história muda
+                    const cidadeNome = cidades.find(cidade => cidade.id === selectedCityId)?.nome || "Cidade Desconhecida";
+                    document.title = `${currentHistory.titulo} - ${cidadeNome}`;
+                    updateMetaTags(currentHistory, cidadeNome);
                 }
-            } else {
-                if (historiasList.length > 0) {
-                    const primeiraHistoria = historiasList[0];
-                    setCurrentHistory(primeiraHistoria);
-                    setCurrentIndex(0);
-                    history.replace(`/rua/${id}/historia/${primeiraHistoria.id}`);
+            }, [currentHistory, cidades, selectedCityId]);
+
+            const updateMetaTags = (currentHistory, cidadeNome) => {
+                let metaDescription = document.querySelector('meta[name="description"]');
+                if (metaDescription) {
+                    metaDescription.setAttribute('content', currentHistory.descricao);
                 } else {
-                    setCurrentHistory(null);
+                    metaDescription = document.createElement('meta');
+                    metaDescription.name = "description";
+                    metaDescription.content = currentHistory.descricao;
+                    document.head.appendChild(metaDescription);
                 }
-            }
+                // Atualizar imagem meta
+                let metaImage = document.querySelector('meta[property="og:image"]');
+                if (metaImage) {
+                    metaImage.setAttribute('content', currentHistory.fotos?.[0] || 'default-image-url');
+                } else {
+                    metaImage = document.createElement('meta');
+                    metaImage.setAttribute('property', 'og:image');
+                    metaImage.setAttribute('content', currentHistory.fotos?.[0] || 'default-image-url');
+                    document.head.appendChild(metaImage);
+                }
+            };
 
-            // Definir a cidade selecionada como a cidade da rua atual
-            setSelectedCityId(rua.cidade_id);
-        }
-    }, [id, historiaId, history]);
+            useEffect(() => {
+                const rua = ruas.find(r => r.id === parseInt(id));
+                if (rua) {
+                    const historiasList = historias.filter(h => h.rua_id === rua.id).sort((a, b) => a.ano - b.ano || a.id - b.id);
+                    setHistoriasDaRua(historiasList);
 
-    // Filtrar ruas com base na cidade selecionada
-    useEffect(() => {
-        const filtered = selectedCityId ? ruas.filter(r => r.cidade_id === selectedCityId) : ruas;
-        setFilteredRuas(filtered);
-    }, [selectedCityId]);
+                    if (historiaId) {
+                        const historia = historiasList.find(h => h.id === parseInt(historiaId));
+                        if (historia) {
+                            setCurrentHistory(historia);
+                            const index = historiasList.findIndex(h => h.id === historia.id);
+                            setCurrentIndex(index);
+                        }
+                    } else if (historiasList.length > 0) {
+                        const primeiraHistoria = historiasList[0];
+                        setCurrentHistory(primeiraHistoria);
+                        setCurrentIndex(0);
+                        history.replace(`/rua/${id}/historia/${primeiraHistoria.id}`);
+                    }
+                    setSelectedCityId(rua.cidade_id);
+                }
+            }, [id, historiaId, history]);
 
-    // Verificar se a rua selecionada está nas ruas filtradas
-    useEffect(() => {
-        const selectedRuaInFiltered = filteredRuas.find(r => r.id === parseInt(id));
-        if (!selectedRuaInFiltered && filteredRuas.length > 0) {
-            // Redirecionar para a primeira rua nas ruas filtradas
-            history.push(`/rua/${filteredRuas[0].id}`);
-        }
-    }, [filteredRuas, id, history]);
+            // Filtra ruas com base na cidade selecionada
+            useEffect(() => {
+                const filtered = selectedCityId ? ruas.filter(r => r.cidade_id === selectedCityId) : ruas;
+                setFilteredRuas(filtered);
+            }, [selectedCityId]);
 
-    const handleRuaClick = (rua) => {
-        history.push(`/rua/${rua.id}`);
-    };
+            // Verifica se a rua selecionada está nas ruas filtradas
+            useEffect(() => {
+                const selectedRuaInFiltered = filteredRuas.find(r => r.id === parseInt(id));
+                if (!selectedRuaInFiltered && filteredRuas.length > 0) {
+                    history.push(`/rua/${filteredRuas[0].id}`);
+                }
+            }, [filteredRuas, id, history]);
 
-    // Nova função para lidar com o clique na cidade
-    const handleCityClick = (cidade) => {
-        setSelectedCityId(cidade.id);
-    };
+            const handleRuaClick = (rua) => {
+                history.push(`/rua/${rua.id}`);
+            };
 
-    return (
-        <main className="w-full lg:w-4/5 flex flex-col items-center flex-grow overflow-y-auto p-2">
-            {/* Renderizar o CityCarousel acima do RuaCarousel */}
-            <CityCarousel cidades={cidades} handleCityClick={handleCityClick} selectedCityId={selectedCityId} />
-            <RuaCarousel ruas={filteredRuas} handleRuaClick={handleRuaClick} selectedRuaId={parseInt(id)} />
-            <HistoriaContent
-                currentHistory={currentHistory}
-                historiasDaRua={historiasDaRua}
-                currentIndex={currentIndex}
-                setCurrentIndex={setCurrentIndex}
-                setCurrentHistory={setCurrentHistory}
-                showAllStories={showAllStories}
-                setShowAllStories={setShowAllStories}
-                selectedRuaId={parseInt(id)}
-            />
-        </main>
-    );
-};
+            const handleCityClick = (cidade) => {
+                setSelectedCityId(cidade.id);
+            };
+
+            return (
+                <main className="w-full lg:w-4/5 flex flex-col items-center flex-grow overflow-y-auto p-2">
+                    <CityCarousel cidades={cidades} handleCityClick={handleCityClick} selectedCityId={selectedCityId} />
+                    <RuaCarousel ruas={filteredRuas} handleRuaClick={handleRuaClick} selectedRuaId={parseInt(id)} />
+                    <HistoriaContent
+                        currentHistory={currentHistory}
+                        historiasDaRua={historiasDaRua}
+                        currentIndex={currentIndex}
+                        setCurrentIndex={setCurrentIndex}
+                        setCurrentHistory={setCurrentHistory}
+                        showAllStories={showAllStories}
+                        setShowAllStories={setShowAllStories}
+                        selectedRuaId={parseInt(id)}
+                    />
+                </main>
+            );
+        };
 
         // não encontrado 404
         const NotFound = () => {
@@ -2514,7 +2554,7 @@ const RuaHistoria = () => {
             useEffect(() => {
                 // Set default title and meta description for the home page
                 if (location.pathname === "/" || location.pathname === "/#") {
-                    document.title = "Historin - Histórias do RS";
+                    document.title = "Historin História da cidades - Ínicio";
                     let metaDescription = document.querySelector('meta[name="description"]');
                     if (metaDescription) {
                         metaDescription.setAttribute('content', 'Descubra as histórias de Gramado através do Historin. Explore ruas, conheça eventos marcantes e contribua com suas próprias histórias.');
