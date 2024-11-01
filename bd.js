@@ -2,7 +2,40 @@ const cidades = [
     {
         id: 1,
         nome: "Gramado",
-        descricao: ""
+        populacao: 40000,
+        ano: 1954,
+        descricao: "",
+        prefeito: "",
+        eventos: [
+            {
+                id: 1,
+                nome: "Natal Luz",
+                inicio: 1996,
+                ocorre: true,
+                data: "Dezembro-Janeiro",
+                descricao: "Festa religiosa",
+                fotos: [],
+            },
+            {
+                id: 2,
+                nome: "Festa da Colonia",
+                inicio: 2002,
+                ocorre: true,
+                data: "Maio",
+                descricao: "Festa voltada a moradores",
+                fotos: [],
+            },
+            {
+                id: 2,
+                nome: "Festa das Hortensias",
+                inicio: 1996,
+                ocorre: false,
+                data: "Dezembro",
+                descricao: "Evento que antecedeu o natal luz",
+                fotos: [],
+            },
+
+        ],
     },
     {
         id: 2,
@@ -24,6 +57,13 @@ const negocios = [
         link: 'https://maps.app.goo.gl/XQ7CqDv14SgjExTa9'
     },
     {
+        id: 10,
+        titulo: 'Jolimont',
+        segmento: 'Vinícola',
+        foto: 'https://i0.wp.com/turistafulltime.com/wp-content/uploads/2020/05/vitivinicola-jolimont-bandeiras.jpg?resize=800%2C600&ssl=1',
+        link: 'https://maps.app.goo.gl/2dGTjWnWWEnTxwPFA'
+    },
+    {
       id: 6,
       titulo: 'Museu do trem',
       segmento: 'Museu',
@@ -31,8 +71,15 @@ const negocios = [
       link: 'https://maps.app.goo.gl/dPoE7c1UxxQtVYaQA'
   },
     {
+      id: 8,
+      titulo: 'Scarppa',
+      segmento: 'Calçados',
+      foto: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3pM_GY0Xq7nbewxkwfRny8Q4gGhRS7qhSNQ&s',
+      link: 'https://maps.app.goo.gl/KpHaJ7L69vVwcAqNA'
+  },
+    {
         id: 2,
-        titulo: 'Restaurante Kilo e Kilo',
+        titulo: 'Kilo e Kilo',
         segmento: 'Restaurante',
         foto: 'https://rota-serra-gaucha.s3.sa-east-1.amazonaws.com/images/fdK5mHRVQUVrqmKE7MYCbwDho4aNqkX02B5q0vMk.png',
         link: 'https://maps.app.goo.gl/qXep5f2He8KMXCsP6'
@@ -64,5 +111,12 @@ const negocios = [
         segmento: 'Biblioteca',
         foto: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjdkOZMgdU950_YayulK_PXUfkq5CrNYIGh9ugWfV-Xn075HKsSGwbofb9JxdcLRnDf6oaKbXQITroeE3p65inGx0M6PgGUZSFGK5CkBFHNTxWw3yumIWiOax-MGRt3ipYqs_pvl1e-4Pz8/s1600/20190502_104307.jpg',
         link: 'https://maps.app.goo.gl/vQdYLhaYBgrsVoio9'
-    }
+    },
+    {
+        id: 9,
+        titulo: 'Vale Quanto Pesa',
+        segmento: 'Restaurante',
+        foto: 'https://img.lacadordeofertas.com.br/site/MTcxNDVfL3RtcC9waHB4UDNPZDVfMTYxNjUxMzAzOA==.png?ims=460x',
+        link: 'https://maps.app.goo.gl/w1pq81qsrzoZGE7aA'
+    },
   ];
