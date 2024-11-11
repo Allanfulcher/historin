@@ -123,6 +123,251 @@ const negocios = [
 
  // Continuation of questions array
 const questions = [
+    {
+        question: "Em que ano foi inaugurado o Lago Joaquina Rita Bier em Gramado?",
+        answers: ["1938", "1960", "1970", "1990"],
+        correct: 0,
+      },
+      {
+        question: "Qual era o antigo nome da Praça das Etnias em Gramado?",
+        answers: [
+          "Praça das Comunicações",
+          "Praça Major Nicoletti",
+          "Praça Central",
+          "Praça das Flores",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Em que ano foi inaugurada a nova rodoviária de Gramado?",
+        answers: ["1984", "1985", "1986", "1987"],
+        correct: 2,
+      },
+      {
+        question: "O que existia no lugar onde hoje é o Banrisul em Gramado?",
+        answers: [
+          "Grupo Escolar Santos Dumont",
+          "Primeira Igreja",
+          "Antiga Prefeitura",
+          "Parque Hotel",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Qual foi o primeiro cinema inaugurado em Gramado em 1929?",
+        answers: [
+          "Cine Splendid",
+          "Cine 3 de Outubro",
+          "Cine Embaixador",
+          "Palácio dos Festivais",
+        ],
+        correct: 1,
+      },
+      {
+        question: "Em que ano foi inaugurado o Cine Embaixador?",
+        answers: ["1967", "1972", "1984", "1990"],
+        correct: 0,
+      },
+      {
+        question: "Qual evento antecedeu o Natal Luz em Gramado?",
+        answers: [
+          "Festival de Cinema",
+          "Festa das Hortênsias",
+          "Festival de Gastronomia",
+          "Festa da Colônia",
+        ],
+        correct: 1,
+      },
+      {
+        question: "Onde ficava o Grupo Escolar Santos Dumont em Gramado?",
+        answers: [
+          "Rua Coberta",
+          "Praça Major Nicoletti",
+          "Lago Negro",
+          "Parque Knorr",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Em que ano ocorreu a construção da Rua Coberta em Gramado?",
+        answers: ["1984", "1990", "1996", "2000"],
+        correct: 2,
+      },
+      {
+        question: "Quem inaugurou o Lago Negro em Gramado?",
+        answers: [
+          "Pedro Bertolucci",
+          "Leopoldo Rosenfeld",
+          "Mateus Canova",
+          "Allan Fulcher",
+        ],
+        correct: 1,
+      },
+      {
+        question: "Qual era o nome original do Lago Negro antes do incêndio de 1942?",
+        answers: ["Lago do Bom Jesus", "Lago Joaquina Rita Bier", "Vale do Bom Retiro", "Lago do Meio"],
+        correct: 2,
+      },
+      {
+        question: "Qual nome da praça central da cidade de Gramado?",
+        answers: [
+          "Praça Major Nicoletti",
+          "Praça das Etnias",
+          "Praça Central",
+          "Praça das Flores",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Qual hospital estava em construção em 1940, sendo muito esperado pela comunidade de Gramado?",
+        answers: [
+          "Hospital São Miguel",
+          "Hospital de Gramado",
+          "Hospital Arcanjo São Miguel",
+          "Hospital Santa Terezinha",
+        ],
+        correct: 2,
+      },
+      {
+        question: "Em que ano a Igreja São Pedro de Gramado foi finalizada?",
+        answers: ["1920", "1930", "1942", "1950"],
+        correct: 2,
+      },
+      {
+        question: "Qual é o nome do famoso ponto turístico de Canela com uma queda d'água de 130 metros?",
+        answers: [
+          "Cascata do Caracol",
+          "Lago Negro",
+          "Parque do Caracol",
+          "Cascata Véu de Noiva",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Qual local em Canela foi construído sem uso de pregos e é famoso por seu apfelstrudel?",
+        answers: [
+          "Castelinho do Caracol",
+          "Casa do Colono",
+          "Mundo a Vapor",
+          "Parque da Ferradura",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Qual avenida de Gramado Teve os cabos enterrados para melhorar o seu visual?",
+        answers: [
+          "Av. das Hortênsias",
+          "Av. Borges de Medeiros",
+          "Rua Coberta",
+          "Rua São Pedro",
+        ],
+        correct: 1,
+      },
+      {
+        question: "Quem foi o fundador da Famastil Ferramentas Ltda. em Gramado?",
+        answers: [
+          "Família Tissot",
+          "Pedro Bertolucci",
+          "Leopoldo Rosenfeld",
+          "Eugênio Bertolucci",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Em que ano a Malharia Lucirene celebrou seus 15 anos de fundação?",
+        answers: ["1980", "1988", "1990", "1995"],
+        correct: 1,
+      },
+      {
+        question: "Qual rua de Gramado é conhecida por abrigar a Rua Coberta e o Palácio dos Festivais?",
+        answers: [
+          "Av. Borges de Medeiros",
+          "Rua Coberta",
+          "Rua Madre Verônica",
+          "Rua São Pedro",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Em que ano ocorreu a neve vista da praça em frente à Igreja Matriz de Canela?",
+        answers: ["1984", "1990", "1994", "2000"],
+        correct: 2,
+      },
+      {
+        question: "Qual clube foi fundado em 1926 e é um marco em Canela?",
+        answers: [
+          "Clube Serrano",
+          "Recreio Gramadense",
+          "Tênis Clube",
+          "Clube dos Amigos",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Qual foi a primeira sede da Sociedade Recreio Gramadense fundada em 1915?",
+        answers: [
+          "Casa de Manuel Becharra",
+          "Parque Hotel",
+          "Hotel Serra Azul",
+          "Casa do Colono",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Qual prédio em Gramado foi transformado em Banrisul, anteriormente sendo uma escola?",
+        answers: [
+          "Grupo Escolar Santos Dumont",
+          "Escola Santa Terezinha",
+          "Colégio Estadual",
+          "Escola Municipal",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Qual hospital em Canela preserva sua característica original após ampliação?",
+        answers: [
+          "Hospital de Canela",
+          "Hospital São Miguel",
+          "Hospital Santa Terezinha",
+          "Hospital Bom Jesus",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Em que ano foi Inaugurada a Estação Ferroviária de Canela?",
+        answers: ["1922", "1934", "1940", "1950"],
+        correct: 0,
+      },
+      {
+        question: "Qual local em Canela é apreciado por católicos e tem sua festa tradicional em 26 de maio?",
+        answers: [
+          "Santuário Caravaggio",
+          "Catedral de Pedra",
+          "Igreja Luterana",
+          "Capela Santa Terezinha",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Qual escola de Canela foi referência no estado e teve como primeira sede a casa de Carlos Wortmann?",
+        answers: [
+          "Escola Neusa Mari Pacheco",
+          "Escola Santa Terezinha",
+          "Colégio Estadual",
+          "Escola Municipal",
+        ],
+        correct: 0,
+      },
+      {
+        question: "Qual foi o primeiro açougue de Gramado, substituído por uma loja de decorações?",
+        answers: [
+          "Açougue Bohrer",
+          "Açougue Fachin",
+          "Casa Raymundo",
+          "Açougue Gramadense",
+        ],
+        correct: 1,
+      },
     { question: "Qual avenida de Gramado é considerada o coração do comércio e turismo?", answers: ["Av. Borges de Medeiros", "Av. das Hortênsias", "Rua São Pedro", "Rua Coberta"], correct: 0 },
     { question: "Quem foi homenageado com o nome da Rua Coronel João Corrêa?", answers: ["Fundador de Gramado", "Engenheiro de Canela", "Construtor da estrada de ferro", "Artista local"], correct: 2 },
     { question: "Qual é o nome do lago em Gramado criado após um incêndio?", answers: ["Lago Negro", "Lago das Hortênsias", "Lago Azul", "Lago Verde"], correct: 0 },
@@ -148,11 +393,9 @@ const questions = [
     { question: "Qual o nome da famosa igreja localizada em Canela?", answers: ["Igreja São Pedro", "Catedral de Pedra", "Igreja das Hortênsias", "Igreja de São Francisco"], correct: 1 },
     { question: "Qual é o símbolo da diversidade cultural de Gramado?", answers: ["Rótula das Bandeiras", "Praça Major Nicoletti", "Rua Coberta", "Praça das Etnias"], correct: 3 },
     { question: "Em que rua de Gramado foi inaugurado o primeiro cinema?", answers: ["Rua São Pedro", "Rua Coronel João Corrêa", "Rua Garibaldi", "Av. Borges de Medeiros"], correct: 3 },
-    { question: "Qual avenida é famosa por seu charme arquitetônico em Gramado?", answers: ["Av. Borges de Medeiros", "Av. das Hortênsias", "Rua Coronel João Corrêa", "Rua São Pedro"], correct: 1 },
     { question: "Qual figura religiosa é homenageada na Av. Cônego João Marchesi?", answers: ["Bispo local", "Cônego João Marchesi", "Padre Antônio Vieira", "Papa Francisco"], correct: 1 },
     { question: "Que festival ocorre no Palácio dos Festivais em Gramado?", answers: ["Festival de Cinema", "Festa da Colônia", "Natal Luz", "Festival de Música"], correct: 0 },
     { question: "Qual rua homenageia uma figura religiosa em Gramado?", answers: ["Rua Madre Verônica", "Rua São Pedro", "Rua Dona Carlinda", "Rua Leopoldo Rosenfeld"], correct: 0 },
-    { question: "Qual rua em Canela é conhecida por sua diversidade cultural e esportiva?", answers: ["Rua Martinho Lutero", "Rua Garibaldi", "Rua São Pedro", "Av. Borges de Medeiros"], correct: 0 },
     { question: "Quem é homenageado na Rua Augusto Pestana em Canela?", answers: ["Engenheiro ferroviário", "Artista local", "Político gaúcho", "Diplomata internacional"], correct: 0 },
     { question: "Qual o nome da rua que homenageia o padroeiro de Gramado?", answers: ["Rua Garibaldi", "Rua São Pedro", "Rua Coronel João Corrêa", "Rua Leopoldo Rosenfeld"], correct: 1 },
     { question: "Qual rua de Canela homenageia um engenheiro republicano?", answers: ["Rua Augusto Pestana", "Rua Garibaldi", "Rua Leopoldo Rosenfeld", "Av. Júlio de Castilhos"], correct: 0 },
