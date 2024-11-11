@@ -299,47 +299,446 @@
             );
         };
 
-        // Componente Header modificado com botão de Compartilhar
-        const Header = ({ setMenuOpen, setShowFeedback }) => {
-            // Função para lidar com a ação de compartilhar
-            const handleShare = () => {
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'Historin - Histórias de Gramado',
-                        text: 'Descubra as histórias de Gramado através do Historin!',
-                        url: window.location.href
-                    }).catch((error) => console.error('Erro ao compartilhar:', error));
-                } else {
-                    alert('Compartilhamento não suportado neste navegador.');
-                }
-            };
 
-            return (
-                <header className="flex justify-between items-center p-4 bg-[#E6D3B4]">
-                    <div className="flex items-center">
-                        <Link to="/" className="ml-2 text-2xl font-bold logo">
-                            HISTORIN
-                        </Link>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                        {/* Botão de Compartilhar */}
-                        <button onClick={handleShare} aria-label="Compartilhar" className="text-2xl pr-2">
-                            <i className="fas fa-share-alt"></i>
-                        </button>
+        const QuizModal = ({
+    isOpen,
+    onClose,
+    email,
+    setEmail,
+    emailSubmitted,
+    setEmailSubmitted,
+    quizStarted,
+    setQuizStarted,
+    timeLeft,
+    setTimeLeft,
+}) => {
+    const [score, setScore] = useState(0);
+    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [answersDisabled, setAnswersDisabled] = useState(false);
+    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
+    const [showFeedback, setShowFeedback] = useState(false);
+    const [feedbackMessage, setFeedbackMessage] = useState('');
+    const [scoresList, setScoresList] = useState([]);
+    const [isCorrect, setIsCorrect] = useState(null);
+    const [selectedQuestions, setSelectedQuestions] = useState([]);
 
-                        {/* Botão de Feedback */}
-                        <button onClick={() => setShowFeedback(true)} aria-label="Feedback" className="text-2xl pr-2">
-                            <i className="fas fa-comment-dots"></i>
-                        </button>
+    // Function to get 10 random questions
+    function getRandomQuestions(allQuestions, num) {
+        const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, num);
+    }
 
-                        {/* Botão de Menu */}
-                        <div className="text-2xl cursor-pointer" onClick={() => setMenuOpen(true)}>
-                            <i className="fas fa-bars"></i>
-                        </div>
-                    </div>
-                </header>
-            );
+    // Save progress to localStorage
+    const saveProgress = () => {
+        const quizData = {
+            email,
+            emailSubmitted,
+            quizStarted,
+            timeLeft,
+            score,
+            currentQuestion,
+            selectedAnswerIndex,
+            answersDisabled,
+            showFeedback,
+            feedbackMessage,
+            isCorrect,
+            selectedQuestions,
         };
+        localStorage.setItem('quizProgress', JSON.stringify(quizData));
+    };
+
+    // Load progress from localStorage
+    const loadProgress = () => {
+        const savedData = JSON.parse(localStorage.getItem('quizProgress'));
+        if (savedData) {
+            setEmail(savedData.email || '');
+            setEmailSubmitted(savedData.emailSubmitted || false);
+            setQuizStarted(savedData.quizStarted || false);
+            setTimeLeft(savedData.timeLeft !== null ? savedData.timeLeft : 600);
+            setScore(savedData.score || 0);
+            setCurrentQuestion(savedData.currentQuestion || 0);
+            setSelectedAnswerIndex(
+                savedData.selectedAnswerIndex !== null ? savedData.selectedAnswerIndex : null
+            );
+            setAnswersDisabled(savedData.answersDisabled || false);
+            setShowFeedback(savedData.showFeedback || false);
+            setFeedbackMessage(savedData.feedbackMessage || '');
+            setIsCorrect(savedData.isCorrect);
+            setSelectedQuestions(savedData.selectedQuestions || []);
+        }
+    };
+
+    // Load progress when component mounts
+    useEffect(() => {
+        if (isOpen) {
+            loadProgress();
+        }
+    }, [isOpen]);
+
+    // Save progress whenever relevant state changes
+    useEffect(() => {
+        if (quizStarted) saveProgress();
+    }, [
+        quizStarted,
+        timeLeft,
+        currentQuestion,
+        score,
+        selectedAnswerIndex,
+        answersDisabled,
+        showFeedback,
+        feedbackMessage,
+        isCorrect,
+        selectedQuestions,
+    ]);
+
+    const handleEmailSubmit = (e) => {
+        e.preventDefault();
+        // Send email via Formspree
+        fetch('https://formspree.io/f/xpwzrpvj', {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email: email,
+            }),
+        })
+            .then((response) => {
+                if (response.ok) {
+                    // Email submitted successfully
+                    setEmailSubmitted(true);
+                    setQuizStarted(true);
+                    setTimeLeft(600);
+                    setSelectedQuestions(getRandomQuestions(questions, 10));
+                } else {
+                    // Handle error
+                    console.error('Email submission failed');
+                }
+            })
+            .catch((error) => {
+                console.error('Email submission error:', error);
+            });
+    };
+
+    const handleAnswer = (index) => {
+        if (answersDisabled) return;
+        setAnswersDisabled(true);
+        setSelectedAnswerIndex(index);
+        const correctIndex = selectedQuestions[currentQuestion]?.correct;
+        const isCorrect = index === correctIndex;
+        setIsCorrect(isCorrect);
+        if (isCorrect) {
+            setScore(score + 10);
+            setFeedbackMessage('Correto!');
+        } else {
+            setFeedbackMessage('Incorreto!');
+        }
+        setShowFeedback(true);
+        setTimeout(() => {
+            setShowFeedback(false);
+            setSelectedAnswerIndex(null);
+            setCurrentQuestion(currentQuestion + 1);
+            setAnswersDisabled(false);
+            setIsCorrect(null);
+        }, 1000);
+    };
+
+    const handleClose = () => {
+        saveProgress();
+        onClose();
+    };
+
+    // Save score and end quiz when all questions are answered
+    useEffect(() => {
+        if (selectedQuestions.length > 0 && currentQuestion >= selectedQuestions.length) {
+            const storedScores = JSON.parse(localStorage.getItem('scoresList')) || [];
+            const newScores = [...storedScores, { email, score }];
+            localStorage.setItem('scoresList', JSON.stringify(newScores));
+            setScoresList(newScores);
+
+            // Stop the timer and reset quiz state
+            setQuizStarted(false);
+            setTimeLeft(null);
+        }
+    }, [currentQuestion]);
+
+    // Start quiz if email is already submitted
+    useEffect(() => {
+        if (emailSubmitted && !quizStarted) {
+            setQuizStarted(true);
+            setSelectedQuestions(getRandomQuestions(questions, 10));
+            setTimeLeft(600);
+        }
+    }, [emailSubmitted, quizStarted]);
+
+    return isOpen ? (
+        <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+            onClick={handleClose}
+        >
+            <div
+                className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full"
+                onClick={(e) => e.stopPropagation()}
+            >
+                {quizStarted || (!quizStarted && emailSubmitted) ? (
+                    selectedQuestions[currentQuestion] ? (
+                        <div>
+                            <div className="flex justify-between items-center mb-4">
+                                <span className="text-lg font-semibold">
+                                    Pergunta {currentQuestion + 1} de {selectedQuestions.length}
+                                </span>
+                                <span className="text-lg font-bold">
+                                    Tempo restante: {Math.floor(timeLeft / 60)}:
+                                    {('0' + (timeLeft % 60)).slice(-2)}
+                                </span>
+                            </div>
+                            <p className="text-lg font-semibold mb-4">
+                                {selectedQuestions[currentQuestion].question}
+                            </p>
+                            {selectedQuestions[currentQuestion].answers.map((answer, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => handleAnswer(idx)}
+                                    className={`w-full py-2 mb-2 rounded-lg
+                                        ${
+                                            answersDisabled
+                                                ? idx === selectedQuestions[currentQuestion].correct
+                                                    ? 'bg-green-500 text-white'
+                                                    : idx === selectedAnswerIndex
+                                                    ? 'bg-red-500 text-white'
+                                                    : 'bg-gray-200'
+                                                : 'bg-blue-500 text-white hover:bg-blue-600'
+                                        }
+                                    `}
+                                    disabled={answersDisabled}
+                                >
+                                    {answer}
+                                </button>
+                            ))}
+                            {showFeedback && (
+                                <p
+                                    className={`text-center text-lg font-bold mt-4 ${
+                                        isCorrect ? 'text-green-500' : 'text-red-500'
+                                    }`}
+                                >
+                                    {feedbackMessage}
+                                </p>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="text-center">
+                            <p className="text-2xl font-semibold mb-4">Quiz finalizado!</p>
+                            <p className="text-lg font-semibold mb-2">Email: {email}</p>
+                            {(() => {
+                                const totalScore = selectedQuestions.length * 10;
+                                const percentageScore = Math.round((score / totalScore) * 100);
+                                return (
+                                    <p className="text-lg font-semibold mb-4">
+                                        Sua pontuação é {percentageScore}%
+                                    </p>
+                                );
+                            })()}
+                            <h3 className="text-xl font-bold mb-2">Ranking:</h3>
+                            <ul className="mb-4">
+                                {scoresList
+                                    .sort((a, b) => b.score - a.score)
+                                    .slice(0, 5) // Top 5
+                                    .map((item, idx) => {
+                                        const totalScore = selectedQuestions.length * 10;
+                                        const percentageScore = Math.round(
+                                            (item.score / totalScore) * 100
+                                        );
+                                        return (
+                                            <li
+                                                key={idx}
+                                                className="flex justify-between items-center py-2 px-4 bg-gray-100 rounded-lg mb-2"
+                                            >
+                                                <span>
+                                                    {idx + 1}. {item.email}
+                                                </span>
+                                                <span>{percentageScore}%</span>
+                                            </li>
+                                        );
+                                    })}
+                            </ul>
+                            <button
+                                onClick={() => {
+                                    // Restart quiz without asking for email again
+                                    setScore(0);
+                                    setCurrentQuestion(0);
+                                    setTimeLeft(600);
+                                    setQuizStarted(true);
+                                    setSelectedQuestions(getRandomQuestions(questions, 10));
+                                }}
+                                className="py-2 mb-2 bg-green-500 text-white rounded-lg mx-auto block w-full hover:bg-green-600"
+                            >
+                                Tentar novamente
+                            </button>
+                        </div>
+                    )
+                ) : !emailSubmitted ? (
+                    <div>
+                        <p className="text-lg font-semibold mb-4">
+                            Teste seus conhecimentos sobre a plataforma.
+                        </p>
+                        <form onSubmit={handleEmailSubmit} className="flex flex-col">
+                            <label className="mb-2 text-lg font-semibold">
+                                Digite seu email para começar:
+                            </label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
+                                className="mb-4 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                            <button
+                                type="submit"
+                                className="py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                            >
+                                Começar Quiz
+                            </button>
+                        </form>
+                    </div>
+                ) : (
+                    <div>
+                        {/* Loading or message */}
+                    </div>
+                )}
+                <button
+                    onClick={handleClose}
+                    className="mt-4 text-red-500 hover:text-red-600"
+                >
+                    Fechar
+                </button>
+            </div>
+        </div>
+    ) : null;
+};
+const Header = ({ setMenuOpen, setShowFeedback }) => {
+    const [showQuiz, setShowQuiz] = useState(false);
+    const [email, setEmail] = useState('');
+    const [emailSubmitted, setEmailSubmitted] = useState(false);
+    const [quizStarted, setQuizStarted] = useState(false);
+    const [timeLeft, setTimeLeft] = useState(null);
+
+    // Timer logic
+    useEffect(() => {
+        let timer;
+        if (quizStarted && timeLeft > 0) {
+            timer = setInterval(() => {
+                setTimeLeft((prev) => {
+                    const newTime = prev - 1;
+                    if (newTime <= 0) {
+                        clearInterval(timer);
+                        // Handle quiz end
+                        setQuizStarted(false);
+                        setTimeLeft(null);
+                    }
+                    return newTime;
+                });
+            }, 1000);
+        } else if (!quizStarted || timeLeft === null) {
+            // Ensure timer is cleared if quiz has ended
+            clearInterval(timer);
+        }
+        return () => clearInterval(timer);
+    }, [quizStarted, timeLeft]);
+
+    // Function to share
+    const handleShare = () => {
+        if (navigator.share) {
+            navigator
+                .share({
+                    title: 'Historin - Histórias de Gramado',
+                    text: 'Descubra as histórias de Gramado através do Historin!',
+                    url: window.location.href,
+                })
+                .catch((error) => console.error('Erro ao compartilhar:', error));
+        } else {
+            alert('Compartilhamento não suportado neste navegador.');
+        }
+    };
+
+    const buttonStyle =
+        'px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600';
+
+    return (
+        <header className="flex justify-between items-center p-4 bg-[#E6D3B4]">
+            <div className="flex items-center">
+                <Link to="/" className="ml-2 text-2xl font-bold logo">
+                    HISTORIN
+                </Link>
+            </div>
+
+            <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-4">
+                    {timeLeft !== null && timeLeft > 0 && quizStarted ? (
+                        <span
+                            className={`${buttonStyle} flex items-center text-white font-bold`}
+                            onClick={() => setShowQuiz(true)}
+                        >
+                            <i className="fas fa-clock mr-2"></i>
+                            {Math.floor(timeLeft / 60)}:{('0' + (timeLeft % 60)).slice(-2)}
+                        </span>
+                    ) : (
+                        <button
+                            onClick={() => setShowQuiz(true)}
+                            className={`${buttonStyle} flex items-center`}
+                        >
+                            <i className="fas fa-question-circle mr-2"></i>
+                            Quiz
+                        </button>
+                    )}
+                </div>
+                <QuizModal
+                    isOpen={showQuiz}
+                    onClose={() => setShowQuiz(false)}
+                    email={email}
+                    setEmail={setEmail}
+                    emailSubmitted={emailSubmitted}
+                    setEmailSubmitted={setEmailSubmitted}
+                    quizStarted={quizStarted}
+                    setQuizStarted={setQuizStarted}
+                    timeLeft={timeLeft}
+                    setTimeLeft={setTimeLeft}
+                />
+                {/* Share Button */}
+                <button
+                    onClick={handleShare}
+                    aria-label="Compartilhar"
+                    className="text-2xl pr-2 hover:text-blue-600"
+                >
+                    <i className="fas fa-share-alt"></i>
+                </button>
+
+                {/* Feedback Button */}
+                <button
+                    onClick={() => setShowFeedback(true)}
+                    aria-label="Feedback"
+                    className="text-2xl pr-2 hover:text-blue-600"
+                >
+                    <i className="fas fa-comment-dots"></i>
+                </button>
+
+                {/* Menu Button */}
+                <div
+                    className="text-2xl cursor-pointer hover:text-blue-600"
+                    onClick={() => setMenuOpen(true)}
+                >
+                    <i className="fas fa-bars"></i>
+                </div>
+            </div>
+        </header>
+    );
+};
+
+
+
+
+
+
 
 
 
