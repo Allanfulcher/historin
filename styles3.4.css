@@ -45,6 +45,7 @@ header {
 }
 
 header .logo {
+    max-height: 50px;
     display: flex;
     align-items: center;
 }
@@ -450,3 +451,44 @@ input[type="range"]::-moz-range-thumb {
         max-width: 600px;
     }
 }
+
+.description-container h1,
+  .description-container h2,
+  .description-container h3,
+  .description-container h4,
+  .description-container h5,
+  .description-container h6 {
+    font-size: 1.5rem; /* Tailwind's text-2xl */
+    font-weight: 700; /* Tailwind's font-bold */
+    margin-bottom: 1rem; /* Tailwind's mb-4 */
+  }
+
+  .description-container p {
+    margin-bottom: 1rem; /* Tailwind's mb-4 */
+    color: #4A5568; /* Tailwind's text-gray-700 */
+  }
+
+  .description-container ul,
+  .description-container ol {
+    list-style-position: inside; /* Tailwind's list-inside */
+    list-style-type: disc; /* Tailwind's list-disc */
+    margin-bottom: 1rem; /* Tailwind's mb-4 */
+  }
+
+  .description-container a {
+    color: #3182CE; /* Tailwind's text-blue-600 */
+    text-decoration: underline; /* Tailwind's underline */
+  }
+
+  .description-container img {
+    border-radius: 0.375rem; /* Tailwind's rounded-md */
+    margin-bottom: 1rem; /* Tailwind's mb-4 */
+  }
+
+  .description-container blockquote {
+    border-left: 4px solid #CBD5E0; /* Tailwind's border-gray-300 */
+    padding-left: 1rem; /* Tailwind's pl-4 */
+    font-style: italic; /* Tailwind's italic */
+    color: #4A5568; /* Tailwind's text-gray-600 */
+    margin-bottom: 1rem; /* Tailwind's mb-4 */
+  }

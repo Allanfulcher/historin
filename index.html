@@ -14,6 +14,8 @@
     <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
 
+
+
     <!-- React Router DOM -->
     <script src="https://unpkg.com/react-router-dom@5/umd/react-router-dom.min.js" crossorigin></script>
 
@@ -301,389 +303,387 @@
 
 
         const QuizModal = ({
-    isOpen,
-    onClose,
-    email,
-    setEmail,
-    emailSubmitted,
-    setEmailSubmitted,
-    quizStarted,
-    setQuizStarted,
-}) => {
-    const [score, setScore] = useState(0);
-    const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [answersDisabled, setAnswersDisabled] = useState(false);
-    const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
-    const [showFeedback, setShowFeedback] = useState(false);
-    const [feedbackMessage, setFeedbackMessage] = useState('');
-    const [scoresList, setScoresList] = useState([]);
-    const [isCorrect, setIsCorrect] = useState(null);
-    const [selectedQuestions, setSelectedQuestions] = useState([]);
-
-    // Função para obter 10 perguntas aleatórias
-    function getRandomQuestions(allQuestions, num) {
-        const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, num);
-    }
-
-    // Salvar progresso no localStorage
-    const saveProgress = () => {
-        const quizData = {
+            isOpen,
+            onClose,
             email,
+            setEmail,
             emailSubmitted,
+            setEmailSubmitted,
             quizStarted,
-            score,
-            currentQuestion,
-            selectedAnswerIndex,
-            answersDisabled,
-            showFeedback,
-            feedbackMessage,
-            isCorrect,
-            selectedQuestions,
-        };
-        localStorage.setItem('quizProgress', JSON.stringify(quizData));
-    };
+            setQuizStarted,
+        }) => {
+            const [score, setScore] = useState(0);
+            const [currentQuestion, setCurrentQuestion] = useState(0);
+            const [answersDisabled, setAnswersDisabled] = useState(false);
+            const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
+            const [showFeedback, setShowFeedback] = useState(false);
+            const [feedbackMessage, setFeedbackMessage] = useState('');
+            const [scoresList, setScoresList] = useState([]);
+            const [isCorrect, setIsCorrect] = useState(null);
+            const [selectedQuestions, setSelectedQuestions] = useState([]);
 
-    // Carregar progresso do localStorage
-    const loadProgress = () => {
-        const savedData = JSON.parse(localStorage.getItem('quizProgress'));
-        if (savedData) {
-            setEmail(savedData.email || '');
-            setEmailSubmitted(savedData.emailSubmitted || false);
-            setQuizStarted(savedData.quizStarted || false);
-            setScore(savedData.score || 0);
-            setCurrentQuestion(savedData.currentQuestion || 0);
-            setSelectedAnswerIndex(
-                savedData.selectedAnswerIndex !== null ? savedData.selectedAnswerIndex : null
-            );
-            setAnswersDisabled(savedData.answersDisabled || false);
-            setShowFeedback(savedData.showFeedback || false);
-            setFeedbackMessage(savedData.feedbackMessage || '');
-            setIsCorrect(savedData.isCorrect);
-            setSelectedQuestions(savedData.selectedQuestions || []);
-        }
-    };
+            // Função para obter 10 perguntas aleatórias
+            function getRandomQuestions(allQuestions, num) {
+                const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+                return shuffled.slice(0, num);
+            }
 
-    // Carregar progresso quando o componente é montado
-    useEffect(() => {
-        if (isOpen) {
-            loadProgress();
-        }
-    }, [isOpen]);
+            // Salvar progresso no localStorage
+            const saveProgress = () => {
+                const quizData = {
+                    email,
+                    emailSubmitted,
+                    quizStarted,
+                    score,
+                    currentQuestion,
+                    selectedAnswerIndex,
+                    answersDisabled,
+                    showFeedback,
+                    feedbackMessage,
+                    isCorrect,
+                    selectedQuestions,
+                };
+                localStorage.setItem('quizProgress', JSON.stringify(quizData));
+            };
 
-    // Salvar progresso sempre que o estado relevante mudar
-    useEffect(() => {
-        if (quizStarted) saveProgress();
-    }, [
-        quizStarted,
-        currentQuestion,
-        score,
-        selectedAnswerIndex,
-        answersDisabled,
-        showFeedback,
-        feedbackMessage,
-        isCorrect,
-        selectedQuestions,
-    ]);
+            // Carregar progresso do localStorage
+            const loadProgress = () => {
+                const savedData = JSON.parse(localStorage.getItem('quizProgress'));
+                if (savedData) {
+                    setEmail(savedData.email || '');
+                    setEmailSubmitted(savedData.emailSubmitted || false);
+                    setQuizStarted(savedData.quizStarted || false);
+                    setScore(savedData.score || 0);
+                    setCurrentQuestion(savedData.currentQuestion || 0);
+                    setSelectedAnswerIndex(
+                        savedData.selectedAnswerIndex !== null ? savedData.selectedAnswerIndex : null
+                    );
+                    setAnswersDisabled(savedData.answersDisabled || false);
+                    setShowFeedback(savedData.showFeedback || false);
+                    setFeedbackMessage(savedData.feedbackMessage || '');
+                    setIsCorrect(savedData.isCorrect);
+                    setSelectedQuestions(savedData.selectedQuestions || []);
+                }
+            };
 
-    const handleEmailSubmit = (e) => {
-        e.preventDefault();
-        // Enviar email via Formspree
-        fetch('https://formspree.io/f/xpwzrpvj', {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                email: email,
-            }),
-        })
-            .then((response) => {
-                if (response.ok) {
-                    // Email enviado com sucesso
-                    setEmailSubmitted(true);
+            // Carregar progresso quando o componente é montado
+            useEffect(() => {
+                if (isOpen) {
+                    loadProgress();
+                }
+            }, [isOpen]);
+
+            // Salvar progresso sempre que o estado relevante mudar
+            useEffect(() => {
+                if (quizStarted) saveProgress();
+            }, [
+                quizStarted,
+                currentQuestion,
+                score,
+                selectedAnswerIndex,
+                answersDisabled,
+                showFeedback,
+                feedbackMessage,
+                isCorrect,
+                selectedQuestions,
+            ]);
+
+            const handleEmailSubmit = (e) => {
+                e.preventDefault();
+                // Enviar email via Formspree
+                fetch('https://formspree.io/f/xpwzrpvj', {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                    }),
+                })
+                    .then((response) => {
+                        if (response.ok) {
+                            // Email enviado com sucesso
+                            setEmailSubmitted(true);
+                            setQuizStarted(true);
+                            setSelectedQuestions(getRandomQuestions(questions, 10));
+                        } else {
+                            // Lidar com erro
+                            console.error('Falha ao enviar email');
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Erro ao enviar email:', error);
+                    });
+            };
+
+            const handleAnswer = (index) => {
+                if (answersDisabled) return;
+                setAnswersDisabled(true);
+                setSelectedAnswerIndex(index);
+                const correctIndex = selectedQuestions[currentQuestion]?.correct;
+                const isCorrect = index === correctIndex;
+                setIsCorrect(isCorrect);
+                if (isCorrect) {
+                    setScore(score + 10);
+                    setFeedbackMessage('Correto!');
+                } else {
+                    setFeedbackMessage('Incorreto!');
+                }
+                setShowFeedback(true);
+                setTimeout(() => {
+                    setShowFeedback(false);
+                    setSelectedAnswerIndex(null);
+                    setCurrentQuestion(currentQuestion + 1);
+                    setAnswersDisabled(false);
+                    setIsCorrect(null);
+                }, 1000);
+            };
+
+            const handleClose = () => {
+                saveProgress();
+                onClose();
+            };
+
+            // Salvar pontuação e finalizar quiz quando todas as perguntas forem respondidas
+            useEffect(() => {
+                if (selectedQuestions.length > 0 && currentQuestion >= selectedQuestions.length) {
+                    const storedScores = JSON.parse(localStorage.getItem('scoresList')) || [];
+                    const newScores = [...storedScores, { email, score }];
+                    localStorage.setItem('scoresList', JSON.stringify(newScores));
+                    setScoresList(newScores);
+
+                    // Resetar estado do quiz
+                    setQuizStarted(false);
+                }
+            }, [currentQuestion]);
+
+            // Iniciar quiz se o email já foi enviado
+            useEffect(() => {
+                if (emailSubmitted && !quizStarted) {
                     setQuizStarted(true);
                     setSelectedQuestions(getRandomQuestions(questions, 10));
-                } else {
-                    // Lidar com erro
-                    console.error('Falha ao enviar email');
                 }
-            })
-            .catch((error) => {
-                console.error('Erro ao enviar email:', error);
-            });
-    };
+            }, [emailSubmitted, quizStarted]);
 
-    const handleAnswer = (index) => {
-        if (answersDisabled) return;
-        setAnswersDisabled(true);
-        setSelectedAnswerIndex(index);
-        const correctIndex = selectedQuestions[currentQuestion]?.correct;
-        const isCorrect = index === correctIndex;
-        setIsCorrect(isCorrect);
-        if (isCorrect) {
-            setScore(score + 10);
-            setFeedbackMessage('Correto!');
-        } else {
-            setFeedbackMessage('Incorreto!');
-        }
-        setShowFeedback(true);
-        setTimeout(() => {
-            setShowFeedback(false);
-            setSelectedAnswerIndex(null);
-            setCurrentQuestion(currentQuestion + 1);
-            setAnswersDisabled(false);
-            setIsCorrect(null);
-        }, 1000);
-    };
-
-    const handleClose = () => {
-        saveProgress();
-        onClose();
-    };
-
-    // Salvar pontuação e finalizar quiz quando todas as perguntas forem respondidas
-    useEffect(() => {
-        if (selectedQuestions.length > 0 && currentQuestion >= selectedQuestions.length) {
-            const storedScores = JSON.parse(localStorage.getItem('scoresList')) || [];
-            const newScores = [...storedScores, { email, score }];
-            localStorage.setItem('scoresList', JSON.stringify(newScores));
-            setScoresList(newScores);
-
-            // Resetar estado do quiz
-            setQuizStarted(false);
-        }
-    }, [currentQuestion]);
-
-    // Iniciar quiz se o email já foi enviado
-    useEffect(() => {
-        if (emailSubmitted && !quizStarted) {
-            setQuizStarted(true);
-            setSelectedQuestions(getRandomQuestions(questions, 10));
-        }
-    }, [emailSubmitted, quizStarted]);
-
-    return isOpen ? (
-        <div
-            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-            onClick={handleClose}
-        >
-            <div
-                className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full"
-                onClick={(e) => e.stopPropagation()}
-            >
-                {quizStarted || (!quizStarted && emailSubmitted) ? (
-                    selectedQuestions[currentQuestion] ? (
-                        <div>
-                            <div className="flex justify-between items-center mb-4">
-                                <span className="text-lg font-semibold">
-                                    Pergunta {currentQuestion + 1} de {selectedQuestions.length}
-                                </span>
-                            </div>
-                            <p className="text-lg font-semibold mb-4">
-                                {selectedQuestions[currentQuestion].question}
-                            </p>
-                            {selectedQuestions[currentQuestion].answers.map((answer, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => handleAnswer(idx)}
-                                    className={`w-full py-2 mb-2 rounded-lg
-                                        ${
-                                            answersDisabled
-                                                ? idx === selectedQuestions[currentQuestion].correct
-                                                    ? 'bg-green-500 text-white'
-                                                    : idx === selectedAnswerIndex
-                                                    ? 'bg-red-500 text-white'
-                                                    : 'bg-gray-200'
-                                                : 'bg-blue-500 text-white hover:bg-blue-600'
-                                        }
-                                    `}
-                                    disabled={answersDisabled}
-                                >
-                                    {answer}
-                                </button>
-                            ))}
-                            {showFeedback && (
-                                <p
-                                    className={`text-center text-lg font-bold mt-4 ${
-                                        isCorrect ? 'text-green-500' : 'text-red-500'
-                                    }`}
-                                >
-                                    {feedbackMessage}
-                                </p>
-                            )}
-                        </div>
-                    ) : (
-                        <div className="text-center">
-                            <p className="text-2xl font-semibold mb-4">Quiz finalizado!</p>
-                            <p className="text-lg font-semibold mb-2">Email: {email}</p>
-                            {(() => {
-                                const totalScore = selectedQuestions.length * 10;
-                                const percentageScore = Math.round((score / totalScore) * 100);
-                                return (
-                                    <p className="text-lg font-semibold mb-4">
-                                        Sua pontuação é {percentageScore}%
-                                    </p>
-                                );
-                            })()}
-                            <h3 className="text-xl font-bold mb-2">Ranking:</h3>
-                            <ul className="mb-4">
-                                {scoresList
-                                    .sort((a, b) => b.score - a.score)
-                                    .slice(0, 5) // Top 5
-                                    .map((item, idx) => {
-                                        const totalScore = selectedQuestions.length * 10;
-                                        const percentageScore = Math.round(
-                                            (item.score / totalScore) * 100
-                                        );
-                                        return (
-                                            <li
-                                                key={idx}
-                                                className="flex justify-between items-center py-2 px-4 bg-gray-100 rounded-lg mb-2"
-                                            >
-                                                <span>
-                                                    {idx + 1}. {item.email}
-                                                </span>
-                                                <span>{percentageScore}%</span>
-                                            </li>
-                                        );
-                                    })}
-                            </ul>
-                            <button
-                                onClick={() => {
-                                    // Reiniciar quiz sem pedir email novamente
-                                    setScore(0);
-                                    setCurrentQuestion(0);
-                                    setQuizStarted(true);
-                                    setSelectedQuestions(getRandomQuestions(questions, 10));
-                                }}
-                                className="py-2 mb-2 bg-green-500 text-white rounded-lg mx-auto block w-full hover:bg-green-600"
-                            >
-                                Tentar novamente
-                            </button>
-                        </div>
-                    )
-                ) : !emailSubmitted ? (
-                    <div>
-                        <p className="text-lg font-semibold mb-4">
-                            Teste seus conhecimentos sobre a plataforma.
-                        </p>
-                        <form onSubmit={handleEmailSubmit} className="flex flex-col">
-                            <label className="mb-2 text-lg font-semibold">
-                                Digite seu email para começar:
-                            </label>
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                                className="mb-4 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                            <button
-                                type="submit"
-                                className="py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
-                            >
-                                Começar Quiz
-                            </button>
-                        </form>
-                    </div>
-                ) : (
-                    <div>
-                        {/* Carregando ou mensagem */}
-                    </div>
-                )}
-                <button
-                    onClick={handleClose}
-                    className="mt-4 text-red-500 hover:text-red-600"
-                >
-                    Fechar
-                </button>
-            </div>
-        </div>
-    ) : null;
-};
-const Header = ({ setMenuOpen, setShowFeedback }) => {
-    const [showQuiz, setShowQuiz] = useState(false);
-    const [email, setEmail] = useState('');
-    const [emailSubmitted, setEmailSubmitted] = useState(false);
-    const [quizStarted, setQuizStarted] = useState(false);
-
-    // Função para compartilhar
-    const handleShare = () => {
-        if (navigator.share) {
-            navigator
-                .share({
-                    title: 'Historin - Histórias de Gramado',
-                    text: 'Descubra as histórias de Gramado através do Historin!',
-                    url: window.location.href,
-                })
-                .catch((error) => console.error('Erro ao compartilhar:', error));
-        } else {
-            alert('Compartilhamento não suportado neste navegador.');
-        }
-    };
-
-    const buttonStyle =
-        'px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600';
-
-    return (
-        <header className="flex justify-between items-center p-4 bg-[#E6D3B4]">
-            <div className="flex items-center">
-                <Link to="/" className="ml-2 text-2xl font-bold logo">
-                    HISTORIN
-                </Link>
-            </div>
-
-            <div className="flex items-center space-x-4">
-                <button
-                    onClick={() => setShowQuiz(true)}
-                    className={`${buttonStyle} flex items-center`}
-                >
-                    <i className="fas fa-question-circle mr-2"></i>
-                    Quiz
-                </button>
-
-                <QuizModal
-                    isOpen={showQuiz}
-                    onClose={() => setShowQuiz(false)}
-                    email={email}
-                    setEmail={setEmail}
-                    emailSubmitted={emailSubmitted}
-                    setEmailSubmitted={setEmailSubmitted}
-                    quizStarted={quizStarted}
-                    setQuizStarted={setQuizStarted}
-                />
-
-                {/* Botão Compartilhar */}
-                <button
-                    onClick={handleShare}
-                    aria-label="Compartilhar"
-                    className="text-2xl pr-2 hover:text-blue-600"
-                >
-                    <i className="fas fa-share-alt"></i>
-                </button>
-
-                {/* Botão Feedback */}
-                <button
-                    onClick={() => setShowFeedback(true)}
-                    aria-label="Feedback"
-                    className="text-2xl pr-2 hover:text-blue-600"
-                >
-                    <i className="fas fa-comment-dots"></i>
-                </button>
-
-                {/* Botão Menu */}
+            return isOpen ? (
                 <div
-                    className="text-2xl cursor-pointer hover:text-blue-600"
-                    onClick={() => setMenuOpen(true)}
+                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                    onClick={handleClose}
                 >
-                    <i className="fas fa-bars"></i>
+                    <div
+                        className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {quizStarted || (!quizStarted && emailSubmitted) ? (
+                            selectedQuestions[currentQuestion] ? (
+                                <div>
+                                    <div className="flex justify-between items-center mb-4">
+                                        <span className="text-lg font-semibold">
+                                            Pergunta {currentQuestion + 1} de {selectedQuestions.length}
+                                        </span>
+                                    </div>
+                                    <p className="text-lg font-semibold mb-4">
+                                        {selectedQuestions[currentQuestion].question}
+                                    </p>
+                                    {selectedQuestions[currentQuestion].answers.map((answer, idx) => (
+                                        <button
+                                            key={idx}
+                                            onClick={() => handleAnswer(idx)}
+                                            className={`w-full py-2 mb-2 rounded-lg
+                                        ${answersDisabled
+                                                    ? idx === selectedQuestions[currentQuestion].correct
+                                                        ? 'bg-green-500 text-white'
+                                                        : idx === selectedAnswerIndex
+                                                            ? 'bg-red-500 text-white'
+                                                            : 'bg-gray-200'
+                                                    : 'bg-blue-500 text-white hover:bg-blue-600'
+                                                }
+                                    `}
+                                            disabled={answersDisabled}
+                                        >
+                                            {answer}
+                                        </button>
+                                    ))}
+                                    {showFeedback && (
+                                        <p
+                                            className={`text-center text-lg font-bold mt-4 ${isCorrect ? 'text-green-500' : 'text-red-500'
+                                                }`}
+                                        >
+                                            {feedbackMessage}
+                                        </p>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="text-center">
+                                    <p className="text-2xl font-semibold mb-4">Quiz finalizado!</p>
+                                    <p className="text-lg font-semibold mb-2">Email: {email}</p>
+                                    {(() => {
+                                        const totalScore = selectedQuestions.length * 10;
+                                        const percentageScore = Math.round((score / totalScore) * 100);
+                                        return (
+                                            <p className="text-lg font-semibold mb-4">
+                                                Sua pontuação é {percentageScore}%
+                                            </p>
+                                        );
+                                    })()}
+                                    <h3 className="text-xl font-bold mb-2">Ranking:</h3>
+                                    <ul className="mb-4">
+                                        {scoresList
+                                            .sort((a, b) => b.score - a.score)
+                                            .slice(0, 5) // Top 5
+                                            .map((item, idx) => {
+                                                const totalScore = selectedQuestions.length * 10;
+                                                const percentageScore = Math.round(
+                                                    (item.score / totalScore) * 100
+                                                );
+                                                return (
+                                                    <li
+                                                        key={idx}
+                                                        className="flex justify-between items-center py-2 px-4 bg-gray-100 rounded-lg mb-2"
+                                                    >
+                                                        <span>
+                                                            {idx + 1}. {item.email}
+                                                        </span>
+                                                        <span>{percentageScore}%</span>
+                                                    </li>
+                                                );
+                                            })}
+                                    </ul>
+                                    <button
+                                        onClick={() => {
+                                            // Reiniciar quiz sem pedir email novamente
+                                            setScore(0);
+                                            setCurrentQuestion(0);
+                                            setQuizStarted(true);
+                                            setSelectedQuestions(getRandomQuestions(questions, 10));
+                                        }}
+                                        className="py-2 mb-2 bg-green-500 text-white rounded-lg mx-auto block w-full hover:bg-green-600"
+                                    >
+                                        Tentar novamente
+                                    </button>
+                                </div>
+                            )
+                        ) : !emailSubmitted ? (
+                            <div>
+                                <p className="text-lg font-semibold mb-4">
+                                    Teste seus conhecimentos sobre a plataforma.
+                                </p>
+                                <form onSubmit={handleEmailSubmit} className="flex flex-col">
+                                    <label className="mb-2 text-lg font-semibold">
+                                        Digite seu email para começar:
+                                    </label>
+                                    <input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        required
+                                        className="mb-4 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+                                    >
+                                        Começar Quiz
+                                    </button>
+                                </form>
+                            </div>
+                        ) : (
+                            <div>
+                                {/* Carregando ou mensagem */}
+                            </div>
+                        )}
+                        <button
+                            onClick={handleClose}
+                            className="mt-4 text-red-500 hover:text-red-600"
+                        >
+                            Fechar
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </header>
-    );
-};
+            ) : null;
+        };
+        const Header = ({ setMenuOpen, setShowFeedback }) => {
+            const [showQuiz, setShowQuiz] = useState(false);
+            const [email, setEmail] = useState('');
+            const [emailSubmitted, setEmailSubmitted] = useState(false);
+            const [quizStarted, setQuizStarted] = useState(false);
+
+            // Função para compartilhar
+            const handleShare = () => {
+                if (navigator.share) {
+                    navigator
+                        .share({
+                            title: 'Historin - Histórias de Gramado',
+                            text: 'Descubra as histórias de Gramado através do Historin!',
+                            url: window.location.href,
+                        })
+                        .catch((error) => console.error('Erro ao compartilhar:', error));
+                } else {
+                    alert('Compartilhamento não suportado neste navegador.');
+                }
+            };
+
+            const buttonStyle =
+                'px-4 py-2 bg-blue-500 text-white rounded-lg cursor-pointer hover:bg-blue-600';
+
+            return (
+                <header className="flex justify-between items-center p-4 bg-[#E6D3B4]">
+                    <div className="flex items-center">
+                        <Link to="/" className="mr-2">
+                            <img src="fotos/historin-logo.svg" alt="HISTORIN Logo" className="text-2xl font-bold logo" />
+                        </Link>
+                    </div>
+
+                    <div className="flex items-center space-x-4">
+                        <button
+                            onClick={() => setShowQuiz(true)}
+                            className={`${buttonStyle} flex items-center`}
+                        >
+                            <i className="fas fa-question-circle mr-2"></i>
+                            Quiz
+                        </button>
+
+                        <QuizModal
+                            isOpen={showQuiz}
+                            onClose={() => setShowQuiz(false)}
+                            email={email}
+                            setEmail={setEmail}
+                            emailSubmitted={emailSubmitted}
+                            setEmailSubmitted={setEmailSubmitted}
+                            quizStarted={quizStarted}
+                            setQuizStarted={setQuizStarted}
+                        />
+
+                        {/* Botão Compartilhar */}
+                        <button
+                            onClick={handleShare}
+                            aria-label="Compartilhar"
+                            className="text-2xl pr-2 hover:text-blue-600"
+                        >
+                            <i className="fas fa-share-alt"></i>
+                        </button>
+
+                        {/* Botão Feedback */}
+                        <button
+                            onClick={() => setShowFeedback(true)}
+                            aria-label="Feedback"
+                            className="text-2xl pr-2 hover:text-blue-600"
+                        >
+                            <i className="fas fa-comment-dots"></i>
+                        </button>
+
+                        {/* Botão Menu */}
+                        <div
+                            className="text-2xl cursor-pointer hover:text-blue-600"
+                            onClick={() => setMenuOpen(true)}
+                        >
+                            <i className="fas fa-bars"></i>
+                        </div>
+                    </div>
+                </header>
+            );
+        };
 
 
 
@@ -766,6 +766,15 @@ const Header = ({ setMenuOpen, setShowFeedback }) => {
                                 onClick={() => setMenuOpen(false)}
                             >
                                 Legado Afro no RS
+                            </Link>
+                            <Link
+                                to="/referencias"
+                                className="menu-item px-4 py-3 bg-transparent hover:bg-gray-100 rounded-md text-lg font-semibold"
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                REFERÊNCIAS
+                                <span className="subtitle block text-sm text-gray-500">+ conteúdo</span>
+
                             </Link>
 
                         </div>
@@ -1793,7 +1802,7 @@ const Header = ({ setMenuOpen, setShowFeedback }) => {
                     </Link>
 
                     {/* Carrossel de Cidades */}
-                    <div ref={carouselRef} className="overflow-x-auto whitespace-nowrap py-2 flex-grow">
+                    <div ref={carouselRef} className="overflow-x-auto whitespace-nowrap flex-grow">
                         <div className="flex space-x-2 inline-flex">
                             {cidades.map(cidade => (
                                 <span
@@ -1856,277 +1865,453 @@ const Header = ({ setMenuOpen, setShowFeedback }) => {
             );
         };
 
+        const Referencias = () => {
+            const [activeSection, setActiveSection] = useState(null);
+            const location = useLocation();
 
-
-        // Componente de Conteúdo da História
-        const HistoriaContent = ({
-            currentHistory,
-            historiasDaRua,
-            currentIndex,
-            setCurrentIndex,
-            setCurrentHistory,
-            showAllStories,
-            setShowAllStories,
-            selectedRuaId
-        }) => {
-            const { useState, useEffect, useRef } = React;
-
-            // Estados para descrição da rua, modal de imagem, zoom e tradução
-            const [showRuaDescription, setShowRuaDescription] = useState(false);
-            const [activeRuaTab, setActiveRuaTab] = useState('descricao'); // Definir 'fotos' como padrão
-            const [isModalOpen, setIsModalOpen] = useState(false);
-            const [selectedImage, setSelectedImage] = useState(null);
-            const [currentZoom, setCurrentZoom] = useState(1);
-            const [translateX, setTranslateX] = useState(0);
-            const [translateY, setTranslateY] = useState(0);
-            const [showLocaisRecomendados, setShowLocaisRecomendados] = useState(false);
-
-            // Refs para gerenciar o estado de arrasto
-            const isDraggingRef = useRef(false);
-            const startXRef = useRef(0);
-            const startYRef = useRef(0);
-            const initialTranslateXRef = useRef(0);
-            const initialTranslateYRef = useRef(0);
-
-            const modalImageRef = useRef(null);
-
-            const history = useHistory();
-
-            const rua = ruas.find(r => r.id === selectedRuaId) || {};
-
-            const handlePrev = () => {
-                if (currentIndex > 0) {
-                    const newIndex = currentIndex - 1;
-                    const newHistory = historiasDaRua[newIndex];
-                    history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
-                    setCurrentHistory(newHistory);
-                    setCurrentIndex(newIndex);
-                    setShowRuaDescription(false); // Oculta a descrição da rua
-                    setActiveRuaTab('fotos'); // Resetar a aba para fotos
-                }
-            };
-
-
-
-            const handleNext = () => {
-                if (currentIndex < historiasDaRua.length - 1) {
-                    const newIndex = currentIndex + 1;
-                    const newHistory = historiasDaRua[newIndex];
-                    history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
-                    setCurrentHistory(newHistory);
-                    setCurrentIndex(newIndex);
-                    setShowRuaDescription(false); // Oculta a descrição da rua
-                    setActiveRuaTab('fotos'); // Resetar a aba para fotos
-                }
-            };
-
-            const handleRangeChange = (event) => {
-                const newIndex = parseInt(event.target.value);
-                if (newIndex >= 0 && newIndex < historiasDaRua.length) {
-                    const newHistory = historiasDaRua[newIndex];
-                    history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
-                    setCurrentHistory(newHistory);
-                    setCurrentIndex(newIndex);
-                    setShowRuaDescription(false); // Oculta a descrição da rua
-                    setActiveRuaTab('fotos'); // Resetar a aba para fotos
-                }
-            };
-
-            const openModal = (image) => {
-                setSelectedImage(image);
-                setIsModalOpen(true);
-                setCurrentZoom(1); // Resetar o zoom ao abrir o modal
-                setTranslateX(0);  // Resetar a tradução ao abrir o modal
-                setTranslateY(0);
-            };
-
-            const closeModal = () => {
-                setIsModalOpen(false);
-                setSelectedImage(null);
-                setCurrentZoom(1); // Resetar o zoom ao fechar o modal
-                setTranslateX(0);  // Resetar a tradução ao fechar o modal
-                setTranslateY(0);
-            };
-
-            // Fechar modal ao pressionar a tecla Esc
             useEffect(() => {
-                const handleKeyDown = (e) => {
-                    if (e.key === 'Escape') {
-                        closeModal();
-                    }
-                };
-                window.addEventListener('keydown', handleKeyDown);
-                return () => window.removeEventListener('keydown', handleKeyDown);
-            }, []);
+                // Extrair o parâmetro 'section' da URL
+                const params = new URLSearchParams(location.search);
+                const section = params.get('section');
+                if (section === 'orgs' || section === 'autores' || section === 'obras') {
+                    setActiveSection(section);
+                }
+            }, [location]);
 
-            // Funções para lidar com arrastar a imagem (Panning) - Desktop
-            const handleMouseDown = (e) => {
-                if (currentZoom <= 1) return; // Não permitir arrastar se não houver zoom
-
-                isDraggingRef.current = true;
-                startXRef.current = e.clientX;
-                startYRef.current = e.clientY;
-                initialTranslateXRef.current = translateX;
-                initialTranslateYRef.current = translateY;
-
-                window.addEventListener('mousemove', handleMouseMove);
-                window.addEventListener('mouseup', handleMouseUp);
+            const toggleSection = (sectionName) => {
+                setActiveSection(prevSection => (prevSection === sectionName ? null : sectionName));
             };
-
-            const handleMouseMove = (e) => {
-                if (!isDraggingRef.current) return;
-
-                const deltaX = e.clientX - startXRef.current;
-                const deltaY = e.clientY - startYRef.current;
-
-                setTranslateX(initialTranslateXRef.current + deltaX);
-                setTranslateY(initialTranslateYRef.current + deltaY);
-            };
-
-            const handleMouseUp = () => {
-                isDraggingRef.current = false;
-                window.removeEventListener('mousemove', handleMouseMove);
-                window.removeEventListener('mouseup', handleMouseUp);
-            };
-
-            // Funções para lidar com arrastar a imagem (Panning) - Mobile
-            const handleTouchStartPan = (e) => {
-                if (currentZoom <= 1 || e.touches.length !== 1) return;
-
-                isDraggingRef.current = true;
-                startXRef.current = e.touches[0].clientX;
-                startYRef.current = e.touches[0].clientY;
-                initialTranslateXRef.current = translateX;
-                initialTranslateYRef.current = translateY;
-
-                window.addEventListener('touchmove', handleTouchMovePan);
-                window.addEventListener('touchend', handleTouchEndPan);
-            };
-
-            const handleTouchMovePan = (e) => {
-                if (!isDraggingRef.current || e.touches.length !== 1) return;
-
-                const deltaX = e.touches[0].clientX - startXRef.current;
-                const deltaY = e.touches[0].clientY - startYRef.current;
-
-                setTranslateX(initialTranslateXRef.current + deltaX);
-                setTranslateY(initialTranslateYRef.current + deltaY);
-            };
-
-            const handleTouchEndPan = () => {
-                isDraggingRef.current = false;
-                window.removeEventListener('touchmove', handleTouchMovePan);
-                window.removeEventListener('touchend', handleTouchEndPan);
-            };
-
-            if (!currentHistory) {
-                return (
-                    <div className="w-full py-4">
-                        <h2 className="text-xl font-bold">Nenhuma história disponível para esta rua.</h2>
-                    </div>
-                );
-            }
 
             return (
-                <div className="main-content w-full flex flex-col items-center flex-grow overflow-y-auto">
+                <div className="referencias px-4 md:px-8 lg:px-16 py-8">
+                    {/* Título Principal */}
+                    <h1 className="text-3xl font-bold text-center">Referências</h1>
+                    <h3 className="font-bold text-center mb-6">+ Conteúdo</h3>
 
-                    <div className="w-full lg:py-4 flex justify-between items-center">
-                        <div className="flex items-center ">
-                            <h3 className="text-xl font-bold mr-2">{rua.nome}</h3>
-                            <button
-                                onClick={() => setShowRuaDescription(!showRuaDescription)}
-                                className="flex items-center text-blue-600"
-                                aria-expanded={showRuaDescription}
-                                aria-controls="sobreRuaContent"
+                    {/* Parágrafo Descritivo */}
+                    <p className="text-center text-gray-700 mb-8 max-w-2xl mx-auto">
+                        Nesta página, você encontrará uma ampla variedade de referências para aprofundar seu conhecimento histórico. Nosso objetivo é incentivar o interesse das pessoas e disseminar conteúdo histórico relevante, fornecendo fontes confiáveis e diversas para a exploração da rica história que a nossa plataforma oferece.
+                    </p>
+
+                    {/* Seção Organizações */}
+                    <section className="orgs mb-8">
+                        <button
+                            className="flex items-center justify-between w-full px-4 py-2 text-2xl font-semibold text-left bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none transition-colors duration-200"
+                            onClick={() => toggleSection('orgs')}
+                        >
+                            <span>Organizações</span>
+                            <svg
+                                className={`w-6 h-6 transform transition-transform duration-200 ${activeSection === 'orgs' ? 'rotate-180' : 'rotate-0'}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
                             >
-                                Sobre a rua
-                                <i className={`ml-1 fas fa-chevron-${showRuaDescription ? 'up' : 'down'}`}></i>
-                            </button>
-                        </div>
-                    </div>
-                    {/* Descrição da Rua com Abas */}
-                    {showRuaDescription && (
-                        <div className="w-full py-2 lg:py-4" id="sobreRuaContent">
-                            {/* Abas */}
-                            <div className="flex border-b border-gray-300">
-                                <button
-                                    className={`px-4 py-2 -mb-px font-semibold text-sm ${activeRuaTab === 'descricao'
-                                        ? 'border-b-2 border-blue-500 text-blue-500'
-                                        : 'text-gray-600 hover:text-blue-500'
-                                        }`}
-                                    onClick={() => setActiveRuaTab('descricao')}
-                                    aria-label="Mostrar descrição da rua"
-                                >
-                                    Descrição
-                                </button>
-                                <button
-                                    className={`px-4 py-2 -mb-px font-semibold text-sm ${activeRuaTab === 'fotos'
-                                        ? 'border-b-2 border-blue-500 text-blue-500'
-                                        : 'text-gray-600 hover:text-blue-500'
-                                        }`}
-                                    onClick={() => setActiveRuaTab('fotos')}
-                                    aria-label="Mostrar fotos da rua"
-                                >
-                                    Fotos
-                                </button>
-                            </div>
-                            {/* Conteúdo das Abas */}
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        {activeSection === 'orgs' && (
                             <div className="mt-4">
-                                {activeRuaTab === 'descricao' && (
-                                    <div className="border border-black p-3 rounded-md max-h-64 overflow-y-scroll bg-[#f5f1e8]">
-                                        <p>{rua.descricao}</p>
+                                {orgs.map(org => (
+                                    <div key={org.id} className="org bg-white shadow-md p-4 rounded-lg mb-4">
+                                        <img
+                                            src={org.logo}
+                                            alt={`${org.fantasia} logo`}
+                                            className="h-32 mx-auto mb-4 object-contain"
+                                        />
+                                        <h3 className="text-xl font-bold text-center">{org.fantasia}</h3>
+                                        <p className="text-gray-700 mt-2">{org.sobre}</p>
+                                        <a href={org.link} className="text-blue-500 hover:underline mt-2 block text-center">Visitar site</a>
                                     </div>
-                                )}
-                                {activeRuaTab === 'fotos' && (
-                                    <div className="border-b border-black pb-2 mt-2 grid grid-cols-2 gap-2">
-                                        {rua.fotos && rua.fotos.length > 0 ? (
-                                            rua.fotos.map((foto, index) => (
-                                                <img
-                                                    key={index}
-                                                    src={foto}
-                                                    alt={`Foto da rua ${index + 1}`}
-                                                    className="w-full h-auto object-cover rounded-md cursor-pointer"
-                                                    onClick={() => openModal(foto)}
-                                                />
-                                            ))
-                                        ) : (
-                                            <p className="text-gray-600">Nenhuma foto disponível.</p>
-                                        )}
-                                    </div>
-                                )}
+                                ))}
                             </div>
-                            {/* Botão "Ocultar" centralizado abaixo das abas */}
-                            <div className="flex justify-center mt-4">
-                                <button
-                                    onClick={() => setShowRuaDescription(false)}
-                                    className="text-blue-600 hover:underline"
-                                >
-                                    Ocultar
-                                    <i className={`ml-1 fas fa-chevron-${showRuaDescription ? 'up' : 'down'}`}></i>
-                                </button>
-                            </div>
-                        </div>
-                    )}
+                        )}
+                    </section>
 
-                    {/* Mostrar todas as histórias em lista vertical */}
+                    {/* Seção Autores */}
+                    <section className="autores mb-8">
+                        <button
+                            className="flex items-center justify-between w-full px-4 py-2 text-2xl font-semibold text-left bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none transition-colors duration-200"
+                            onClick={() => toggleSection('autores')}
+                        >
+                            <span>Autores</span>
+                            <svg
+                                className={`w-6 h-6 transform transition-transform duration-200 ${activeSection === 'autores' ? 'rotate-180' : 'rotate-0'}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        {activeSection === 'autores' && (
+                            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {autores.map(autor => (
+                                    <div key={autor.id} className="autor bg-white shadow-md p-4 rounded-lg flex flex-col items-center">
+                                        <img src={autor.foto} alt={autor.nome} className="w-24 h-24 mb-4 rounded-full object-cover" />
+                                        <h3 className="text-xl font-bold text-center">{autor.nome}</h3>
+                                        <p className="text-gray-700 text-center mt-2">{autor.bio}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </section>
+
+                    {/* Seção Obras */}
+                    <section className="obras mb-8">
+                        <button
+                            className="flex items-center justify-between w-full px-4 py-2 text-2xl font-semibold text-left bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none transition-colors duration-200"
+                            onClick={() => toggleSection('obras')}
+                        >
+                            <span>Obras</span>
+                            <svg
+                                className={`w-6 h-6 transform transition-transform duration-200 ${activeSection === 'obras' ? 'rotate-180' : 'rotate-0'}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        {activeSection === 'obras' && (
+                            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {obras.map(obra => (
+                                    <div key={obra.id} className="obra bg-white shadow-md p-4 rounded-lg">
+                                        <img src={obra.capa} alt={obra.titulo} className="w-full h-40 object-cover mb-4 rounded-lg" />
+                                        <h3 className="text-xl font-bold">{obra.titulo}</h3>
+                                        <p className="text-gray-700 mt-2">{obra.descricao}</p>
+                                        <a href={obra.link} className="text-blue-500 hover:underline mt-2 block">
+                                            {obra.pago ? "Adquirir" : "Ler gratuitamente"}
+                                        </a>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </section>
+
+                    {/* Seção Sites */}
+                    <section className="sites mb-8">
+                        <button
+                            className="flex items-center justify-between w-full px-4 py-2 text-2xl font-semibold text-left bg-gray-100 rounded-md hover:bg-gray-200 focus:outline-none transition-colors duration-200"
+                            onClick={() => toggleSection("sites")}
+                        >
+                            <span>Sites</span>
+                            <svg
+                                className={`w-6 h-6 transform transition-transform duration-200 ${activeSection === "sites" ? "rotate-180" : "rotate-0"
+                                    }`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        {activeSection === "sites" && (
+                            <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {sites.map((site) => (
+                                    <div key={site.id} className="site bg-white shadow-md p-4 rounded-lg flex flex-col items-center">
+                                        <img
+                                            src={site.logo}
+                                            alt={`${site.nome} logo`}
+                                            className="w-24 h-24 mb-4 rounded-lg object-contain"
+                                        />
+                                        <h3 className="text-xl font-bold text-center">{site.nome}</h3>
+                                        <a
+                                            href={site.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-500 hover:underline mt-2 block text-center"
+                                        >
+                                            Visitar site
+                                        </a>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </section>
+
+                    {/* Seção de Vídeos */}
+                    <section className="videos mb-8">
+                        <h2 className="pl-4 text-2xl font-semibold mb-4">Vídeos</h2>
+                        <div className="video-container">
+                            <iframe
+                                width="100%"
+                                height="500"
+                                src="https://www.youtube.com/embed/videoseries?list=PL7HcHb8oOEF8p3w7QAc5LPFVVaBP1SNoP"
+                                title="YouTube playlist"
+                                frameBorder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                className="rounded-lg shadow-md"
+                            ></iframe>
+                        </div>
+                    </section>
+
+
+
+                </div>
+            );
+
+        };
+
+        // Updated HistoriaContent component
+const HistoriaContent = ({
+    currentHistory,
+    historiasDaRua,
+    currentIndex,
+    setCurrentIndex,
+    setCurrentHistory,
+    showAllStories,
+    setShowAllStories,
+    selectedRuaId,
+}) => {
+    const { useState, useEffect, useRef } = React;
+
+    // State variables
+    const [activeTab, setActiveTab] = useState('historia'); // 'historia', 'rua', 'cidade'
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [currentZoom, setCurrentZoom] = useState(1);
+    const [translateX, setTranslateX] = useState(0);
+    const [translateY, setTranslateY] = useState(0);
+    const [showLocaisRecomendados, setShowLocaisRecomendados] = useState(false);
+    const [showCreditModal, setShowCreditModal] = useState(false);
+    const [currentPhoto, setCurrentPhoto] = useState(null);
+
+    const isDraggingRef = useRef(false);
+    const startXRef = useRef(0);
+    const startYRef = useRef(0);
+    const initialTranslateXRef = useRef(0);
+    const initialTranslateYRef = useRef(0);
+
+    const modalImageRef = useRef(null);
+
+    const history = useHistory();
+
+    // Fetching rua data (assuming ruas data includes cidadeId)
+    const rua = ruas.find((r) => r.id === selectedRuaId) || {};
+    const cidade = cidades.find((c) => c.id === rua.cidade_id) || {};
+
+    // Fetching organization data if available
+    const org =
+        currentHistory && currentHistory.orgId
+            ? orgs.find((o) => o.id == currentHistory.orgId)
+            : null;
+
+    // Navigation handlers
+    const handlePrev = () => {
+        if (currentIndex > 0) {
+            const newIndex = currentIndex - 1;
+            const newHistory = historiasDaRua[newIndex];
+            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+            setCurrentHistory(newHistory);
+            setCurrentIndex(newIndex);
+            setActiveTab('historia'); // Reset to 'historia' tab
+        }
+    };
+
+    const handleNext = () => {
+        if (currentIndex < historiasDaRua.length - 1) {
+            const newIndex = currentIndex + 1;
+            const newHistory = historiasDaRua[newIndex];
+            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+            setCurrentHistory(newHistory);
+            setCurrentIndex(newIndex);
+            setActiveTab('historia'); // Reset to 'historia' tab
+        }
+    };
+
+    const handleRangeChange = (event) => {
+        const newIndex = parseInt(event.target.value);
+        if (newIndex >= 0 && newIndex < historiasDaRua.length) {
+            const newHistory = historiasDaRua[newIndex];
+            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+            setCurrentHistory(newHistory);
+            setCurrentIndex(newIndex);
+            setActiveTab('historia'); // Reset to 'historia' tab
+        }
+    };
+
+    const openModal = (foto) => {
+        setSelectedImage(foto);
+        setIsModalOpen(true);
+        setCurrentZoom(1);
+        setTranslateX(0);
+        setTranslateY(0);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setSelectedImage(null);
+        setCurrentZoom(1);
+        setTranslateX(0);
+        setTranslateY(0);
+    };
+
+    // Close modal on Escape key
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    // Panning handlers for desktop
+    const handleMouseDown = (e) => {
+        if (currentZoom <= 1) return;
+        isDraggingRef.current = true;
+        startXRef.current = e.clientX;
+        startYRef.current = e.clientY;
+        initialTranslateXRef.current = translateX;
+        initialTranslateYRef.current = translateY;
+
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mouseup', handleMouseUp);
+    };
+
+    const handleMouseMove = (e) => {
+        if (!isDraggingRef.current) return;
+
+        const deltaX = e.clientX - startXRef.current;
+        const deltaY = e.clientY - startYRef.current;
+
+        setTranslateX(initialTranslateXRef.current + deltaX);
+        setTranslateY(initialTranslateYRef.current + deltaY);
+    };
+
+    const handleMouseUp = () => {
+        isDraggingRef.current = false;
+        window.removeEventListener('mousemove', handleMouseMove);
+        window.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    // Panning handlers for mobile
+    const handleTouchStartPan = (e) => {
+        if (currentZoom <= 1 || e.touches.length !== 1) return;
+
+        isDraggingRef.current = true;
+        startXRef.current = e.touches[0].clientX;
+        startYRef.current = e.touches[0].clientY;
+        initialTranslateXRef.current = translateX;
+        initialTranslateYRef.current = translateY;
+
+        window.addEventListener('touchmove', handleTouchMovePan);
+        window.addEventListener('touchend', handleTouchEndPan);
+    };
+
+    const handleTouchMovePan = (e) => {
+        if (!isDraggingRef.current || e.touches.length !== 1) return;
+
+        const deltaX = e.touches[0].clientX - startXRef.current;
+        const deltaY = e.touches[0].clientY - startYRef.current;
+
+        setTranslateX(initialTranslateXRef.current + deltaX);
+        setTranslateY(initialTranslateYRef.current + deltaY);
+    };
+
+    const handleTouchEndPan = () => {
+        isDraggingRef.current = false;
+        window.removeEventListener('touchmove', handleTouchMovePan);
+        window.removeEventListener('touchend', handleTouchEndPan);
+    };
+
+    if (!currentHistory) {
+        return (
+            <div className="w-full py-4">
+                <h2 className="text-xl font-bold">Nenhuma história disponível para esta rua.</h2>
+            </div>
+        );
+    }
+
+    return (
+        <div className="main-content w-full flex flex-col items-center flex-grow overflow-y-auto">
+            {/* Tabs */}
+            <div className="w-full lg:py-4 flex justify-between items-center border-b border-gray-300">
+                <div className="flex items-center space-x-4">
+                    <button
+                        className={`px-4 py-2 font-semibold text-sm ${
+                            activeTab === 'historia'
+                                ? 'border-b-2 border-blue-500 text-blue-500'
+                                : 'text-gray-600 hover:text-blue-500'
+                        }`}
+                        onClick={() => setActiveTab('historia')}
+                    >
+                        História
+                    </button>
+                    <button
+                        className={`px-4 py-2 font-semibold text-sm ${
+                            activeTab === 'rua'
+                                ? 'border-b-2 border-blue-500 text-blue-500'
+                                : 'text-gray-600 hover:text-blue-500'
+                        }`}
+                        onClick={() => setActiveTab('rua')}
+                    >
+                        Rua
+                    </button>
+                    <button
+                        className={`px-4 py-2 font-semibold text-sm ${
+                            activeTab === 'cidade'
+                                ? 'border-b-2 border-blue-500 text-blue-500'
+                                : 'text-gray-600 hover:text-blue-500'
+                        }`}
+                        onClick={() => setActiveTab('cidade')}
+                    >
+                        Cidade
+                    </button>
+                </div>
+            </div>
+
+            {/* Content based on activeTab */}
+            {activeTab === 'historia' && (
+                <>
+                    {/* Existing 'História' content */}
                     {showAllStories ? (
                         <div className="w-full py-2 md:py-4">
                             {historiasDaRua.map((historia, index) => (
                                 <div key={historia.id} className="w-full mb-4 bg-white p-4 rounded-lg shadow-md">
                                     <h3 className="text-xl font-bold">{historia.titulo}</h3>
-                                    <p className="text-sm text-gray-600">Por: {historia.criador}</p>
+                                    <p className="text-sm text-gray-600">Por: {historia.criador || 'Desconhecido'}</p>
                                     <p className="text-sm text-gray-600">Ano: {historia.ano}</p>
                                     {historia.fotos && historia.fotos.length > 0 && (
                                         <div className="mt-2 grid grid-cols-2 gap-2">
-                                            {historia.fotos.map((foto, fotoIndex) => (
-                                                <img
-                                                    key={fotoIndex}
-                                                    src={foto}
-                                                    alt={`Foto de ${historia.titulo} ${fotoIndex + 1}`}
-                                                    className="w-full h-32 object-cover rounded-md cursor-pointer"
-                                                    onClick={() => openModal(foto)}
-                                                />
-                                            ))}
+                                            {historia.fotos.map((foto, fotoIndex) => {
+                                                const isObject = typeof foto === 'object' && foto !== null;
+                                                const url = isObject ? foto.url : foto;
+                                                const credito = isObject ? foto.credito : null;
+
+                                                return (
+                                                    <div key={fotoIndex} className="relative">
+                                                        <img
+                                                            src={url}
+                                                            alt={`Foto de ${historia.titulo} ${fotoIndex + 1}`}
+                                                            className="w-full h-32 object-cover rounded-md cursor-pointer"
+                                                            onClick={() => openModal({ url, credito })}
+                                                        />
+                                                        {credito ? (
+                                                            <p className="text-sm text-gray-600 mt-1">{credito}</p>
+                                                        ) : (
+                                                            <p className="text-sm mt-1">
+                                                                <button
+                                                                    onClick={() => {
+                                                                        setCurrentPhoto(foto);
+                                                                        setShowCreditModal(true);
+                                                                    }}
+                                                                    className="text-blue-600 underline"
+                                                                    aria-label="Indicar crédito"
+                                                                >
+                                                                    Reportar Crédito
+                                                                </button>
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     )}
                                     <div className="mt-2 max-h-40 overflow-y-scroll">
@@ -2137,109 +2322,330 @@ const Header = ({ setMenuOpen, setShowFeedback }) => {
                         </div>
                     ) : (
                         <>
-                            {/* Conteúdo da História Atual */}
+                            {/* Current History Content */}
                             <div className="w-full py-2 md:py-4">
-                                {/* Caixa com altura ajustada e cabeçalho fixo */}
                                 <div className="border border-black px-2 rounded-md max-h-60 overflow-y-scroll bg-[#f5f1e8]">
-                                    {/* Cabeçalho fixo com título, criador, ano e link para Google Maps */}
                                     <div className="sticky top-0 bg-[#f5f1e8] pb-2">
-                                        <h3 className="text-xl pt-2 md:text-2xl font-bold mb-1">{currentHistory.titulo}</h3>
+                                        <h3 className="text-xl pt-2 md:text-2xl font-bold mb-1">
+                                            {currentHistory.titulo}
+                                        </h3>
                                         <div className="flex justify-between items-center text-sm text-gray-600">
-                                            <span>Por: {currentHistory.criador}</span>
+                                            <span>Por: {currentHistory.criador || 'Desconhecido'}</span>
                                             <span>Ano: {currentHistory.ano}</span>
-                                            {/* Verificação se há coordenadas e criação do link para o Google Maps */}
-                                            {currentHistory.coordenadas && currentHistory.coordenadas.length === 2 && (
-                                                <a
-                                                    href={`https://www.google.com/maps?q=${currentHistory.coordenadas[0]},${currentHistory.coordenadas[1]}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-blue-600 hover:underline"
-                                                >
-                                                    Ver no Maps
-                                                </a>
-                                            )}
+                                            {currentHistory.coordenadas &&
+                                                currentHistory.coordenadas.length === 2 && (
+                                                    <a
+                                                        href={`https://www.google.com/maps?q=${currentHistory.coordenadas[0]},${currentHistory.coordenadas[1]}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="text-blue-600 hover:underline"
+                                                    >
+                                                        Ver no Maps
+                                                    </a>
+                                                )}
                                         </div>
                                     </div>
-                                    {/* Descrição da história */}
                                     <p>{currentHistory.descricao}</p>
                                 </div>
                             </div>
 
-                            {/* Carousel de fotos */}
+                            {/* Carousel of Photos */}
                             <div className="w-full border-b border-black py-4 md:py-8 text-center">
                                 <div className="carousel grid grid-cols-1 gap-2">
-                                    {currentHistory.fotos && currentHistory.fotos.map((image, index) => (
-                                        <img
-                                            key={index}
-                                            src={image}
-                                            alt={`Foto de ${currentHistory.ano} ${index + 1}`}
-                                            className="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer"
-                                            onClick={() => openModal(image)}
-                                        />
-                                    ))}
+                                    {currentHistory.fotos &&
+                                        currentHistory.fotos.map((foto, index) => {
+                                            const isObject = typeof foto === 'object' && foto !== null;
+                                            const url = isObject ? foto.url : foto;
+                                            const credito = isObject ? foto.credito : null;
+
+                                            return (
+                                                <div key={index} className="relative">
+                                                    <img
+                                                        src={url}
+                                                        alt={`Foto de ${currentHistory.ano} ${index + 1}`}
+                                                        className="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer"
+                                                        onClick={() => openModal({ url, credito })}
+                                                    />
+                                                    {credito ? (
+                                                        <p className="text-sm text-gray-600 mt-1">{credito}</p>
+                                                    ) : (
+                                                        <p className="text-sm mt-1">
+                                                            <button
+                                                                onClick={() => {
+                                                                    setCurrentPhoto(foto);
+                                                                    setShowCreditModal(true);
+                                                                }}
+                                                                className="text-blue-600 underline"
+                                                                aria-label="Indicar crédito"
+                                                            >
+                                                                Reportar Crédito
+                                                            </button>
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
                                 </div>
                             </div>
                         </>
                     )}
+                </>
+            )}
 
-                    {/* Modal de imagem em tela cheia com zoom e panning */}
-                    {isModalOpen && selectedImage && (
+            {activeTab === 'rua' && (
+                <>
+                    {/* Rua Content: Photos and Description */}
+                    <div className="w-full py-2 lg:py-4">
+                        <h3 className="text-xl font-bold mb-4">{rua.nome}</h3>
+                        <div className="border border-black p-3 rounded-md max-h-64 overflow-y-scroll bg-[#f5f1e8]">
+                            <p>{rua.descricao}</p>
+                        </div>
+                        <div className="border-b border-black pb-2 mt-4 grid grid-cols-2 gap-2">
+                            {rua.fotos && rua.fotos.length > 0 ? (
+                                rua.fotos.map((foto, index) => (
+                                    <img
+                                        key={index}
+                                        src={foto}
+                                        alt={`Foto da rua ${index + 1}`}
+                                        className="w-full h-auto object-cover rounded-md cursor-pointer"
+                                        onClick={() => openModal({ url: foto })}
+                                    />
+                                ))
+                            ) : (
+                                <p className="text-gray-600">Nenhuma foto disponível.</p>
+                            )}
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {activeTab === 'cidade' && (
+                <div className="w-full py-4 px-4 md:px-8">
+                    <h3 className="text-2xl font-bold mb-6 text-center">
+                        {cidade.nome || 'Cidade não identificada'}
+                    </h3>
+
+                    {/* Descrição da cidade com formatação */}
+                    {cidade.descricao ? (
                         <div
-                            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75"
-                            onClick={closeModal}
-                        >
-                            <img
-                                ref={modalImageRef}
-                                src={selectedImage}
-                                alt="Imagem ampliada"
-                                className="max-w-[90%] max-h-[90%] object-contain cursor-grab"
-                                style={{
-                                    transform: `scale(${currentZoom}) translate(${translateX}px, ${translateY}px)`,
-                                    transition: 'transform 0.3s ease',
-                                    cursor: currentZoom > 1 ? 'grab' : 'default'
-                                }}
-                                onClick={(e) => e.stopPropagation()}
-                                onMouseDown={handleMouseDown}
-                                onTouchStart={handleTouchStartPan} // Custom handler para panning em touch
-                                draggable="false"
-                            />
-                            {/* Botão de fechar com destaque */}
-                            <button
-                                className="absolute top-4 right-4 text-white text-2xl bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 focus:outline-none"
-                                onClick={closeModal}
-                                aria-label="Fechar modal"
-                            >
-                                &times;
-                            </button>
-                            {/* Botões de zoom */}
-                            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
-                                <button
-                                    className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setCurrentZoom(prevZoom => Math.min(prevZoom + 0.2, 3));
-                                    }}
-                                    aria-label="Aumentar zoom"
-                                >
-                                    <i className="fas fa-search-plus"></i>
-                                </button>
-                                <button
-                                    className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setCurrentZoom(prevZoom => Math.max(prevZoom - 0.2, 1));
-                                    }}
-                                    aria-label="Diminuir zoom"
-                                >
-                                    <i className="fas fa-search-minus"></i>
-                                </button>
+                            className="description-container max-w-none mb-8 mx-auto text-justify"
+                            dangerouslySetInnerHTML={{ __html: cidade.descricao }}
+                        ></div>
+                    ) : (
+                        <p className="text-gray-600 mb-8">
+                            Informações sobre a cidade não disponíveis.
+                        </p>
+                    )}
+
+                    {/* Informações do Prefeito */}
+                    {cidade.prefeito && (
+                        <div className="mb-12">
+                            <h4 className="text-xl font-semibold mb-6 text-center">Prefeito</h4>
+                            <div className="flex flex-col items-center">
+                                {cidade.prefeito.foto && (
+                                    <img
+                                        src={cidade.prefeito.foto}
+                                        alt={cidade.prefeito.nome}
+                                        className="w-32 h-32 object-cover rounded-full mb-4 shadow-lg"
+                                    />
+                                )}
+                                <div className="text-center">
+                                    <p className="text-lg font-bold">{cidade.prefeito.nome}</p>
+                                    <p>Número de mandatos: {cidade.prefeito.mandatos}</p>
+                                </div>
                             </div>
                         </div>
                     )}
 
-                    {/* Renderização Condicional da Parte Inferior */}
+                    {/* Informações dos Vereadores */}
+                    {cidade.vereadores && cidade.vereadores.length > 0 && (
+                        <div className="mb-12">
+                            <h4 className="text-xl font-semibold mb-6 text-center">Vereadores</h4>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                                {cidade.vereadores.map((vereador, index) => (
+                                    <div key={index} className="flex flex-col items-center">
+                                        {vereador.foto && (
+                                            <img
+                                                src={vereador.foto}
+                                                alt={vereador.nome}
+                                                className="w-24 h-24 object-cover rounded-full mb-2 shadow-md"
+                                            />
+                                        )}
+                                        <p className="text-center font-medium">{vereador.nome}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Eventos */}
+                    {cidade.eventos && cidade.eventos.length > 0 && (
+                        <div className="mb-12">
+                            <h4 className="text-xl font-semibold mb-6 text-center">Eventos</h4>
+                            {cidade.eventos.map((evento) => (
+                                <div key={evento.id} className="mb-12">
+                                    <h5 className="text-lg font-bold mb-2">{evento.nome}</h5>
+                                    <p className="text-sm text-gray-600 mb-2">
+                                        Início: {evento.inicio} | Data: {evento.data}
+                                    </p>
+                                    <p className="mb-4">{evento.descricao}</p>
+                                    {/* Fotos dos Eventos */}
+                                    {evento.fotos && evento.fotos.length > 0 && (
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                            {evento.fotos.map((foto, index) => (
+                                                <img
+                                                    key={index}
+                                                    src={foto}
+                                                    alt={`Foto do evento ${evento.nome} ${index + 1}`}
+                                                    className="w-full h-40 object-cover rounded-md cursor-pointer shadow-sm hover:shadow-md transition-shadow duration-300"
+                                                    onClick={() => openModal({ url: foto })}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* Modal for Reporting Credit */}
+            {showCreditModal && (
+                <div
+                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+                    onClick={() => setShowCreditModal(false)}
+                >
+                    <div
+                        className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+                            onClick={() => setShowCreditModal(false)}
+                            aria-label="Fechar formulário"
+                        >
+                            <i className="fas fa-times text-xl"></i>
+                        </button>
+                        <h3 className="text-xl font-bold mb-4 text-center">Reportar proprietário de créditos</h3>
+                        <form action="https://formspree.io/f/mwpkazda" method="POST">
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nome">
+                                    Nome:
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="nome"
+                                    type="text"
+                                    name="nome"
+                                    placeholder="Seu nome"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                                    E-mail:
+                                </label>
+                                <input
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    placeholder="Seu e-mail"
+                                    required
+                                />
+                            </div>
+                            <div className="mb-4">
+                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="mensagem">
+                                    Mensagem:
+                                </label>
+                                <textarea
+                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                    id="mensagem"
+                                    name="mensagem"
+                                    rows="4"
+                                    placeholder="Detalhe sobre a propriedade de crédito ou outras observações."
+                                    required
+                                ></textarea>
+                            </div>
+                            <input
+                                type="hidden"
+                                name="photo_url"
+                                value={currentPhoto ? currentPhoto.url || currentPhoto : ''}
+                            />
+                            <div className="flex items-center justify-center">
+                                <button
+                                    type="submit"
+                                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                >
+                                    Enviar
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* Image Modal with Zoom and Panning */}
+            {isModalOpen && selectedImage && (
+                <div
+                    className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black bg-opacity-75"
+                    onClick={closeModal}
+                >
+                    <img
+                        ref={modalImageRef}
+                        src={selectedImage.url}
+                        alt="Imagem ampliada"
+                        className="max-w-[90%] max-h-[90%] object-contain cursor-grab"
+                        style={{
+                            transform: `scale(${currentZoom}) translate(${translateX}px, ${translateY}px)`,
+                            transition: 'transform 0.3s ease',
+                            cursor: currentZoom > 1 ? 'grab' : 'default',
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                        onMouseDown={handleMouseDown}
+                        onTouchStart={handleTouchStartPan}
+                        draggable="false"
+                    />
+                    {selectedImage.credito && (
+                        <p className="text-white mt-2">{selectedImage.credito}</p>
+                    )}
+                    <button
+                        className="absolute top-4 right-4 text-white text-2xl bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 focus:outline-none"
+                        onClick={closeModal}
+                        aria-label="Fechar modal"
+                    >
+                        &times;
+                    </button>
+                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
+                        <button
+                            className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setCurrentZoom((prevZoom) => Math.min(prevZoom + 0.2, 3));
+                            }}
+                            aria-label="Aumentar zoom"
+                        >
+                            <i className="fas fa-search-plus"></i>
+                        </button>
+                        <button
+                            className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setCurrentZoom((prevZoom) => Math.max(prevZoom - 0.2, 1));
+                            }}
+                            aria-label="Diminuir zoom"
+                        >
+                            <i className="fas fa-search-minus"></i>
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* Conditionally Render Bottom Section */}
+            {activeTab === 'historia' && (
+                <>
                     {showAllStories ? (
-                        // Botão "Ver Histórias" fixado quando showAllStories está ativo
                         <div className="w-full fixed bottom-0 left-0 py-2 m-0">
                             <div className="w-full lg:py-8 flex justify-center">
                                 <button
@@ -2251,11 +2657,9 @@ const Header = ({ setMenuOpen, setShowFeedback }) => {
                             </div>
                         </div>
                     ) : (
-                        // Controles de Navegação fixados quando showAllStories está inativo
                         <div className="w-full fixed bottom-0 left-0 m-0">
                             <div className="w-full lg:py-4">
                                 <div className="border border-black p-2 mb-2 sm:mb-0 lg:mb-8 rounded-md bg-[#f5f1e8]">
-                                    {/* Ano Centralizado Acima */}
                                     <p className="text-center text-lg font-bold -mb-4">
                                         Ano <strong>{currentHistory.ano}</strong>
                                     </p>
@@ -2270,7 +2674,6 @@ const Header = ({ setMenuOpen, setShowFeedback }) => {
                                             <i className="fas fa-chevron-left"></i>
                                         </button>
 
-                                        {/* Input Range com Largura Ajustada */}
                                         <input
                                             type="range"
                                             min={0}
@@ -2292,7 +2695,6 @@ const Header = ({ setMenuOpen, setShowFeedback }) => {
                                         </button>
                                     </div>
 
-                                    {/* Texto de 'história X de Y' Centralizado Abaixo */}
                                     <p className="text-center text-sm -mt-2">
                                         História {currentIndex + 1} de {historiasDaRua.length}
                                     </p>
@@ -2300,82 +2702,108 @@ const Header = ({ setMenuOpen, setShowFeedback }) => {
                             </div>
                         </div>
                     )}
+                </>
+            )}
 
-                    {/* Carrossel de Locais Recomendados */}
-                    <div className=" p-2 w-full py-2">
-                        <div className="flex items-center justify-between"> {/* Altere a classe aqui */}
-                            <h3 className="text-xl pb-2 md:text-2xl font-bold">Locais Recomendados</h3>
-                            <button
-                                onClick={() => setShowLocaisRecomendados(!showLocaisRecomendados)}
-                                className="flex items-center text-blue-600"
-                            >
-                                {showLocaisRecomendados ? 'Ocultar' : 'Mostrar'}
-                                <i className={`ml-1 fas fa-chevron-${showLocaisRecomendados ? 'up' : 'down'}`}></i>
-                            </button>
-                        </div>
-                        {/* Renderizar condicionalmente o carrossel */}
-                        {showLocaisRecomendados && (
-                            <div className="w-full overflow-x-auto">
-                                <div className="flex space-x-4 px-4">
-                                    {negocios.map((negocio, index) => (
-                                        <div
-                                            key={index}
-                                            className="border border-black min-w-[200px] bg-[#f5f1e8] p-2 rounded-lg shadow cursor-pointer flex-shrink-0 hover:shadow-lg transition-shadow duration-300"
-                                        >
-                                            <img
-                                                src={negocio.foto || 'https://placehold.co/250x150'}
-                                                alt={negocio.titulo}
-                                                className="w-full h-32 object-cover rounded-lg mb-2"
-                                            />
-                                            <h4 className="font-semibold mb-1">{negocio.titulo}</h4>
-                                            <p className="text-sm text-gray-600 mb-2 flex items-center justify-between">
-                                                {negocio.segmento}
-                                                <a
-                                                    href={negocio.link}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-blue-600 hover:text-blue-800 flex items-center ml-auto"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        className="h-4 w-4 mr-1"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        stroke="currentColor"
-                                                    >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth="2"
-                                                            d="M12 2c4.418 0 8 3.582 8 8 0 3.255-1.938 6.062-4.707 7.456L12 22l-3.293-4.544C6.938 16.062 5 13.255 5 10c0-4.418 3.582-8 8-8z"
-                                                        />
-                                                    </svg>
-                                                    Ver no Google
-                                                </a>
-                                            </p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Botão para alternar entre "Ver Histórias" e "Tudo desta rua" */}
-                    {!showAllStories && (
-                        <div className="w-full py-2 md:py-4 mb-12 lg:mb-20">
-                            <button
-                                onClick={() => setShowAllStories(true)}
-                                className="w-full bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
-                            >
-                                Todas Histórias desta rua
-                            </button>
-                        </div>
-                    )}
+            {/* Organization Banner */}
+            {org && (
+                <div
+                    className="w-full flex items-center justify-center rounded-b-lg relative"
+                    style={{ height: '128px', backgroundColor: org.cor }}
+                >
+                    <span className="absolute top-2 right-2 text-white text-sm font-semibold">
+                        História por:
+                    </span>
+                    <Link to="/referencias?section=orgs" className="flex items-center">
+                        <img src={org.logo} alt={org.fantasia} className="h-32" />
+                    </Link>
                 </div>
-            );
-        };
+            )}
 
+            {/* Recommended Places Carousel */}
+            <div className="p-2 w-full py-2">
+                <div className="flex items-center justify-between">
+                    <h3 className="text-xl pb-2 md:text-2xl font-bold">Locais Recomendados</h3>
+                    <button
+                        onClick={() => setShowLocaisRecomendados(!showLocaisRecomendados)}
+                        className="flex items-center text-blue-600"
+                    >
+                        {showLocaisRecomendados ? 'Ocultar' : 'Mostrar'}
+                        <i className={`ml-1 fas fa-chevron-${showLocaisRecomendados ? 'up' : 'down'}`}></i>
+                    </button>
+                </div>
+                {showLocaisRecomendados && (
+                    <div className="w-full overflow-x-auto">
+                        <div className="flex space-x-4 px-4">
+                            {negocios.map((negocio, index) => (
+                                <div
+                                    key={index}
+                                    className="border border-black min-w-[200px] bg-[#f5f1e8] p-2 rounded-lg shadow cursor-pointer flex-shrink-0 hover:shadow-lg transition-shadow duration-300"
+                                >
+                                    <img
+                                        src={negocio.foto || 'https://placehold.co/250x150'}
+                                        alt={negocio.titulo}
+                                        className="w-full h-32 object-cover rounded-lg mb-2"
+                                    />
+                                    <h4 className="font-semibold mb-1">{negocio.titulo}</h4>
+                                    <p className="text-sm text-gray-600 mb-2 flex items-center justify-between">
+                                        {negocio.segmento}
+                                        <a
+                                            href={negocio.link}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-blue-600 hover:text-blue-800 flex items-center ml-auto"
+                                        >
+                                            <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="h-4 w-4 mr-1"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor"
+                                            >
+                                                <path
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth="2"
+                                                    d="M12 2c4.418 0 8 3.582 8 8 0 3.255-1.938 6.062-4.707 7.456L12 22l-3.293-4.544C6.938 16.062 5 13.255 5 10c0-4.418 3.582-8 8-8z"
+                                                />
+                                            </svg>
+                                            Ver no Google
+                                        </a>
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
+            </div>
 
+            {/* Button to Show All Stories or Open 'historia' tab */}
+            {activeTab !== 'historia' && (
+                <div className="w-full py-2 md:py-4 mb-12 lg:mb-20">
+                    <button
+                        onClick={() => setActiveTab('historia')}
+                        className="w-full bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
+                    >
+                        Ver histórias dessa rua
+                    </button>
+                </div>
+            )}
+
+            {/* Button to Show All Stories */}
+            {activeTab === 'historia' && !showAllStories && (
+                <div className="w-full py-2 md:py-4 mb-12 lg:mb-20">
+                    <button
+                        onClick={() => setShowAllStories(true)}
+                        className="w-full bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
+                    >
+                        Todas Histórias desta rua
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};
 
         // Componente Legado Africano (Atualizado)
         const LegadoAfricano = () => {
@@ -2681,7 +3109,7 @@ const Header = ({ setMenuOpen, setShowFeedback }) => {
                         <h3 className="text-xl font-bold mb-4 text-center">Envie seu Feedback</h3>
 
                         <p className="text-gray-600 text-center mb-4">
-                            Estamos em fase de protótipo e sua opinião é muito importante para nós! Por favor, avalie nossa plataforma e nos ajude a melhorar.
+                            Estamos em fase inicial da nossa plataforma e sua opinião é muito importante para nós! Por favor, avalie-nos ajude a melhorar.
                         </p>
 
                         <form action="https://formspree.io/f/manywvne" method="POST">
@@ -2955,6 +3383,7 @@ const Header = ({ setMenuOpen, setShowFeedback }) => {
                     <Switch>
                         <Route path="/sobre" component={Sobre} />
                         <Route path="/apoio" component={Apoio} />
+                        <Route path="/referencias" component={Referencias} />
                         <Route path="/adicionar-historia" component={AdicionarHistoria} />
                         <Route path="/ruas-e-historias" component={RuasEHistorias} />
                         <Route path="/legado-africano" component={LegadoAfricano} />
