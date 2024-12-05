@@ -371,7 +371,7 @@ const ruas = [{
 }];
 
 const historias = [{
-	'orgId': 1,
+	'orgId': 8,
 	'id': 1,
 	'rua_id': 3,
 	'criador': 'Mateus Canova',
@@ -1224,7 +1224,7 @@ const historias = [{
 	'id': 111,
 	'rua_id': 16,
 	'criador': 'Mateus Canova',
-	'fotos': ['/fotos/historias/estacao-ferroviaria-1934.png'],
+	'fotos': ['/fotos/historias/estaçao-ferroviaria-1934.png'],
 	'titulo': 'Estação Ferroviária ',
 	'descricao': 'Construida em 1922, era um dos grandes icones da cidade, com a chegada do trem vieram novas perspectivas de progresso a cidade, atulamente ainda há pontos revitaalizados deste importante marco a cidade.',
 	'ano': 1934,

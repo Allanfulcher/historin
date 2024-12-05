@@ -186,21 +186,21 @@
                             <i className="fas fa-times text-xl"></i>
                         </button>
                         <h3 className="text-xl font-bold mb-4 text-center">Gostou do Historin?</h3>
-                        <p className="text-center mb-4">Apoie nosso projeto com uma doação!</p>
+                        <p className="text-center mb-4">Apoie o projeto e ajude a cobrir os custos mensais!</p>
                         <div className="flex justify-center">
                             <Link
-                                to="/apoio"
+                                to="/sobre#doacao"
                                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
                                 onClick={onClose}
                             >
                                 Doar Agora
                             </Link>
-
                         </div>
                     </div>
                 </div>
             );
         };
+
 
         // Componente de Modal de Dados (DataModal)
         const DataModal = ({ isOpen, onClose, title, data, columns }) => {
@@ -798,15 +798,6 @@
                                 Compre seus ingressos
                             </a>
 
-                            {/* Botão Apoie */}
-                            <Link
-                                to="/apoio"
-                                className="button bg-yellow-400 text-white px-4 py-2 rounded-md block text-center"
-                                onClick={() => setMenuOpen(false)}
-                            >
-                                APOIE
-                            </Link>
-
                             {/* Texto de Rodapé */}
                             <div className="footer-text text-center text-sm text-gray-600 mt-4">
                                 Criado em Gramado
@@ -817,8 +808,19 @@
             );
         };
 
-        // Página Sobre (Atualizada com botão "Cadastre-se")
+        // Página Sobre (Atualizada)
         const Sobre = () => {
+
+            const location = useLocation();
+            useEffect(() => {
+                if (location.hash === "#doacao") {
+                    const donationSection = document.getElementById("doacao");
+                    if (donationSection) {
+                        donationSection.scrollIntoView({ behavior: "smooth" });
+                    }
+                }
+            }, [location]);
+
             useEffect(() => {
                 document.title = "Sobre Nós - Historin";
 
@@ -876,7 +878,6 @@
                     {/* Espaço para o Vídeo do YouTube */}
                     <section className="mb-6">
                         <div className="video-container mb-4">
-                            {/* Substitua "SEU_VIDEO_ID" pelo ID real do vídeo do YouTube */}
                             <iframe
                                 width="100%"
                                 height="215"
@@ -928,7 +929,7 @@
                         )}
                     </section>
 
-                    {/* Nova Seção: Precisamos de Ajuda / Cadastre-se */}
+                    {/* Seção Precisamos de Ajuda / Cadastre-se */}
                     <section className="mb-6">
                         <h3 className="text-center text-xl font-bold mb-4">Precisamos de Ajuda</h3>
                         <p className="text-center text-gray-700 mb-4">
@@ -1074,18 +1075,26 @@
                             </div>
                             {/* Adicione mais logos ou itens aqui se necessário */}
                         </div>
-
-                        <div>
-                            <ProgressBar />
-                        </div>
-
-                        <Link to="/apoio">
-                            <button className="w-full py-2 bg-yellow-400 rounded-full text-white font-bold">
-                                Apoie agora
-                            </button>
-                        </Link>
                     </section>
 
+                    {/* Seção: Faça sua Doação */}
+                    <section id="doacao" className="mb-6">
+                        <div className="bg-white p-6 rounded-lg shadow-md">
+                            <h3 className="text-center text-xl font-bold mb-4">Faça sua Doação</h3>
+                            <p className="text-center text-gray-600 mb-4">
+                                Contamos com financiamento coletivo e patrocínios para manter o Historin.com. Apoie o Historin e nos ajude a cobrir os custos mensais da plataforma.
+                            </p>
+                            <div className="flex justify-center">
+                                <button
+                                    className="bg-[#8A5A44] text-white px-6 py-3 rounded-md hover:bg-[#D8A568] flex items-center space-x-2 transition-transform transform hover:scale-105"
+                                    onClick={copyToClipboard}
+                                >
+                                    <i className="fas fa-copy"></i>
+                                    <span>Copiar Chave Pix</span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
 
                     {/* Seção Entre em Contato */}
                     <section className="mb-6">
@@ -1129,159 +1138,12 @@
             );
         };
 
-        const ProgressBar = () => {
-            const valorAtual = 6587.0; // Valor atual arrecadado (fixo no componente)
-            const valorMeta = 50000.0; // Meta total (fixa no componente)
-
-            const porcentagem = (valorAtual / valorMeta) * 100; // Calcula a porcentagem do valor arrecadado
-
-            return (
-                <div className="text-center">
-                    <h3 className="font-bold mb-4 text-xl text-yellow-600">Apoie Nosso Projeto!</h3>
-                    <div className="relative w-full bg-gray-300 rounded-full h-6 mb-2 overflow-hidden shadow-lg">
-                        <div
-                            className="bg-yellow-400 h-full rounded-full transition-all duration-1000 ease-in-out"
-                            style={{ width: `${porcentagem}%` }}
-                        >
-                        </div>
-                        <div className="absolute inset-0 flex justify-between text-sm px-4 font-semibold text-gray-800">
-                            <span>R${valorAtual.toFixed(2)}</span>
-                            <span>Meta: R${valorMeta.toFixed(2)}</span>
-                        </div>
-                    </div>
-                </div>
-            );
+        // Função para copiar a chave Pix
+        const copyToClipboard = () => {
+            navigator.clipboard.writeText('00020101021126580014br.gov.bcb.pix01368eac1054-b957-4af2-88c7-046b743ece015204000053039865802BR5925allcom comercio e servico6009SAO PAULO622905251J87ZBFMDTY970D6AP39DEHSC6304FDFB');
+            alert('Chave Pix copiada!');
         };
 
-
-
-
-        // Página Apoio
-        const Apoio = () => {
-            useEffect(() => {
-                document.title = "Apoio ao Historin - Faça Parte Dessa História";
-
-                // Atualizar a meta descrição
-                let metaDescription = document.querySelector('meta[name="description"]');
-                if (metaDescription) {
-                    metaDescription.setAttribute('content', 'Apoie o projeto Historin e ajude a preservar e contar as histórias da cidade de Gramado.');
-                } else {
-                    metaDescription = document.createElement('meta');
-                    metaDescription.name = "description";
-                    metaDescription.content = 'Apoie o projeto Historin e ajude a preservar e contar as histórias da cidade de Gramado.';
-                    document.head.appendChild(metaDescription);
-                }
-            }, []);
-
-            const [showAllDonors, setShowAllDonors] = useState(false);
-            // Lista de doadores adicionais (exemplo)
-            const allDonors = [
-                { name: 'Elias Fulcher', amount: 500 },
-                { name: 'Eliane Silva', amount: 100 },
-                { name: 'Rosmarie Benetti', amount: 20 },
-                { name: 'Stevi R.', amount: 4 },
-                // Adicione mais doadores conforme necessário
-            ];
-
-            const copyToClipboard = () => {
-                navigator.clipboard.writeText('00020101021126580014br.gov.bcb.pix01368eac1054-b957-4af2-88c7-046b743ece015204000053039865802BR5925allcom comercio e servico6009SAO PAULO622905251J87ZBFMDTY970D6AP39DEHSC6304FDFB');
-                alert('Chave Pix copiada!');
-            };
-
-            return (
-                <div className="p-4">
-                    <header className="flex justify-between items-center mb-4">
-                        <div className="text-2xl cursor-pointer">
-                            <Link to="/">
-                                <i className="fas fa-arrow-left"></i>
-                            </Link>
-                        </div>
-                        <h1 className="text-lg font-bold">Apoio</h1>
-                        <div className="w-10 h-10"></div>
-                    </header>
-                    <h2 className="text-center text-lg font-bold mb-2">Faça parte do Historin</h2>
-                    <p className="text-center text-gray-600 mb-4">
-                        O Historin é uma plataforma criada com financiamento coletivo. De pessoas para pessoas! <br />
-                        Ajude-nos a expandir essa iniciativa.
-                    </p>
-
-                    <div>
-                        <ProgressBar />
-                    </div>
-
-                    <div>
-                        <h3 className="font-bold mb-2 text-center">Apoie com Pix:</h3>
-                        <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center">
-                            <p className="mb-4 text-center">
-                                Clique no botão abaixo para copiar nossa chave Pix e realizar sua doação:
-                            </p>
-                            <button
-                                className="bg-[#8A5A44] text-white px-6 py-3 rounded-md hover:bg-[#D8A568] flex items-center space-x-2 transition-transform transform hover:scale-105"
-                                onClick={copyToClipboard}
-                            >
-                                <i className="fas fa-copy"></i>
-                                <span>Copiar Chave Pix</span>
-                            </button>
-                        </div>
-
-                        <DataModal
-                            isOpen={showAllDonors}
-                            onClose={() => setShowAllDonors(false)}
-                            title="Apoiadores"
-                            data={allDonors}
-                            columns={[
-                                { header: 'Nome', accessor: 'name' },
-                                { header: 'Valor', accessor: 'amount' },
-                            ]}
-                        />
-                    </div>
-
-                    <div className="mb-4 mt-4">
-                        <h3 className="font-bold mb-2">Ranking de doações</h3>
-                        {/* Aqui você pode mapear os doadores reais ou fictícios */}
-                        <div className="bg-white p-2 rounded-lg flex justify-between items-center mb-2">
-                            <span>#1 Elias Fulcher</span>
-                            <span className="text-gray-500">R$ 500,00</span>
-                        </div>
-                        <div className="bg-white p-2 rounded-lg flex justify-between items-center mb-2">
-                            <span>#2 Eliane</span>
-                            <span className="text-gray-500">R$ 100,00</span>
-                        </div>
-                        <div className="bg-white p-2 rounded-lg flex justify-between items-center mb-2">
-                            <span>#3 Rosmarie Benetti</span>
-                            <span className="text-gray-500">R$ 20,00</span>
-                        </div>
-                        <p className="text-gray-500 text-right">e outras:
-                            <button
-                                className="font-bold text-blue-600 hover:underline ml-1"
-                                onClick={() => setShowAllDonors(true)}
-                            >
-                                {allDonors.length > 4 ? `${allDonors.length - 3} pessoas` : '1 pessoa'}
-                            </button>
-                        </p>
-                    </div>
-
-                    <div className="mb-4">
-                        <h3 className="font-bold mb-4">Empresas Parceiras</h3>
-                        <div className="grid grid-cols-3 gap-4">
-                            <div className="bg-white p-4 rounded-lg text-center">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPggvEFhQuIqwkCuCsVwhKNaByk_8S1UFKDg&s" alt="Empresa 1" className="mx-auto mb-2 h-16" />
-                                <p className="text-sm text-gray-600">Arabella Couros</p>
-                            </div>
-                            <div className="bg-white p-4 rounded-lg text-center">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfspyXMwfnpbnN4Oxqs-zpg6CfJ5G2hFvGYQ&s" alt="Empresa 2" className="mx-auto mb-2 h-16" />
-                                <p className="text-sm text-gray-600">Kilo e Kilo</p>
-                            </div>
-                            <div className="bg-white p-4 rounded-lg text-center">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQB4eApUVF8NZnGv-X4DU0cLuh3ofSqmTrN9A&s" alt="Empresa 3" className="mx-auto mb-2 h-16" />
-                                <p className="text-sm text-gray-600">Super Benetti</p>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            );
-        };
 
 
 
@@ -1870,6 +1732,24 @@
             const location = useLocation();
 
             useEffect(() => {
+        // Atualizar título e meta descrição dinamicamente
+        document.title = "Referências - Historin";
+        let metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+            metaDescription.setAttribute(
+                'content',
+                'Explore uma ampla variedade de referências históricas, incluindo organizações, autores e obras selecionadas no Historin.'
+            );
+        } else {
+            metaDescription = document.createElement('meta');
+            metaDescription.name = "description";
+            metaDescription.content =
+                'Explore uma ampla variedade de referências históricas, incluindo organizações, autores e obras selecionadas no Historin.';
+            document.head.appendChild(metaDescription);
+        }
+    }, []);
+    
+            useEffect(() => {
                 // Extrair o parâmetro 'section' da URL
                 const params = new URLSearchParams(location.search);
                 const section = params.get('section');
@@ -2049,761 +1929,755 @@
                             ></iframe>
                         </div>
                     </section>
-
-
-
                 </div>
             );
 
         };
 
         // Updated HistoriaContent component
-const HistoriaContent = ({
-    currentHistory,
-    historiasDaRua,
-    currentIndex,
-    setCurrentIndex,
-    setCurrentHistory,
-    showAllStories,
-    setShowAllStories,
-    selectedRuaId,
-}) => {
-    const { useState, useEffect, useRef } = React;
+        const HistoriaContent = ({
+            currentHistory,
+            historiasDaRua,
+            currentIndex,
+            setCurrentIndex,
+            setCurrentHistory,
+            showAllStories,
+            setShowAllStories,
+            selectedRuaId,
+        }) => {
+            const { useState, useEffect, useRef } = React;
 
-    // State variables
-    const [activeTab, setActiveTab] = useState('historia'); // 'historia', 'rua', 'cidade'
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedImage, setSelectedImage] = useState(null);
-    const [currentZoom, setCurrentZoom] = useState(1);
-    const [translateX, setTranslateX] = useState(0);
-    const [translateY, setTranslateY] = useState(0);
-    const [showLocaisRecomendados, setShowLocaisRecomendados] = useState(false);
-    const [showCreditModal, setShowCreditModal] = useState(false);
-    const [currentPhoto, setCurrentPhoto] = useState(null);
+            // State variables
+            const [activeTab, setActiveTab] = useState('historia'); // 'historia', 'rua', 'cidade'
+            const [isModalOpen, setIsModalOpen] = useState(false);
+            const [selectedImage, setSelectedImage] = useState(null);
+            const [currentZoom, setCurrentZoom] = useState(1);
+            const [translateX, setTranslateX] = useState(0);
+            const [translateY, setTranslateY] = useState(0);
+            const [showLocaisRecomendados, setShowLocaisRecomendados] = useState(false);
+            const [showCreditModal, setShowCreditModal] = useState(false);
+            const [currentPhoto, setCurrentPhoto] = useState(null);
 
-    const isDraggingRef = useRef(false);
-    const startXRef = useRef(0);
-    const startYRef = useRef(0);
-    const initialTranslateXRef = useRef(0);
-    const initialTranslateYRef = useRef(0);
+            const isDraggingRef = useRef(false);
+            const startXRef = useRef(0);
+            const startYRef = useRef(0);
+            const initialTranslateXRef = useRef(0);
+            const initialTranslateYRef = useRef(0);
 
-    const modalImageRef = useRef(null);
+            const modalImageRef = useRef(null);
 
-    const history = useHistory();
+            const history = useHistory();
 
-    // Fetching rua data (assuming ruas data includes cidadeId)
-    const rua = ruas.find((r) => r.id === selectedRuaId) || {};
-    const cidade = cidades.find((c) => c.id === rua.cidade_id) || {};
+            // Fetching rua data (assuming ruas data includes cidadeId)
+            const rua = ruas.find((r) => r.id === selectedRuaId) || {};
+            const cidade = cidades.find((c) => c.id === rua.cidade_id) || {};
 
-    // Fetching organization data if available
-    const org =
-        currentHistory && currentHistory.orgId
-            ? orgs.find((o) => o.id == currentHistory.orgId)
-            : null;
+            // Fetching organization data if available
+            const org =
+                currentHistory && currentHistory.orgId
+                    ? orgs.find((o) => o.id == currentHistory.orgId)
+                    : null;
 
-    // Navigation handlers
-    const handlePrev = () => {
-        if (currentIndex > 0) {
-            const newIndex = currentIndex - 1;
-            const newHistory = historiasDaRua[newIndex];
-            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
-            setCurrentHistory(newHistory);
-            setCurrentIndex(newIndex);
-            setActiveTab('historia'); // Reset to 'historia' tab
-        }
-    };
+            // Navigation handlers
+            const handlePrev = () => {
+                if (currentIndex > 0) {
+                    const newIndex = currentIndex - 1;
+                    const newHistory = historiasDaRua[newIndex];
+                    history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+                    setCurrentHistory(newHistory);
+                    setCurrentIndex(newIndex);
+                    setActiveTab('historia'); // Reset to 'historia' tab
+                }
+            };
 
-    const handleNext = () => {
-        if (currentIndex < historiasDaRua.length - 1) {
-            const newIndex = currentIndex + 1;
-            const newHistory = historiasDaRua[newIndex];
-            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
-            setCurrentHistory(newHistory);
-            setCurrentIndex(newIndex);
-            setActiveTab('historia'); // Reset to 'historia' tab
-        }
-    };
+            const handleNext = () => {
+                if (currentIndex < historiasDaRua.length - 1) {
+                    const newIndex = currentIndex + 1;
+                    const newHistory = historiasDaRua[newIndex];
+                    history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+                    setCurrentHistory(newHistory);
+                    setCurrentIndex(newIndex);
+                    setActiveTab('historia'); // Reset to 'historia' tab
+                }
+            };
 
-    const handleRangeChange = (event) => {
-        const newIndex = parseInt(event.target.value);
-        if (newIndex >= 0 && newIndex < historiasDaRua.length) {
-            const newHistory = historiasDaRua[newIndex];
-            history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
-            setCurrentHistory(newHistory);
-            setCurrentIndex(newIndex);
-            setActiveTab('historia'); // Reset to 'historia' tab
-        }
-    };
+            const handleRangeChange = (event) => {
+                const newIndex = parseInt(event.target.value);
+                if (newIndex >= 0 && newIndex < historiasDaRua.length) {
+                    const newHistory = historiasDaRua[newIndex];
+                    history.replace(`/rua/${selectedRuaId}/historia/${newHistory.id}`);
+                    setCurrentHistory(newHistory);
+                    setCurrentIndex(newIndex);
+                    setActiveTab('historia'); // Reset to 'historia' tab
+                }
+            };
 
-    const openModal = (foto) => {
-        setSelectedImage(foto);
-        setIsModalOpen(true);
-        setCurrentZoom(1);
-        setTranslateX(0);
-        setTranslateY(0);
-    };
+            const openModal = (foto) => {
+                setSelectedImage(foto);
+                setIsModalOpen(true);
+                setCurrentZoom(1);
+                setTranslateX(0);
+                setTranslateY(0);
+            };
 
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setSelectedImage(null);
-        setCurrentZoom(1);
-        setTranslateX(0);
-        setTranslateY(0);
-    };
+            const closeModal = () => {
+                setIsModalOpen(false);
+                setSelectedImage(null);
+                setCurrentZoom(1);
+                setTranslateX(0);
+                setTranslateY(0);
+            };
 
-    // Close modal on Escape key
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            if (e.key === 'Escape') {
-                closeModal();
+            // Close modal on Escape key
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (e.key === 'Escape') {
+                        closeModal();
+                    }
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, []);
+
+            // Panning handlers for desktop
+            const handleMouseDown = (e) => {
+                if (currentZoom <= 1) return;
+                isDraggingRef.current = true;
+                startXRef.current = e.clientX;
+                startYRef.current = e.clientY;
+                initialTranslateXRef.current = translateX;
+                initialTranslateYRef.current = translateY;
+
+                window.addEventListener('mousemove', handleMouseMove);
+                window.addEventListener('mouseup', handleMouseUp);
+            };
+
+            const handleMouseMove = (e) => {
+                if (!isDraggingRef.current) return;
+
+                const deltaX = e.clientX - startXRef.current;
+                const deltaY = e.clientY - startYRef.current;
+
+                setTranslateX(initialTranslateXRef.current + deltaX);
+                setTranslateY(initialTranslateYRef.current + deltaY);
+            };
+
+            const handleMouseUp = () => {
+                isDraggingRef.current = false;
+                window.removeEventListener('mousemove', handleMouseMove);
+                window.removeEventListener('mouseup', handleMouseUp);
+            };
+
+            // Panning handlers for mobile
+            const handleTouchStartPan = (e) => {
+                if (currentZoom <= 1 || e.touches.length !== 1) return;
+
+                isDraggingRef.current = true;
+                startXRef.current = e.touches[0].clientX;
+                startYRef.current = e.touches[0].clientY;
+                initialTranslateXRef.current = translateX;
+                initialTranslateYRef.current = translateY;
+
+                window.addEventListener('touchmove', handleTouchMovePan);
+                window.addEventListener('touchend', handleTouchEndPan);
+            };
+
+            const handleTouchMovePan = (e) => {
+                if (!isDraggingRef.current || e.touches.length !== 1) return;
+
+                const deltaX = e.touches[0].clientX - startXRef.current;
+                const deltaY = e.touches[0].clientY - startYRef.current;
+
+                setTranslateX(initialTranslateXRef.current + deltaX);
+                setTranslateY(initialTranslateYRef.current + deltaY);
+            };
+
+            const handleTouchEndPan = () => {
+                isDraggingRef.current = false;
+                window.removeEventListener('touchmove', handleTouchMovePan);
+                window.removeEventListener('touchend', handleTouchEndPan);
+            };
+
+            if (!currentHistory) {
+                return (
+                    <div className="w-full py-4">
+                        <h2 className="text-xl font-bold">Nenhuma história disponível para esta rua.</h2>
+                    </div>
+                );
             }
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, []);
 
-    // Panning handlers for desktop
-    const handleMouseDown = (e) => {
-        if (currentZoom <= 1) return;
-        isDraggingRef.current = true;
-        startXRef.current = e.clientX;
-        startYRef.current = e.clientY;
-        initialTranslateXRef.current = translateX;
-        initialTranslateYRef.current = translateY;
-
-        window.addEventListener('mousemove', handleMouseMove);
-        window.addEventListener('mouseup', handleMouseUp);
-    };
-
-    const handleMouseMove = (e) => {
-        if (!isDraggingRef.current) return;
-
-        const deltaX = e.clientX - startXRef.current;
-        const deltaY = e.clientY - startYRef.current;
-
-        setTranslateX(initialTranslateXRef.current + deltaX);
-        setTranslateY(initialTranslateYRef.current + deltaY);
-    };
-
-    const handleMouseUp = () => {
-        isDraggingRef.current = false;
-        window.removeEventListener('mousemove', handleMouseMove);
-        window.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    // Panning handlers for mobile
-    const handleTouchStartPan = (e) => {
-        if (currentZoom <= 1 || e.touches.length !== 1) return;
-
-        isDraggingRef.current = true;
-        startXRef.current = e.touches[0].clientX;
-        startYRef.current = e.touches[0].clientY;
-        initialTranslateXRef.current = translateX;
-        initialTranslateYRef.current = translateY;
-
-        window.addEventListener('touchmove', handleTouchMovePan);
-        window.addEventListener('touchend', handleTouchEndPan);
-    };
-
-    const handleTouchMovePan = (e) => {
-        if (!isDraggingRef.current || e.touches.length !== 1) return;
-
-        const deltaX = e.touches[0].clientX - startXRef.current;
-        const deltaY = e.touches[0].clientY - startYRef.current;
-
-        setTranslateX(initialTranslateXRef.current + deltaX);
-        setTranslateY(initialTranslateYRef.current + deltaY);
-    };
-
-    const handleTouchEndPan = () => {
-        isDraggingRef.current = false;
-        window.removeEventListener('touchmove', handleTouchMovePan);
-        window.removeEventListener('touchend', handleTouchEndPan);
-    };
-
-    if (!currentHistory) {
-        return (
-            <div className="w-full py-4">
-                <h2 className="text-xl font-bold">Nenhuma história disponível para esta rua.</h2>
-            </div>
-        );
-    }
-
-    return (
-        <div className="main-content w-full flex flex-col items-center flex-grow overflow-y-auto">
-            {/* Tabs */}
-            <div className="w-full lg:py-4 flex justify-between items-center border-b border-gray-300">
-                <div className="flex items-center space-x-4">
-                    <button
-                        className={`px-4 py-2 font-semibold text-sm ${
-                            activeTab === 'historia'
-                                ? 'border-b-2 border-blue-500 text-blue-500'
-                                : 'text-gray-600 hover:text-blue-500'
-                        }`}
-                        onClick={() => setActiveTab('historia')}
-                    >
-                        História
-                    </button>
-                    <button
-                        className={`px-4 py-2 font-semibold text-sm ${
-                            activeTab === 'rua'
-                                ? 'border-b-2 border-blue-500 text-blue-500'
-                                : 'text-gray-600 hover:text-blue-500'
-                        }`}
-                        onClick={() => setActiveTab('rua')}
-                    >
-                        Rua
-                    </button>
-                    <button
-                        className={`px-4 py-2 font-semibold text-sm ${
-                            activeTab === 'cidade'
-                                ? 'border-b-2 border-blue-500 text-blue-500'
-                                : 'text-gray-600 hover:text-blue-500'
-                        }`}
-                        onClick={() => setActiveTab('cidade')}
-                    >
-                        Cidade
-                    </button>
-                </div>
-            </div>
-
-            {/* Content based on activeTab */}
-            {activeTab === 'historia' && (
-                <>
-                    {/* Existing 'História' content */}
-                    {showAllStories ? (
-                        <div className="w-full py-2 md:py-4">
-                            {historiasDaRua.map((historia, index) => (
-                                <div key={historia.id} className="w-full mb-4 bg-white p-4 rounded-lg shadow-md">
-                                    <h3 className="text-xl font-bold">{historia.titulo}</h3>
-                                    <p className="text-sm text-gray-600">Por: {historia.criador || 'Desconhecido'}</p>
-                                    <p className="text-sm text-gray-600">Ano: {historia.ano}</p>
-                                    {historia.fotos && historia.fotos.length > 0 && (
-                                        <div className="mt-2 grid grid-cols-2 gap-2">
-                                            {historia.fotos.map((foto, fotoIndex) => {
-                                                const isObject = typeof foto === 'object' && foto !== null;
-                                                const url = isObject ? foto.url : foto;
-                                                const credito = isObject ? foto.credito : null;
-
-                                                return (
-                                                    <div key={fotoIndex} className="relative">
-                                                        <img
-                                                            src={url}
-                                                            alt={`Foto de ${historia.titulo} ${fotoIndex + 1}`}
-                                                            className="w-full h-32 object-cover rounded-md cursor-pointer"
-                                                            onClick={() => openModal({ url, credito })}
-                                                        />
-                                                        {credito ? (
-                                                            <p className="text-sm text-gray-600 mt-1">{credito}</p>
-                                                        ) : (
-                                                            <p className="text-sm mt-1">
-                                                                <button
-                                                                    onClick={() => {
-                                                                        setCurrentPhoto(foto);
-                                                                        setShowCreditModal(true);
-                                                                    }}
-                                                                    className="text-blue-600 underline"
-                                                                    aria-label="Indicar crédito"
-                                                                >
-                                                                    Reportar Crédito
-                                                                </button>
-                                                            </p>
-                                                        )}
-                                                    </div>
-                                                );
-                                            })}
-                                        </div>
-                                    )}
-                                    <div className="mt-2 max-h-40 overflow-y-scroll">
-                                        <p>{historia.descricao}</p>
-                                    </div>
-                                </div>
-                            ))}
+            return (
+                <div className="main-content w-full flex flex-col items-center flex-grow overflow-y-auto">
+                    {/* Tabs */}
+                    <div className="w-full lg:py-4 flex justify-between items-center border-b border-gray-300">
+                        <div className="flex items-center space-x-4">
+                            <button
+                                className={`px-4 py-2 font-semibold text-sm ${activeTab === 'historia'
+                                    ? 'border-b-2 border-blue-500 text-blue-500'
+                                    : 'text-gray-600 hover:text-blue-500'
+                                    }`}
+                                onClick={() => setActiveTab('historia')}
+                            >
+                                História
+                            </button>
+                            <button
+                                className={`px-4 py-2 font-semibold text-sm ${activeTab === 'rua'
+                                    ? 'border-b-2 border-blue-500 text-blue-500'
+                                    : 'text-gray-600 hover:text-blue-500'
+                                    }`}
+                                onClick={() => setActiveTab('rua')}
+                            >
+                                Rua
+                            </button>
+                            <button
+                                className={`px-4 py-2 font-semibold text-sm ${activeTab === 'cidade'
+                                    ? 'border-b-2 border-blue-500 text-blue-500'
+                                    : 'text-gray-600 hover:text-blue-500'
+                                    }`}
+                                onClick={() => setActiveTab('cidade')}
+                            >
+                                Cidade
+                            </button>
                         </div>
-                    ) : (
+                    </div>
+
+                    {/* Content based on activeTab */}
+                    {activeTab === 'historia' && (
                         <>
-                            {/* Current History Content */}
-                            <div className="w-full py-2 md:py-4">
-                                <div className="border border-black px-2 rounded-md max-h-60 overflow-y-scroll bg-[#f5f1e8]">
-                                    <div className="sticky top-0 bg-[#f5f1e8] pb-2">
-                                        <h3 className="text-xl pt-2 md:text-2xl font-bold mb-1">
-                                            {currentHistory.titulo}
-                                        </h3>
-                                        <div className="flex justify-between items-center text-sm text-gray-600">
-                                            <span>Por: {currentHistory.criador || 'Desconhecido'}</span>
-                                            <span>Ano: {currentHistory.ano}</span>
-                                            {currentHistory.coordenadas &&
-                                                currentHistory.coordenadas.length === 2 && (
-                                                    <a
-                                                        href={`https://www.google.com/maps?q=${currentHistory.coordenadas[0]},${currentHistory.coordenadas[1]}`}
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="text-blue-600 hover:underline"
-                                                    >
-                                                        Ver no Maps
-                                                    </a>
-                                                )}
+                            {/* Existing 'História' content */}
+                            {showAllStories ? (
+                                <div className="w-full py-2 md:py-4">
+                                    {historiasDaRua.map((historia, index) => (
+                                        <div key={historia.id} className="w-full mb-4 bg-white p-4 rounded-lg shadow-md">
+                                            <h3 className="text-xl font-bold">{historia.titulo}</h3>
+                                            <p className="text-sm text-gray-600">Por: {historia.criador || 'Desconhecido'}</p>
+                                            <p className="text-sm text-gray-600">Ano: {historia.ano}</p>
+                                            {historia.fotos && historia.fotos.length > 0 && (
+                                                <div className="mt-2 grid grid-cols-2 gap-2">
+                                                    {historia.fotos.map((foto, fotoIndex) => {
+                                                        const isObject = typeof foto === 'object' && foto !== null;
+                                                        const url = isObject ? foto.url : foto;
+                                                        const credito = isObject ? foto.credito : null;
+
+                                                        return (
+                                                            <div key={fotoIndex} className="relative">
+                                                                <img
+                                                                    src={url}
+                                                                    alt={`Foto de ${historia.titulo} ${fotoIndex + 1}`}
+                                                                    className="w-full h-32 object-cover rounded-md cursor-pointer"
+                                                                    onClick={() => openModal({ url, credito })}
+                                                                />
+                                                                {credito ? (
+                                                                    <p className="text-sm text-gray-600 mt-1">{credito}</p>
+                                                                ) : (
+                                                                    <p className="text-sm mt-1">
+                                                                        <button
+                                                                            onClick={() => {
+                                                                                setCurrentPhoto(foto);
+                                                                                setShowCreditModal(true);
+                                                                            }}
+                                                                            className="text-blue-600 underline"
+                                                                            aria-label="Indicar crédito"
+                                                                        >
+                                                                            Reportar Crédito
+                                                                        </button>
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })}
+                                                </div>
+                                            )}
+                                            <div className="mt-2 max-h-40 overflow-y-scroll">
+                                                <p>{historia.descricao}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <>
+                                    {/* Current History Content */}
+                                    <div className="w-full py-2 md:py-4">
+                                        <div className="border border-black px-2 rounded-md max-h-60 overflow-y-scroll bg-[#f5f1e8]">
+                                            <div className="sticky top-0 bg-[#f5f1e8] pb-2">
+                                                <h3 className="text-xl pt-2 md:text-2xl font-bold mb-1">
+                                                    {currentHistory.titulo}
+                                                </h3>
+                                                <div className="flex justify-between items-center text-sm text-gray-600">
+                                                    <span>Por: {currentHistory.criador || 'Desconhecido'}</span>
+                                                    <span>Ano: {currentHistory.ano}</span>
+                                                    {currentHistory.coordenadas &&
+                                                        currentHistory.coordenadas.length === 2 && (
+                                                            <a
+                                                                href={`https://www.google.com/maps?q=${currentHistory.coordenadas[0]},${currentHistory.coordenadas[1]}`}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className="text-blue-600 hover:underline"
+                                                            >
+                                                                Ver no Maps
+                                                            </a>
+                                                        )}
+                                                </div>
+                                            </div>
+                                            <p>{currentHistory.descricao}</p>
                                         </div>
                                     </div>
-                                    <p>{currentHistory.descricao}</p>
+
+                                    {/* Carousel of Photos */}
+                                    <div className="w-full border-b border-black py-4 md:py-8 text-center">
+                                        <div className="carousel grid grid-cols-1 gap-2">
+                                            {currentHistory.fotos &&
+                                                currentHistory.fotos.map((foto, index) => {
+                                                    const isObject = typeof foto === 'object' && foto !== null;
+                                                    const url = isObject ? foto.url : foto;
+                                                    const credito = isObject ? foto.credito : null;
+
+                                                    return (
+                                                        <div key={index} className="relative">
+                                                            <img
+                                                                src={url}
+                                                                alt={`Foto de ${currentHistory.ano} ${index + 1}`}
+                                                                className="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer"
+                                                                onClick={() => openModal({ url, credito })}
+                                                            />
+                                                            {credito ? (
+                                                                <p className="text-sm text-gray-600 mt-1">{credito}</p>
+                                                            ) : (
+                                                                <p className="text-sm mt-1">
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            setCurrentPhoto(foto);
+                                                                            setShowCreditModal(true);
+                                                                        }}
+                                                                        className="text-blue-600 underline"
+                                                                        aria-label="Indicar crédito"
+                                                                    >
+                                                                        Reportar Crédito
+                                                                    </button>
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        </>
+                    )}
+
+                    {activeTab === 'rua' && (
+                        <>
+                            {/* Rua Content: Photos and Description */}
+                            <div className="w-full py-2 lg:py-4">
+                                <h3 className="text-xl font-bold mb-4">{rua.nome}</h3>
+                                <div className="border border-black p-3 rounded-md max-h-64 overflow-y-scroll bg-[#f5f1e8]">
+                                    <p>{rua.descricao}</p>
                                 </div>
-                            </div>
-
-                            {/* Carousel of Photos */}
-                            <div className="w-full border-b border-black py-4 md:py-8 text-center">
-                                <div className="carousel grid grid-cols-1 gap-2">
-                                    {currentHistory.fotos &&
-                                        currentHistory.fotos.map((foto, index) => {
-                                            const isObject = typeof foto === 'object' && foto !== null;
-                                            const url = isObject ? foto.url : foto;
-                                            const credito = isObject ? foto.credito : null;
-
-                                            return (
-                                                <div key={index} className="relative">
-                                                    <img
-                                                        src={url}
-                                                        alt={`Foto de ${currentHistory.ano} ${index + 1}`}
-                                                        className="w-full h-auto object-cover rounded-lg shadow-md cursor-pointer"
-                                                        onClick={() => openModal({ url, credito })}
-                                                    />
-                                                    {credito ? (
-                                                        <p className="text-sm text-gray-600 mt-1">{credito}</p>
-                                                    ) : (
-                                                        <p className="text-sm mt-1">
-                                                            <button
-                                                                onClick={() => {
-                                                                    setCurrentPhoto(foto);
-                                                                    setShowCreditModal(true);
-                                                                }}
-                                                                className="text-blue-600 underline"
-                                                                aria-label="Indicar crédito"
-                                                            >
-                                                                Reportar Crédito
-                                                            </button>
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            );
-                                        })}
+                                <div className="border-b border-black pb-2 mt-4 grid grid-cols-2 gap-2">
+                                    {rua.fotos && rua.fotos.length > 0 ? (
+                                        rua.fotos.map((foto, index) => (
+                                            <img
+                                                key={index}
+                                                src={foto}
+                                                alt={`Foto da rua ${index + 1}`}
+                                                className="w-full h-auto object-cover rounded-md cursor-pointer"
+                                                onClick={() => openModal({ url: foto })}
+                                            />
+                                        ))
+                                    ) : (
+                                        <p className="text-gray-600">Nenhuma foto disponível.</p>
+                                    )}
                                 </div>
                             </div>
                         </>
                     )}
-                </>
-            )}
 
-            {activeTab === 'rua' && (
-                <>
-                    {/* Rua Content: Photos and Description */}
-                    <div className="w-full py-2 lg:py-4">
-                        <h3 className="text-xl font-bold mb-4">{rua.nome}</h3>
-                        <div className="border border-black p-3 rounded-md max-h-64 overflow-y-scroll bg-[#f5f1e8]">
-                            <p>{rua.descricao}</p>
-                        </div>
-                        <div className="border-b border-black pb-2 mt-4 grid grid-cols-2 gap-2">
-                            {rua.fotos && rua.fotos.length > 0 ? (
-                                rua.fotos.map((foto, index) => (
-                                    <img
-                                        key={index}
-                                        src={foto}
-                                        alt={`Foto da rua ${index + 1}`}
-                                        className="w-full h-auto object-cover rounded-md cursor-pointer"
-                                        onClick={() => openModal({ url: foto })}
-                                    />
-                                ))
+                    {activeTab === 'cidade' && (
+                        <div className="w-full py-4 px-4 md:px-8">
+                            <h3 className="text-2xl font-bold mb-6 text-center">
+                                {cidade.nome || 'Cidade não identificada'}
+                            </h3>
+
+                            {/* Descrição da cidade com formatação */}
+                            {cidade.descricao ? (
+                                <div
+                                    className="description-container max-w-none mb-8 mx-auto text-justify"
+                                    dangerouslySetInnerHTML={{ __html: cidade.descricao }}
+                                ></div>
                             ) : (
-                                <p className="text-gray-600">Nenhuma foto disponível.</p>
+                                <p className="text-gray-600 mb-8">
+                                    Informações sobre a cidade não disponíveis.
+                                </p>
                             )}
-                        </div>
-                    </div>
-                </>
-            )}
 
-            {activeTab === 'cidade' && (
-                <div className="w-full py-4 px-4 md:px-8">
-                    <h3 className="text-2xl font-bold mb-6 text-center">
-                        {cidade.nome || 'Cidade não identificada'}
-                    </h3>
-
-                    {/* Descrição da cidade com formatação */}
-                    {cidade.descricao ? (
-                        <div
-                            className="description-container max-w-none mb-8 mx-auto text-justify"
-                            dangerouslySetInnerHTML={{ __html: cidade.descricao }}
-                        ></div>
-                    ) : (
-                        <p className="text-gray-600 mb-8">
-                            Informações sobre a cidade não disponíveis.
-                        </p>
-                    )}
-
-                    {/* Informações do Prefeito */}
-                    {cidade.prefeito && (
-                        <div className="mb-12">
-                            <h4 className="text-xl font-semibold mb-6 text-center">Prefeito</h4>
-                            <div className="flex flex-col items-center">
-                                {cidade.prefeito.foto && (
-                                    <img
-                                        src={cidade.prefeito.foto}
-                                        alt={cidade.prefeito.nome}
-                                        className="w-32 h-32 object-cover rounded-full mb-4 shadow-lg"
-                                    />
-                                )}
-                                <div className="text-center">
-                                    <p className="text-lg font-bold">{cidade.prefeito.nome}</p>
-                                    <p>Número de mandatos: {cidade.prefeito.mandatos}</p>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Informações dos Vereadores */}
-                    {cidade.vereadores && cidade.vereadores.length > 0 && (
-                        <div className="mb-12">
-                            <h4 className="text-xl font-semibold mb-6 text-center">Vereadores</h4>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-                                {cidade.vereadores.map((vereador, index) => (
-                                    <div key={index} className="flex flex-col items-center">
-                                        {vereador.foto && (
+                            {/* Informações do Prefeito */}
+                            {cidade.prefeito && (
+                                <div className="mb-12">
+                                    <h4 className="text-xl font-semibold mb-6 text-center">Prefeito</h4>
+                                    <div className="flex flex-col items-center">
+                                        {cidade.prefeito.foto && (
                                             <img
-                                                src={vereador.foto}
-                                                alt={vereador.nome}
-                                                className="w-24 h-24 object-cover rounded-full mb-2 shadow-md"
+                                                src={cidade.prefeito.foto}
+                                                alt={cidade.prefeito.nome}
+                                                className="w-32 h-32 object-cover rounded-full mb-4 shadow-lg"
                                             />
                                         )}
-                                        <p className="text-center font-medium">{vereador.nome}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Eventos */}
-                    {cidade.eventos && cidade.eventos.length > 0 && (
-                        <div className="mb-12">
-                            <h4 className="text-xl font-semibold mb-6 text-center">Eventos</h4>
-                            {cidade.eventos.map((evento) => (
-                                <div key={evento.id} className="mb-12">
-                                    <h5 className="text-lg font-bold mb-2">{evento.nome}</h5>
-                                    <p className="text-sm text-gray-600 mb-2">
-                                        Início: {evento.inicio} | Data: {evento.data}
-                                    </p>
-                                    <p className="mb-4">{evento.descricao}</p>
-                                    {/* Fotos dos Eventos */}
-                                    {evento.fotos && evento.fotos.length > 0 && (
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                                            {evento.fotos.map((foto, index) => (
-                                                <img
-                                                    key={index}
-                                                    src={foto}
-                                                    alt={`Foto do evento ${evento.nome} ${index + 1}`}
-                                                    className="w-full h-40 object-cover rounded-md cursor-pointer shadow-sm hover:shadow-md transition-shadow duration-300"
-                                                    onClick={() => openModal({ url: foto })}
-                                                />
-                                            ))}
+                                        <div className="text-center">
+                                            <p className="text-lg font-bold">{cidade.prefeito.nome}</p>
+                                            <p>Número de mandatos: {cidade.prefeito.mandatos}</p>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
-                            ))}
+                            )}
+
+                            {/* Informações dos Vereadores */}
+                            {cidade.vereadores && cidade.vereadores.length > 0 && (
+                                <div className="mb-12">
+                                    <h4 className="text-xl font-semibold mb-6 text-center">Vereadores</h4>
+                                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                                        {cidade.vereadores.map((vereador, index) => (
+                                            <div key={index} className="flex flex-col items-center">
+                                                {vereador.foto && (
+                                                    <img
+                                                        src={vereador.foto}
+                                                        alt={vereador.nome}
+                                                        className="w-24 h-24 object-cover rounded-full mb-2 shadow-md"
+                                                    />
+                                                )}
+                                                <p className="text-center font-medium">{vereador.nome}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Eventos */}
+                            {cidade.eventos && cidade.eventos.length > 0 && (
+                                <div className="mb-12">
+                                    <h4 className="text-xl font-semibold mb-6 text-center">Eventos</h4>
+                                    {cidade.eventos.map((evento) => (
+                                        <div key={evento.id} className="mb-12">
+                                            <h5 className="text-lg font-bold mb-2">{evento.nome}</h5>
+                                            <p className="text-sm text-gray-600 mb-2">
+                                                Início: {evento.inicio} | Data: {evento.data}
+                                            </p>
+                                            <p className="mb-4">{evento.descricao}</p>
+                                            {/* Fotos dos Eventos */}
+                                            {evento.fotos && evento.fotos.length > 0 && (
+                                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                                    {evento.fotos.map((foto, index) => (
+                                                        <img
+                                                            key={index}
+                                                            src={foto}
+                                                            alt={`Foto do evento ${evento.nome} ${index + 1}`}
+                                                            className="w-full h-40 object-cover rounded-md cursor-pointer shadow-sm hover:shadow-md transition-shadow duration-300"
+                                                            onClick={() => openModal({ url: foto })}
+                                                        />
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
                     )}
-                </div>
-            )}
 
-            {/* Modal for Reporting Credit */}
-            {showCreditModal && (
-                <div
-                    className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-                    onClick={() => setShowCreditModal(false)}
-                >
-                    <div
-                        className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <button
-                            className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+                    {/* Modal for Reporting Credit */}
+                    {showCreditModal && (
+                        <div
+                            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
                             onClick={() => setShowCreditModal(false)}
-                            aria-label="Fechar formulário"
                         >
-                            <i className="fas fa-times text-xl"></i>
-                        </button>
-                        <h3 className="text-xl font-bold mb-4 text-center">Reportar proprietário de créditos</h3>
-                        <form action="https://formspree.io/f/mwpkazda" method="POST">
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nome">
-                                    Nome:
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="nome"
-                                    type="text"
-                                    name="nome"
-                                    placeholder="Seu nome"
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-                                    E-mail:
-                                </label>
-                                <input
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    placeholder="Seu e-mail"
-                                    required
-                                />
-                            </div>
-                            <div className="mb-4">
-                                <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="mensagem">
-                                    Mensagem:
-                                </label>
-                                <textarea
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="mensagem"
-                                    name="mensagem"
-                                    rows="4"
-                                    placeholder="Detalhe sobre a propriedade de crédito ou outras observações."
-                                    required
-                                ></textarea>
-                            </div>
-                            <input
-                                type="hidden"
-                                name="photo_url"
-                                value={currentPhoto ? currentPhoto.url || currentPhoto : ''}
-                            />
-                            <div className="flex items-center justify-center">
+                            <div
+                                className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative"
+                                onClick={(e) => e.stopPropagation()}
+                            >
                                 <button
-                                    type="submit"
-                                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                                    className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+                                    onClick={() => setShowCreditModal(false)}
+                                    aria-label="Fechar formulário"
                                 >
-                                    Enviar
+                                    <i className="fas fa-times text-xl"></i>
                                 </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
-
-            {/* Image Modal with Zoom and Panning */}
-            {isModalOpen && selectedImage && (
-                <div
-                    className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black bg-opacity-75"
-                    onClick={closeModal}
-                >
-                    <img
-                        ref={modalImageRef}
-                        src={selectedImage.url}
-                        alt="Imagem ampliada"
-                        className="max-w-[90%] max-h-[90%] object-contain cursor-grab"
-                        style={{
-                            transform: `scale(${currentZoom}) translate(${translateX}px, ${translateY}px)`,
-                            transition: 'transform 0.3s ease',
-                            cursor: currentZoom > 1 ? 'grab' : 'default',
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                        onMouseDown={handleMouseDown}
-                        onTouchStart={handleTouchStartPan}
-                        draggable="false"
-                    />
-                    {selectedImage.credito && (
-                        <p className="text-white mt-2">{selectedImage.credito}</p>
-                    )}
-                    <button
-                        className="absolute top-4 right-4 text-white text-2xl bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 focus:outline-none"
-                        onClick={closeModal}
-                        aria-label="Fechar modal"
-                    >
-                        &times;
-                    </button>
-                    <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
-                        <button
-                            className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setCurrentZoom((prevZoom) => Math.min(prevZoom + 0.2, 3));
-                            }}
-                            aria-label="Aumentar zoom"
-                        >
-                            <i className="fas fa-search-plus"></i>
-                        </button>
-                        <button
-                            className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setCurrentZoom((prevZoom) => Math.max(prevZoom - 0.2, 1));
-                            }}
-                            aria-label="Diminuir zoom"
-                        >
-                            <i className="fas fa-search-minus"></i>
-                        </button>
-                    </div>
-                </div>
-            )}
-
-            {/* Conditionally Render Bottom Section */}
-            {activeTab === 'historia' && (
-                <>
-                    {showAllStories ? (
-                        <div className="w-full fixed bottom-0 left-0 py-2 m-0">
-                            <div className="w-full lg:py-8 flex justify-center">
-                                <button
-                                    onClick={() => setShowAllStories(false)}
-                                    className="w-[90%] bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
-                                >
-                                    Ver Linha do Tempo
-                                </button>
-                            </div>
-                        </div>
-                    ) : (
-                        <div className="w-full fixed bottom-0 left-0 m-0">
-                            <div className="w-full lg:py-4">
-                                <div className="border border-black p-2 mb-2 sm:mb-0 lg:mb-8 rounded-md bg-[#f5f1e8]">
-                                    <p className="text-center text-lg font-bold -mb-4">
-                                        Ano <strong>{currentHistory.ano}</strong>
-                                    </p>
-
-                                    <div className="flex items-center space-x-4 justify-center">
-                                        <button
-                                            onClick={handlePrev}
-                                            className="p-2 bg-[#8A5A44] text-white rounded-full hover:bg-[#D8A568] focus:outline-none"
-                                            disabled={currentIndex === 0}
-                                            aria-label="História Anterior"
-                                        >
-                                            <i className="fas fa-chevron-left"></i>
-                                        </button>
-
+                                <h3 className="text-xl font-bold mb-4 text-center">Reportar proprietário de créditos</h3>
+                                <form action="https://formspree.io/f/mwpkazda" method="POST">
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="nome">
+                                            Nome:
+                                        </label>
                                         <input
-                                            type="range"
-                                            min={0}
-                                            max={historiasDaRua.length - 1}
-                                            value={currentIndex}
-                                            onChange={handleRangeChange}
-                                            className="w-1/2"
-                                            step="1"
-                                            aria-label="Selecionar história"
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="nome"
+                                            type="text"
+                                            name="nome"
+                                            placeholder="Seu nome"
+                                            required
                                         />
-
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                                            E-mail:
+                                        </label>
+                                        <input
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="email"
+                                            type="email"
+                                            name="email"
+                                            placeholder="Seu e-mail"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="mensagem">
+                                            Mensagem:
+                                        </label>
+                                        <textarea
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="mensagem"
+                                            name="mensagem"
+                                            rows="4"
+                                            placeholder="Detalhe sobre a propriedade de crédito ou outras observações."
+                                            required
+                                        ></textarea>
+                                    </div>
+                                    <input
+                                        type="hidden"
+                                        name="photo_url"
+                                        value={currentPhoto ? currentPhoto.url || currentPhoto : ''}
+                                    />
+                                    <div className="flex items-center justify-center">
                                         <button
-                                            onClick={handleNext}
-                                            className="p-2 bg-[#8A5A44] text-white rounded-full hover:bg-[#D8A568] focus:outline-none"
-                                            disabled={currentIndex === historiasDaRua.length - 1}
-                                            aria-label="Próxima História"
+                                            type="submit"
+                                            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                         >
-                                            <i className="fas fa-chevron-right"></i>
+                                            Enviar
                                         </button>
                                     </div>
-
-                                    <p className="text-center text-sm -mt-2">
-                                        História {currentIndex + 1} de {historiasDaRua.length}
-                                    </p>
-                                </div>
+                                </form>
                             </div>
                         </div>
                     )}
-                </>
-            )}
 
-            {/* Organization Banner */}
-            {org && (
-                <div
-                    className="w-full flex items-center justify-center rounded-b-lg relative"
-                    style={{ height: '128px', backgroundColor: org.cor }}
-                >
-                    <span className="absolute top-2 right-2 text-white text-sm font-semibold">
-                        História por:
-                    </span>
-                    <Link to="/referencias?section=orgs" className="flex items-center">
-                        <img src={org.logo} alt={org.fantasia} className="h-32" />
-                    </Link>
-                </div>
-            )}
-
-            {/* Recommended Places Carousel */}
-            <div className="p-2 w-full py-2">
-                <div className="flex items-center justify-between">
-                    <h3 className="text-xl pb-2 md:text-2xl font-bold">Locais Recomendados</h3>
-                    <button
-                        onClick={() => setShowLocaisRecomendados(!showLocaisRecomendados)}
-                        className="flex items-center text-blue-600"
-                    >
-                        {showLocaisRecomendados ? 'Ocultar' : 'Mostrar'}
-                        <i className={`ml-1 fas fa-chevron-${showLocaisRecomendados ? 'up' : 'down'}`}></i>
-                    </button>
-                </div>
-                {showLocaisRecomendados && (
-                    <div className="w-full overflow-x-auto">
-                        <div className="flex space-x-4 px-4">
-                            {negocios.map((negocio, index) => (
-                                <div
-                                    key={index}
-                                    className="border border-black min-w-[200px] bg-[#f5f1e8] p-2 rounded-lg shadow cursor-pointer flex-shrink-0 hover:shadow-lg transition-shadow duration-300"
+                    {/* Image Modal with Zoom and Panning */}
+                    {isModalOpen && selectedImage && (
+                        <div
+                            className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black bg-opacity-75"
+                            onClick={closeModal}
+                        >
+                            <img
+                                ref={modalImageRef}
+                                src={selectedImage.url}
+                                alt="Imagem ampliada"
+                                className="max-w-[90%] max-h-[90%] object-contain cursor-grab"
+                                style={{
+                                    transform: `scale(${currentZoom}) translate(${translateX}px, ${translateY}px)`,
+                                    transition: 'transform 0.3s ease',
+                                    cursor: currentZoom > 1 ? 'grab' : 'default',
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                                onMouseDown={handleMouseDown}
+                                onTouchStart={handleTouchStartPan}
+                                draggable="false"
+                            />
+                            {selectedImage.credito && (
+                                <p className="text-white mt-2">{selectedImage.credito}</p>
+                            )}
+                            <button
+                                className="absolute top-4 right-4 text-white text-2xl bg-black bg-opacity-50 rounded-full p-2 hover:bg-opacity-75 focus:outline-none"
+                                onClick={closeModal}
+                                aria-label="Fechar modal"
+                            >
+                                &times;
+                            </button>
+                            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-4">
+                                <button
+                                    className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCurrentZoom((prevZoom) => Math.min(prevZoom + 0.2, 3));
+                                    }}
+                                    aria-label="Aumentar zoom"
                                 >
-                                    <img
-                                        src={negocio.foto || 'https://placehold.co/250x150'}
-                                        alt={negocio.titulo}
-                                        className="w-full h-32 object-cover rounded-lg mb-2"
-                                    />
-                                    <h4 className="font-semibold mb-1">{negocio.titulo}</h4>
-                                    <p className="text-sm text-gray-600 mb-2 flex items-center justify-between">
-                                        {negocio.segmento}
-                                        <a
-                                            href={negocio.link}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 hover:text-blue-800 flex items-center ml-auto"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                className="h-4 w-4 mr-1"
-                                                fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor"
-                                            >
-                                                <path
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth="2"
-                                                    d="M12 2c4.418 0 8 3.582 8 8 0 3.255-1.938 6.062-4.707 7.456L12 22l-3.293-4.544C6.938 16.062 5 13.255 5 10c0-4.418 3.582-8 8-8z"
-                                                />
-                                            </svg>
-                                            Ver no Google
-                                        </a>
-                                    </p>
-                                </div>
-                            ))}
+                                    <i className="fas fa-search-plus"></i>
+                                </button>
+                                <button
+                                    className="bg-white p-2 rounded-full shadow hover:bg-gray-200 focus:outline-none"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setCurrentZoom((prevZoom) => Math.max(prevZoom - 0.2, 1));
+                                    }}
+                                    aria-label="Diminuir zoom"
+                                >
+                                    <i className="fas fa-search-minus"></i>
+                                </button>
+                            </div>
                         </div>
+                    )}
+
+                    {/* Conditionally Render Bottom Section */}
+                    {activeTab === 'historia' && (
+                        <>
+                            {showAllStories ? (
+                                <div className="w-full fixed bottom-0 left-0 py-2 m-0">
+                                    <div className="w-full lg:py-8 flex justify-center">
+                                        <button
+                                            onClick={() => setShowAllStories(false)}
+                                            className="w-[90%] bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
+                                        >
+                                            Ver Linha do Tempo
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="w-full fixed bottom-0 left-0 m-0">
+                                    <div className="w-full lg:py-4">
+                                        <div className="border border-black p-2 mb-2 sm:mb-0 lg:mb-8 rounded-md bg-[#f5f1e8]">
+                                            <p className="text-center text-lg font-bold -mb-4">
+                                                Ano <strong>{currentHistory.ano}</strong>
+                                            </p>
+
+                                            <div className="flex items-center space-x-4 justify-center">
+                                                <button
+                                                    onClick={handlePrev}
+                                                    className="p-2 bg-[#8A5A44] text-white rounded-full hover:bg-[#D8A568] focus:outline-none"
+                                                    disabled={currentIndex === 0}
+                                                    aria-label="História Anterior"
+                                                >
+                                                    <i className="fas fa-chevron-left"></i>
+                                                </button>
+
+                                                <input
+                                                    type="range"
+                                                    min={0}
+                                                    max={historiasDaRua.length - 1}
+                                                    value={currentIndex}
+                                                    onChange={handleRangeChange}
+                                                    className="w-1/2"
+                                                    step="1"
+                                                    aria-label="Selecionar história"
+                                                />
+
+                                                <button
+                                                    onClick={handleNext}
+                                                    className="p-2 bg-[#8A5A44] text-white rounded-full hover:bg-[#D8A568] focus:outline-none"
+                                                    disabled={currentIndex === historiasDaRua.length - 1}
+                                                    aria-label="Próxima História"
+                                                >
+                                                    <i className="fas fa-chevron-right"></i>
+                                                </button>
+                                            </div>
+
+                                            <p className="text-center text-sm -mt-2">
+                                                História {currentIndex + 1} de {historiasDaRua.length}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </>
+                    )}
+
+                    {/* Organization Banner */}
+                    {org && (
+                        <div
+                            className="w-full flex items-center justify-center rounded-b-lg relative"
+                            style={{ height: '128px', backgroundColor: org.cor }}
+                        >
+                            <span className="absolute top-2 right-2 text-white text-sm font-semibold">
+                                História por:
+                            </span>
+                            <Link to="/referencias?section=orgs" className="flex items-center">
+                                <img src={org.logo} alt={org.fantasia} className="h-32" />
+                            </Link>
+                        </div>
+                    )}
+
+                    {/* Recommended Places Carousel */}
+                    <div className="p-2 w-full py-2">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xl pb-2 md:text-2xl font-bold">Locais Recomendados</h3>
+                            <button
+                                onClick={() => setShowLocaisRecomendados(!showLocaisRecomendados)}
+                                className="flex items-center text-blue-600"
+                            >
+                                {showLocaisRecomendados ? 'Ocultar' : 'Mostrar'}
+                                <i className={`ml-1 fas fa-chevron-${showLocaisRecomendados ? 'up' : 'down'}`}></i>
+                            </button>
+                        </div>
+                        {showLocaisRecomendados && (
+                            <div className="w-full overflow-x-auto">
+                                <div className="flex space-x-4 px-4">
+                                    {negocios.map((negocio, index) => (
+                                        <div
+                                            key={index}
+                                            className="border border-black min-w-[200px] bg-[#f5f1e8] p-2 rounded-lg shadow cursor-pointer flex-shrink-0 hover:shadow-lg transition-shadow duration-300"
+                                        >
+                                            <img
+                                                src={negocio.foto || 'https://placehold.co/250x150'}
+                                                alt={negocio.titulo}
+                                                className="w-full h-32 object-cover rounded-lg mb-2"
+                                            />
+                                            <h4 className="font-semibold mb-1">{negocio.titulo}</h4>
+                                            <p className="text-sm text-gray-600 mb-2 flex items-center justify-between">
+                                                {negocio.segmento}
+                                                <a
+                                                    href={negocio.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-600 hover:text-blue-800 flex items-center ml-auto"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        className="h-4 w-4 mr-1"
+                                                        fill="none"
+                                                        viewBox="0 0 24 24"
+                                                        stroke="currentColor"
+                                                    >
+                                                        <path
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                            strokeWidth="2"
+                                                            d="M12 2c4.418 0 8 3.582 8 8 0 3.255-1.938 6.062-4.707 7.456L12 22l-3.293-4.544C6.938 16.062 5 13.255 5 10c0-4.418 3.582-8 8-8z"
+                                                        />
+                                                    </svg>
+                                                    Ver no Google
+                                                </a>
+                                            </p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
-                )}
-            </div>
 
-            {/* Button to Show All Stories or Open 'historia' tab */}
-            {activeTab !== 'historia' && (
-                <div className="w-full py-2 md:py-4 mb-12 lg:mb-20">
-                    <button
-                        onClick={() => setActiveTab('historia')}
-                        className="w-full bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
-                    >
-                        Ver histórias dessa rua
-                    </button>
-                </div>
-            )}
+                    {/* Button to Show All Stories or Open 'historia' tab */}
+                    {activeTab !== 'historia' && (
+                        <div className="w-full py-2 md:py-4 mb-12 lg:mb-20">
+                            <button
+                                onClick={() => setActiveTab('historia')}
+                                className="w-full bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
+                            >
+                                Ver histórias dessa rua
+                            </button>
+                        </div>
+                    )}
 
-            {/* Button to Show All Stories */}
-            {activeTab === 'historia' && !showAllStories && (
-                <div className="w-full py-2 md:py-4 mb-12 lg:mb-20">
-                    <button
-                        onClick={() => setShowAllStories(true)}
-                        className="w-full bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
-                    >
-                        Todas Histórias desta rua
-                    </button>
+                    {/* Button to Show All Stories */}
+                    {activeTab === 'historia' && !showAllStories && (
+                        <div className="w-full py-2 md:py-4 mb-12 lg:mb-20">
+                            <button
+                                onClick={() => setShowAllStories(true)}
+                                className="w-full bg-[#8A5A44] text-white py-2 px-4 rounded-md hover:bg-[#D8A568] focus:outline-none"
+                            >
+                                Todas Histórias desta rua
+                            </button>
+                        </div>
+                    )}
                 </div>
-            )}
-        </div>
-    );
-};
+            );
+        };
 
         // Componente Legado Africano (Atualizado)
         const LegadoAfricano = () => {
@@ -3382,7 +3256,6 @@ const HistoriaContent = ({
 
                     <Switch>
                         <Route path="/sobre" component={Sobre} />
-                        <Route path="/apoio" component={Apoio} />
                         <Route path="/referencias" component={Referencias} />
                         <Route path="/adicionar-historia" component={AdicionarHistoria} />
                         <Route path="/ruas-e-historias" component={RuasEHistorias} />
