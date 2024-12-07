@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historin - Histórias das cidades</title>
     <meta name="theme-color" content="#E6D3B4">
-    <link rel="icon" href="fotos/historin.ico" />
+    <link rel="icon" href="fotos/historin-logo.svg" />
     <!-- Banco de Dados -->
     <script src="bd.js"></script>
     <!-- Bibliotecas e estilos externos -->
@@ -14,13 +14,14 @@
     <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
 
+    <link rel="manifest" href="manifest.json">
 
 
     <!-- React Router DOM -->
-    <script src="https://unpkg.com/react-router-dom@5/umd/react-router-dom.min.js" crossorigin></script>
+    <script src="libs/react-router-dom.min.js" crossorigin></script>
 
     <!-- Babel para JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="libs/babel.min.js"></script>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -36,7 +37,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="libs/leaflet.css" />
 
     <!-- Estilos personalizados -->
     <link rel="stylesheet" href="styles3.4.css" />
@@ -49,6 +50,7 @@
 
         gtag('config', 'G-6RZP5DGP0E', { 'send_page_view': false });
     </script>
+    
 </head>
 
 <body>
@@ -1748,7 +1750,7 @@
             document.head.appendChild(metaDescription);
         }
     }, []);
-    
+
             useEffect(() => {
                 // Extrair o parâmetro 'section' da URL
                 const params = new URLSearchParams(location.search);
