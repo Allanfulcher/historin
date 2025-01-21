@@ -371,7 +371,7 @@ const ruas = [{
 }];
 
 const historias = [{
-	'orgId': 8,
+	/*'orgId': 1,*/
 	'id': 1,
 	'rua_id': 3,
 	'criador': 'Mateus Canova',
@@ -433,8 +433,8 @@ const historias = [{
 	'rua_id': 2,
 	'criador': 'Mateus Canova',
 	'fotos': ['https://i.imgur.com/pTCVPEj.png', ],
-	'titulo': 'Praça das Comunicações',
-	'descricao': 'Moradores aguardavam o trem na Praça das Comunicações, hoje conhecida como Praça das Etnias.',
+	'titulo': 'Carreteiros descarregando madeira próximo à Estação Férrea Gramado',
+	'descricao': 'Os colonos, vindos das áreas rurais, chegavam na sede do então Quinto Distrito de Taquara, com suas carretas puxadas por bois, cavalos ou mulas cheias de produtos. Traziam itens agropecuários ou de extrativismo vegetal, para embarcá-los no trem, que estacionava na Estação Gramado, área central do distrito. Nessa época, havia em Gramado e arredores, pelo menos desde o início do século XX, muitas serrarias produtoras de madeira proveniente da derrubada das extensas matas nativas de pinheiro araucária existentes na região. Na foto, tábuas de madeira trazidas das serrarias estão sendo descarregadas à beira dos trilhos, aguardando encaminhamento até algum vagão do trem de carga. Num período em que não existia asfalto e caminhões, os carreteiros levavam cargas por longas distâncias no relevo montanhoso e sob o clima instável da Serra Gaúcha, enfrentando estradas estreitas e ruins, repletas de subidas, descidas, pedras e atoleiros.',
 	'ano': 1925,
 	'coordenadas': [-29.382853213252286, -50.871694803261995]
 }, {
@@ -442,8 +442,8 @@ const historias = [{
 	'rua_id': 2,
 	'criador': 'Mateus Canova',
 	'fotos': ['https://i.imgur.com/53ca1hf.png', 'https://i.imgur.com/K3756Ab.png', ],
-	'titulo': 'O espaço recebe comércios',
-	'descricao': 'A Praça das Comunicações começa a abrigar comércios, evoluindo para a atual Rua Coronel João Corrêa.',
+	'titulo': 'Prédio comercial se destaca entre residências do jovem município',
+	'descricao': 'A primeira foto foi tirada na subida da rua hoje conhecida como Rua Torta. A sombra ao chão é da antiga casa do major Nicoletti, hoje museu. O ângulo é o mesmo da foto anterior, de 1925. Ao fundo está a Rua Emílio Sorgetz, que leva o nome do proprietário de uma das casas à esquerda. O prédio branco de dois andares em alvenaria ainda existe. Em 1957, era um comércio de ferragens também pertencente à família Sorgetz; depois de 1976 foi sede do primeiro chocolate caseiro do Brasil, de Jayme Prawer, e, desde 1986, abriga o restaurante Chateau de La Fondue. À direita dele, há uma casa de madeira, cujo dono era engenheiro, mesmo terreno em que está a pizzaria temática Cara de Mau, atualmente. Na frente dessas duas construções há uma placa fixada ao chão, mesmo local da atual Praça das Etnias. A segunda foto, com uma araucária à esquerda, é da casa de um membro de outra tradicional família gramadense, os Lorenzoni. Temos aqui duas amostras do jovem município de Gramado, recém-emancipado de Taquara. Na época, o centro da cidade possuía ainda muitas residências de madeira com andar único e, pouco a pouco, surgiam prédios comerciais de alvenaria com mais andares. Convidamos você a subir até a metade da Rua Torta, mirar seu celular e tirar uma fotografia no mesmo ângulo. Comparando as fotos de 1925 e de 1957 com a que você tirou, que elementos novos há na paisagem?',
 	'ano': 1957,
 	'coordenadas': [-29.382853213252286, -50.871694803261995]
 }, {
@@ -451,8 +451,8 @@ const historias = [{
 	'rua_id': 2,
 	'criador': 'Mateus Canova',
 	'fotos': ['https://i.imgur.com/Nza5JWW.png', ],
-	'titulo': 'O vime ganha força na cidade',
-	'descricao': 'A família Accorsi inaugura sua fábrica de artefatos em vime, consolidando essa produção na cidade.',
+	'titulo': 'O artesanato em vime ganha força na cidade',
+	'descricao': 'Oficialmente, o início da produção de móveis e artefatos em vime, em Gramado, data da década de 1920, quando aqui chegaram o casal Antônio e Ana Accorsi, conhecedores do cultivo e do manuseio da planta. Antônio é conhecido como o “Pai do Artesanato Gramadense”. Sem matéria-prima, nos primeiros anos, foi até às áreas rurais introduzir o cultivo da planta entre os colonos e também tornou muitos deles seus aprendizes no ofício. Durante muitas décadas, sua fábrica ficava na então Rua Borges de Medeiros, hoje Avenida. Produzia móveis, cestas e brinquedos, mas sua fama se deveu principalmente à fabricação de bengalas, que, juntamente com chapéus de palha, eram utilizadas pelos veranistas em seus passeios nas belas paisagens de Gramado. Na foto, temos a nova sede de sua fábrica. Nesse mesmo período da foto, ao longo das décadas de 1970 e 1980, ocorreu o auge da produção industrial em Gramado. O ramo moveleiro era o segundo ramo industrial mais rentável na cidade, enquanto que o artesanato em vime era o sexto. Por esses anos, faleceu Antônio que, mesmo idoso, ainda trançava seus vimes. A empresa passou, então, a ser administrada pelos filhos, chamando-se “Vimes Accorsi”. Posteriormente, com o encerramento das atividades, foi construído um edifício, no mesmo terreno, intitulado “Condomínio Antônio Accorsi”, homenageando o artesão falecido.',
 	'ano': 1970,
 	'coordenadas': [-29.382853213252286, -50.871694803261995]
 }, {
@@ -460,8 +460,8 @@ const historias = [{
 	'rua_id': 2,
 	'criador': 'Mateus Canova',
 	'fotos': ['https://i.imgur.com/UOkcbb6.png', 'https://i.imgur.com/2qpofoJ.png', 'https://i.imgur.com/aZIPdFg.png'],
-	'titulo': 'Início da construção da nova rodoviária',
-	'descricao': 'Início das obras da nova rodoviária de Gramado, um projeto muito aguardado pela população.',
+	'titulo': 'Etapas de construção da nova Estação Rodoviária Gramado',
+	'descricao': 'A nova Estação Rodoviária foi construída no terreno onde se localizava a antiga Estação Férrea Gramado, que funcionou por mais de quarenta anos, de 1921 a 1963. A antiga estação foi um dos quatro pontos de parada do transporte ferroviário no território do então Quinto Distrito de Taquara. Com a desativação da ferrovia Taquara-Canela, na década de 1960, o mesmo prédio abrigou, posteriormente, a sede da Brigada Militar, até ser demolido. No mesmo terreno, atualmente existe um complexo, do qual fazem parte, além da Estação Rodoviária, a nova sede da Brigada Militar, a Praça das Etnias, o edifício Dom Fernando entre outras construções. Anteriormente, também serviu como Estação Rodoviária, na década de 1950, a Praça Major Nicoletti e, depois, um prédio na atual Avenida das Hortênsias, onde hoje está o restaurante Madero Burguer. Na primeira das fotos abaixo, ao fundo à esquerda, vê-se a loja Vimes Accorsi, que hoje não existe mais. A residência por detrás do caminhão estacionado, passadas quatro décadas, ainda resiste à crescente verticalização da cidade nos últimos anos.',
 	'ano': 1984,
 	'coordenadas': [-29.38371759705751, -50.871942005169366]
 }, {
@@ -469,8 +469,8 @@ const historias = [{
 	'rua_id': 2,
 	'criador': 'Mateus Canova',
 	'fotos': ['https://i.imgur.com/FEwM0zt.png', 'https://i.imgur.com/45Q417o.png', ],
-	'titulo': 'Inauguração da nova rodoviária',
-	'descricao': 'Inauguração da nova rodoviária, com grande participação da comunidade.',
+	'titulo': 'Rodoviária durante e após a inauguração',
+	'descricao': 'A atual Estação Rodoviária teve sua construção iniciada em 1984 e finalizada em 1986. No mesmo período, foram construídos ou repaginados vários prédios públicos municipais, como a Prefeitura, a Câmara de Vereadores e o Palácio dos Festivais. O estilo arquitetônico adotado foi inspirado em residências de personalidades alemãs ilustres das primeiras décadas da história de Gramado. Por exemplo, o formato da cobertura da Estação Rodoviária é muito semelhante ao telhado da casa do médico naturalista Richard Sturmhoeffel, a mesma que aparece em fotografias da então Rua Borges de Medeiros, na década de 1920. Desde sua inauguração, a 8 de março de 1986, o prédio é basicamente o mesmo até os dias atuais. Passou por uma reforma nos anos 2000, visando melhor atender o crescente número de turistas que participavam dos muitos eventos que ocorriam na antiga Praça das Comunicações, hoje Praça das Etnias, como a Festa da Colônia, a Feira do Artesanato, a Feira de Natal e a Feira do Livro, atualmente realizados em outros espaços da cidade. Ademais, também beneficiava aqueles que diariamente vinham realizar compras na Casa do Colono e nos Fornos de Gramado, construídos ao lado da Rodoviária, no início do século XXI.',
 	'ano': 1986,
 	'coordenadas': [-29.38371759705751, -50.871942005169366]
 }, {
