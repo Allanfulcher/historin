@@ -61,44 +61,48 @@ const cidades = [
     prefeito: {
       nome: "Nestor Tissot",
       foto: "https://www.blogdogerson.com.br/wp-content/uploads/2021/05/nestor-tissot-2021-1024x682.jpg",
-      mandatos: 3,
+      mandatos: 4,
     },
     vereadores: [
       { 
-        nome: "Cícero Altreiter", 
-        foto: "https://www.gramado.rs.leg.br/imagens/copy2_of_CceroMDB.png/@@images/a8036fa9-7a2e-42df-817e-ab84dd8d1aac.png" 
+        nome: "Ike Koetz", 
+        foto: "https://s3-sa-east-1.amazonaws.com/static.gramado.rs.leg.br/uploads/14129.jpg" 
       },
       { 
-        nome: "Professor Daniel", 
-        foto: "https://www.gramado.rs.leg.br/Prof.DanielPSDB.png/@@images/be4a1259-4200-4bc9-8472-a1939626e8fa.png" 
+        nome: "Rafael Ronsoni", 
+        foto: "https://s3-sa-east-1.amazonaws.com/static.gramado.rs.leg.br/uploads/14130.jpg" 
       },
       { 
-        nome: "Renan Sartori", 
-        foto: "https://www.gramado.rs.leg.br/RenanMDB.png/@@images/7b089640-7d02-4bd1-ba8b-44f41e10240d.png" 
+        nome: "Pedro Lazaretti", 
+        foto: "https://s3-sa-east-1.amazonaws.com/static.gramado.rs.leg.br/uploads/14127.jpg" 
       },
       { 
-        nome: "Andreia Reck", 
-        foto: "https://www.gramado.rs.leg.br/AndreiaReckPSDB.png/@@images/0e647a00-4a79-45df-b6e5-49fa6b5d1c9d.png" 
+        nome: "Roberto Cavallin", 
+        foto: "https://s3-sa-east-1.amazonaws.com/static.gramado.rs.leg.br/uploads/14123.jpg" 
       },
       { 
         nome: "Neri", 
         foto: "https://www.gramado.rs.leg.br/NeriPP.png/@@images/8d09bc12-63e5-4cd8-b37a-d95241d39826.png" 
       },
       { 
-        nome: "Rafael Ronsoni", 
-        foto: "https://www.gramado.rs.leg.br/RafaelRonsoniPP.png/@@images/4568b059-2ada-4c6d-b67b-af3e151412ae.png" 
+        nome: "Maria de Fátima", 
+        foto: "https://s3-sa-east-1.amazonaws.com/static.gramado.rs.leg.br/uploads/14124.jpg" 
       },
       { 
-        nome: "Rodrigo Paim", 
-        foto: "https://www.gramado.rs.leg.br/PaimMDB.png/@@images/a074672a-fcc0-4caa-b7a9-4d7aaa59a3ed.png" 
+        nome: "Fernanda Pereira", 
+        foto: "https://s3-sa-east-1.amazonaws.com/static.gramado.rs.leg.br/uploads/14126.jpg" 
       },
       { 
-        nome: "Rosi Ecker Schmitt", 
-        foto: "https://www.gramado.rs.leg.br/RosiPP.png/@@images/42e364e0-81fb-4b80-872e-083a41871812.png" 
+        nome: "Neri da Farmácia", 
+        foto: "https://s3-sa-east-1.amazonaws.com/static.gramado.rs.leg.br/uploads/14128.jpg" 
       },
       { 
-        nome: "Volnei da Saúde", 
-        foto: "https://www.gramado.rs.leg.br/VolneidaSade.png/@@images/9664de43-983b-4244-add7-b078cc931732.png" 
+        nome: "Denise Buhler", 
+        foto: "https://s3-sa-east-1.amazonaws.com/static.gramado.rs.leg.br/uploads/14122.jpg" 
+      },
+      { 
+        nome: "Vivi Cardoso", 
+        foto: "https://s3-sa-east-1.amazonaws.com/static.gramado.rs.leg.br/uploads/14125.jpg" 
       },
     ],
     eventos: [
