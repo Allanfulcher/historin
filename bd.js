@@ -1166,8 +1166,8 @@ const historias = [{
 	'rua_id': 13,
 	'criador': 'Mateus Canova',
 	'fotos': ['/fotos/historias/nevada-igreja-1994.png'],
-	'titulo': 'Neve na ciadade',
-	'descricao': 'Neve vista da praça em frente da igreja matriz',
+	'titulo': 'Neve na cidade',
+	'descricao': 'Neve vista da praça em frente da igreja matriz na grande nevasca de 1994',
 	'ano': 1994,
 	'coordenadas': [-29.36369851853247, -50.80995755372044]
 }, {
@@ -1449,7 +1449,331 @@ const historias = [{
 	'descricao': 'A famosa Cascata do Caracol, muito visitada por todos, um dos principais pontos turisticos da cidade, conta com um ambiente preservado, e uma quedaa de 130m conforme medições atuais.',
 	'ano': 1961,
 	'coordenadas': [-29.31295260355406, -50.85195529552594]
-}];
+},     {
+    id: 136,
+    rua_id: 13,
+    criador: 'Canela Fotos',
+    fotos: [
+      '/fotos/historias/igreja-canela-1964.jpg'
+    ],
+    titulo: 'Construção nova igreja de Canela',
+    descricao: 'Em 1964 foram concluídas as paredes ao redor da antiga Igreja e então se deu a demolição da mesma.',
+    ano: 1964,
+    coordenadas: [-29.363275343461503, -50.81002083772186]
+  },
+  {
+    id: 137,
+    rua_id: 2,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/nova-rodoviaria83-2.jpg',
+      '/fotos/historias/nova-rodoviaria83.jpg'
+    ],
+    titulo: 'A Nova Porta de Entrada: A Inauguração da Rodoviária de Gramado',
+    descricao: 'Em 1979, a charmosa cidade de Gramado estava prestes a dar mais um passo em sua jornada de desenvolvimento turístico. A antiga estação ferroviária, localizada na Avenida Borges de Medeiros, cederia lugar a uma moderna rodoviária, simbolizando a transição dos trilhos para as estradas. A aquisição do terreno, com 9.240 metros quadrados, pela Prefeitura Municipal, representava a realização de um antigo sonho da comunidade. O então prefeito, Nelson Dinnebier, assinou a escritura definitiva, expressando o desejo de iniciar as obras ainda em seu mandato. A nova rodoviária prometia ser uma das mais modernas do Estado, com capacidade para 14 ônibus simultaneamente, além de oferecer restaurante, lanchonete e até mesmo um hotel. Essa iniciativa não apenas modernizaria a infraestrutura da cidade, mas também reforçaria Gramado como um destino turístico de destaque, acolhendo visitantes com ainda mais conforto e eficiência.',
+    ano: 1979,
+    coordenadas: [-29.383504986378256, -50.87198568723769]
+  },
+  {
+    id: 138,
+    rua_id: 3,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/festa-hortensias.jpg'
+    ],
+    titulo: 'A Festa das Hortênsias: O Florescer de uma Tradição em Gramado',
+    descricao: 'Em dezembro de 1958, Gramado, a encantadora cidade da Serra Gaúcha, preparava-se para um evento que marcaria para sempre sua história: a primeira Festa das Hortênsias. Idealizada por visionários como Oscar Knorr e Walter Bertolucci, a celebração ocorreu nos dias 7 e 8 de dezembro, encantando moradores e visitantes com suas cores e aromas. \nSAFERRARI.BLOGSPOT.COM\n\nA festa não apenas exaltava a beleza das hortênsias que adornavam a cidade, mas também simbolizava o florescer de Gramado como um destino turístico de destaque. A programação incluiu apresentações de balé, danças gaúchas e a coroação da primeira Rainha das Hortênsias, Iraci Casagrande, acompanhada das princesas Rosalina Petersen e Irani Stürmer. \nILTONMULLER.COM.BR\n\nO sucesso do evento foi tão grande que ultrapassou as fronteiras do Rio Grande do Sul, projetando Gramado no cenário turístico nacional e plantando as sementes para futuras celebrações que se tornariam tradição na cidade. A Festa das Hortênsias floresceu por 12 edições, sendo a última realizada em 1986, ano que também marcou o nascimento do Natal Luz, outro evento icônico de Gramado. \nSAFERRARI.BLOGSPOT.COM\n\nAssim, a Festa das Hortênsias não apenas celebrou a flora local, mas também cultivou o espírito comunitário e a vocação turística de Gramado, deixando um legado que continua a inspirar eventos e festividades na cidade até os dias de hoje.',
+    ano: 1958,
+    coordenadas: [-29.38645605666849, -50.87496676214851]
+  },
+  {
+    id: 139,
+    rua_id: 10,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/cavalo-lago-negro.jpg'
+    ],
+    titulo: 'Cavalos e Hortênsias: A Harmonia do Lago Negro',
+    descricao: 'Na década de 1970, o pitoresco Lago Negro de Gramado não era apenas um refúgio para amantes da natureza, mas também um ponto de encontro para entusiastas da equitação. Cavaleiros elegantemente trajados desfilavam ao redor do lago, compartilhando trilhas com pedestres que admiravam as deslumbrantes hortênsias em flor. Para garantir a convivência harmoniosa entre todos, a comunidade local propôs medidas como a disciplina do tráfego, a definição de limites de velocidade e a criação de áreas específicas para passeios a pé e a cavalo. Essas iniciativas visavam preservar a tranquilidade e a segurança do Lago Negro, assegurando que tanto cavaleiros quanto pedestres pudessem desfrutar plenamente da serenidade e beleza deste icônico ponto turístico de Gramado.',
+    ano: 1958,
+    coordenadas: [-29.393598021923268, -50.87678033335178]
+  },
+  {
+    id: 140,
+    rua_id: 8,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/1-radio-gramado.jpg'
+    ],
+    titulo: 'A Voz de Gramado: A Inauguração da Primeira Rádio da Cidade',
+    descricao: 'Em 13 de outubro de 1978, Gramado celebrou um marco em sua história com a inauguração da Rádio Excelsior AM 1440. A cerimônia ocorreu no Cine Embaixador, onde artistas renomados, como o Conjunto Impacto de Porto Alegre, encantaram o público com apresentações vibrantes. No dia seguinte, 14 de outubro, a sede da emissora, situada na Avenida Costa e Silva, 78, foi oficialmente inaugurada, contando com a presença de autoridades locais e convidados ilustres. A Rádio Excelsior trouxe uma nova dinâmica à comunicação na cidade, oferecendo uma programação diversificada que incluía músicas típicas alemãs, programas interativos com ouvintes e noticiários regionais. Com um transmissor de 250 watts na frequência de 1510 kHz, a emissora rapidamente se tornou uma parte essencial da vida dos gramadenses, conectando a comunidade e dando voz aos moradores locais.',
+    ano: 1978,
+    coordenadas: [-29.378404488019275, -50.8654799049953]
+  },
+  {
+    id: 141,
+    rua_id: 8,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/laje-de-pedra-1.jpg',
+      '/fotos/historias/laje-de-pedra-2.jpg',
+      '/fotos/historias/laje-de-pedra-3.jpg'
+    ],
+    titulo: 'A Inauguração do Hotel Laje de Pedra e o Crescimento do Turismo em Canela',
+    descricao: 'No dia 3 de dezembro de 1978, a Serra Gaúcha testemunhou um marco histórico com a inauguração do Hotel Laje de Pedra, em Canela. O evento, presidido pelo governador Sinval Guazzelli, contou com a presença de autoridades como o futuro governador Amaral de Souza e o presidente da Embratur, Said Farhat. Com uma estrutura moderna e localização privilegiada, o empreendimento fortaleceu a vocação turística da região, consolidando Canela como destino para grandes convenções e eventos, impulsionando o desenvolvimento econômico local.',
+    ano: 1978,
+    coordenadas: null
+  },
+  {
+    id: 142,
+    rua_id: 7,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/artesanto-gramado-historia.jpg'
+    ],
+    titulo: 'A História do Artesanato de Gramado: Tradição e Criatividade na Serra Gaúcha',
+    descricao: 'Localizada na Serra Gaúcha, no estado do Rio Grande do Sul, a cidade de Gramado se destaca não apenas por seu turismo, mas também por sua rica tradição artesanal. O artesanato local tem suas raízes no início do século XX, com pioneiros como Aldno Asem, mestre na produção de móveis e objetos de vime, e Elisabeth Rosenfeld, responsável por impulsionar o design e a comercialização de móveis da região. Com o tempo, a cidade se tornou um polo de referência, exportando sua produção para diversos países e consolidando eventos como a Feira Nacional do Artesanato. Hoje, Gramado mantém viva sua identidade artesanal, unindo tradição e inovação no cenário cultural e econômico da Serra Gaúcha. A história do artesanato de Gramado teve diferentes locais de desenvolvimento ao longo dos anos. Um dos marcos foi a fábrica de Elisabeth Rosenfeld, localizada na Rua São Pedro, que ajudou a impulsionar a produção e exportação de móveis artesanais. Além disso, a tradicional Feira Nacional do Artesanato ocorre em espaços como o Centro de Eventos ExpoGramado, situado na Avenida Borges de Medeiros, uma das principais vias da cidade.',
+    ano: 1930,
+    coordenadas: [-29.37503258612303, -50.877708362149086]
+  },
+  {
+    id: 143,
+    rua_id: 1,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/praça-major-nicoleti.jpg'
+    ],
+    titulo: 'Praça Major Nicoletti: Um Símbolo Histórico no Coração de Gramado',
+    descricao: 'A Praça Major Nicoletti, inaugurada em 1936, é um dos marcos históricos de Gramado, situada no coração da cidade, em frente à Igreja Matriz São Pedro e ao Palácio dos Festivais. Nomeada em homenagem ao Major José Nicoletti Filho, primeiro subintendente local e figura central na fundação de Gramado, a praça tornou-se um ponto de encontro para moradores e visitantes ao longo das décadas. Após uma significativa reforma em 2003, o espaço foi revitalizado, mantendo seu charme original e reforçando sua importância como um dos cenários mais característicos da cidade. Atualmente, a Praça Major Nicoletti oferece aos visitantes uma vista privilegiada de outros pontos turísticos emblemáticos, como a Rua Coberta e a Avenida Borges de Medeiros. Além disso, abriga um coreto que serve como ponto de venda de produtos da grife oficial "Gramado Inesquecível", proporcionando uma experiência cultural e comercial única.',
+    ano: 1979,
+    coordenadas: [-29.379159395213012, -50.8730453993464]
+  },
+  {
+    id: 144,
+    rua_id: 1,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/centro-medico1.jpg',
+      '/fotos/historias/centro-medico2.jpg',
+      '/fotos/historias/centro-medico3.jpg',
+      '/fotos/historias/centro-medico4.jpg'
+    ],
+    titulo: 'Inauguração do Centro Médico e Odontológico de Gramado',
+    descricao: 'A cidade de Gramado deu um importante passo na área da saúde com a inauguração do Centro Médico e Odontológico, localizado na Avenida Augusto Zatti. O novo complexo foi criado para atender à crescente demanda por serviços médicos especializados, tanto para os moradores locais quanto para os turistas. Com uma equipe multidisciplinar composta por clínicos gerais, ortopedistas, cardiologistas, psiquiatras, dentistas e outros especialistas, o centro trouxe mais comodidade para a população, reduzindo a necessidade de deslocamento para Porto Alegre ou Caxias do Sul.\n\nAlém do atendimento médico 24 horas, o espaço conta com pronto-socorro de urgência, serviço de fisioterapia, ambulância para remoções, centro cirúrgico e um laboratório de análises clínicas moderno. Anexo ao centro, foi inaugurada a Farmácia Real, oferecendo plantão 24 horas para garantir assistência contínua. O Centro Médico e Odontológico de Gramado representa um avanço significativo para a infraestrutura de saúde do município, consolidando-se como um serviço essencial para a comunidade.',
+    ano: 1980,
+    coordenadas: [-29.377366356358426, -50.873724397730875]
+  },
+  {
+    id: 145,
+    rua_id: 1,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/igreja-sao-pedro1.jpg',
+      '/fotos/historias/igreja-sao-pedro2.jpg'
+    ],
+    titulo: 'Igreja Matriz São Pedro: O Símbolo Religioso e Arquitetônico de Gramado',
+    descricao: 'Localizada no coração de Gramado, a Igreja Matriz São Pedro é um dos monumentos mais icônicos da cidade e um dos cartões-postais da Serra Gaúcha. Sua construção teve início em 1917, inicialmente como uma capela de madeira, e em 1942 foi concluída a atual estrutura em pedra basáltica, inspirada no estilo arquitetônico romano. A imponência da igreja é complementada por sua torre de 46 metros de altura e seus belíssimos vitrais importados da Bélgica, que retratam passagens da vida do apóstolo São Pedro.\n\nA igreja está situada na Avenida Borges de Medeiros, em frente à Praça Major Nicoletti, e faz parte do cenário central de Gramado, ao lado do Palácio dos Festivais. Além de seu valor histórico e religioso, o local se tornou um importante ponto turístico, recebendo visitantes de todo o Brasil e do exterior. À sua frente, as estátuas dos 12 apóstolos formam um conjunto simbólico que reforça a identidade cristã da construção.\n\nA Igreja São Pedro não é apenas um local de fé e devoção, mas também um marco cultural e arquitetônico da cidade, sendo palco de celebrações tradicionais como o Natal Luz e a Páscoa em Gramado. Seu charme e imponência fazem dela um dos principais atrativos da região, destacando-se como um patrimônio que une história, arte e religiosidade.',
+    ano: 1979,
+    coordenadas: [-29.379283238464232, -50.87379472447617]
+  },
+  {
+    id: 146,
+    rua_id: 1,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/parque-knorr11.jpg',
+      '/fotos/historias/parque-knorr22.jpg'
+    ],
+    titulo: 'Parque Knorr: Um Refúgio Natural e Histórico em Gramado',
+    descricao: 'O Parque Knorr é um dos mais encantadores refúgios naturais de Gramado, combinando história, beleza paisagística e cultura local. Criado pelo imigrante alemão Oscar João Knorr, o parque surgiu da visão de um homem apaixonado pela natureza, que transformou uma área privilegiada da cidade em um verdadeiro jardim alpino. Com sua localização privilegiada, próxima ao Centro de Gramado, o parque oferece uma vista deslumbrante do Vale do Quilombo, um dos mais belos cartões-postais da Serra Gaúcha.\n\nO espaço abriga uma rica vegetação composta por árvores nativas, coníferas e flores, sendo um ambiente ideal para contemplação e passeios tranquilos. Durante sua administração pela companhia aérea VARIG, o parque passou a ser um patrimônio público, tornando-se um dos principais pontos turísticos da cidade. Atualmente, o Parque Knorr também é conhecido por abrigar a Aldeia do Papai Noel, uma das atrações mais visitadas durante o Natal Luz.\n\nCom sua atmosfera nostálgica e romântica, o Parque Knorr se mantém como um símbolo da preservação ambiental e do amor à natureza. Ele não apenas representa a beleza natural de Gramado, mas também reforça o vínculo da cidade com suas tradições e com o legado de seus pioneiros.',
+    ano: 1979,
+    coordenadas: [-29.38151715920746, -50.8710748400639]
+  },
+  {
+    id: 147,
+    rua_id: 1,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/av-borges-neve.jpg'
+    ],
+    titulo: 'Neve em Gramado: O Inverno Histórico de 1920',
+    descricao: 'No rigoroso inverno de 1920, a cidade de Gramado – RS viveu um dos momentos mais marcantes de sua história climática: uma intensa nevasca cobriu suas ruas, transformando a paisagem em um cenário digno das regiões mais frias do mundo. A Avenida Borges de Medeiros, uma das principais vias da cidade, ficou totalmente coberta de neve, proporcionando um espetáculo natural raro e inesquecível para os moradores da época.\n\nA cena, registrada em fotografias históricas, mostra a altura da neve na região onde hoje se encontra a loja Iraci, evidenciando a magnitude do fenômeno. Esse episódio reforça o clima europeu característico da Serra Gaúcha, que, desde então, se consolidou como um dos grandes atrativos turísticos da cidade, despertando o encanto de visitantes que sonham em vivenciar a neve no Brasil.\n\nEste acontecimento integra o acervo cultural do Museu Histórico de Gramado, que preserva memórias da cidade e relembra momentos emblemáticos que ajudaram a moldar a identidade local. A neve de 1920 permanece como um dos grandes marcos climáticos de Gramado, tornando-se uma referência nostálgica e simbólica para a cidade e seus habitantes.',
+    ano: 1920,
+    coordenadas: [-29.38543515802406, -50.87365046214866]
+  },
+  {
+    id: 148,
+    rua_id: 5,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/rua-garibaldi.jpg'
+    ],
+    titulo: 'Expansão Urbana: Continuidade da Rua Garibaldi',
+    descricao: 'A cidade de Gramado – RS passou por um importante processo de planejamento urbano com a implementação da Lei 457/75, parte do Plano Diretor Urbano do município. Dentro desse contexto, uma das mudanças significativas foi a continuidade da Rua Garibaldi até a Rua 7 de Setembro, promovendo uma melhor organização do crescimento territorial da cidade.\n\nEssa expansão visa não apenas a melhoria na mobilidade urbana, mas também o ordenamento do espaço público, garantindo que o desenvolvimento ocorra de forma planejada e sustentável. O Plano Diretor de Gramado tem como objetivo principal a preservação da identidade da cidade, conciliando o crescimento com a manutenção das características arquitetônicas e culturais que fazem da região um dos destinos turísticos mais procurados do país.\n\nA ampliação da Rua Garibaldi reflete a necessidade de adaptação da cidade ao seu crescimento populacional e turístico, proporcionando uma infraestrutura adequada para moradores e visitantes. Com diretrizes bem estabelecidas, a expansão busca harmonizar o progresso com a preservação do charme característico da Serra Gaúcha.',
+    ano: 1975,
+    coordenadas: [-29.378228245940026, -50.872177733312746]
+  },
+  {
+    id: 149,
+    rua_id: 5,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/banco-do-brasil-74.jpg'
+    ],
+    titulo: 'A Chegada do Primeiro Banco do Brasil em Gramado',
+    descricao: 'A instalação do primeiro Banco do Brasil em Gramado – RS marcou um importante passo no desenvolvimento econômico e financeiro da cidade. Inaugurado em 15 de dezembro de 1981, o edifício foi construído em um estilo bávaro, harmonizando-se perfeitamente com a arquitetura característica da cidade Jardim das Hortênsias.\n\nLocalizado em uma esquina estratégica, o banco tornou-se uma referência visual e um símbolo do progresso local. Além de facilitar o acesso a serviços bancários para os moradores e empresários, sua presença impulsionou o setor comercial e turístico da região, fortalecendo a economia da cidade.\n\nO prédio, com seu design singular, é um dos poucos exemplos de arquitetura bávara aplicados a uma instituição financeira no Brasil. Essa particularidade reforça a identidade única de Gramado, uma cidade que sempre valorizou sua herança cultural e estética. A chegada do Banco do Brasil consolidou a cidade como um centro financeiro emergente na Serra Gaúcha, acompanhando o crescimento do turismo e o aumento das atividades empresariais na região.',
+    ano: 1981,
+    coordenadas: [-29.37828433987652, -50.87219916582528]
+  },
+  {
+    id: 150,
+    rua_id: 13,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/igreja-canela-74.jpg'
+    ],
+    titulo: 'A Igreja Matriz de Canela em 1974: Um Ícone da Serra Gaúcha',
+    descricao: 'Em 1974, a Igreja Matriz de Canela, também conhecida como Catedral de Pedra, já se destacava como um dos principais cartões-postais da Serra Gaúcha. Localizada no coração de Canela, sua imponente estrutura em estilo gótico inglês e sua torre de 65 metros de altura tornavam-se símbolos de fé e beleza arquitetônica.\n\nConstruída com pedra basáltica, a catedral começou a ser erguida em 1953 e teve sua obra concluída nos anos seguintes, tornando-se um ponto turístico e religioso de grande relevância. Na década de 1970, a igreja já atraía visitantes e fiéis, consolidando-se como um dos monumentos mais importantes do Rio Grande do Sul.\n\nA Igreja Matriz de Canela não é apenas um local de culto, mas também um patrimônio cultural e histórico. Em 1974, sua presença já embelezava a cidade, e seu charme gótico seguia encantando moradores e turistas, reforçando sua importância para a identidade local e o desenvolvimento do turismo na região.',
+    ano: 1974,
+    coordenadas: [-29.363651963083704, -50.80943982633361]
+  },
+  {
+    id: 151,
+    rua_id: 17,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/1-cinema-de-canela.jpg'
+    ],
+    titulo: 'O Primeiro Cinema de Canela-RS: História e Reforma',
+    descricao: 'O primeiro cinema de Canela, conhecido como Cine Ideal, foi inaugurado em 1930, situado na Rua Osvaldo Aranha, tornando-se um marco cultural e social para a comunidade. Inicialmente, o cinema enfrentou desafios operacionais devido à limitação dos equipamentos disponíveis na época. A exibição de filmes exigia constantes interrupções para a troca de rolos, uma vez que a projeção era feita com uma única máquina, o que gerava longos intervalos e insatisfação do público.\n\nEm 1934, Hugo Schmitt, vindo de Campo Bom, assumiu a administração do cinema e implementou uma transformação significativa, introduzindo o Cinema Sonoro, conhecido como "falado". O primeiro filme exibido com essa tecnologia foi "O Congresso Dança", uma opereta que gerou grande expectativa entre os moradores. Apesar das inovações e da publicidade bem elaborada, o cinema continuou a enfrentar desafios técnicos, como a falta de latas para armazenar os filmes emendados, o que levou a um incidente perigoso: um princípio de incêndio durante a exibição de "A Guerra das Valsas", causado pela combustão de uma fita pendurada na parede.\n\nCom o passar dos anos, a necessidade de modernização levou Pedro Oscar Selbach a realizar uma grande reforma no cinema. Foram instalados novos equipamentos de projeção KLANG-FILM, um assoalho inclinado para melhor visibilidade e melhorias estruturais que tornaram a experiência dos espectadores mais confortável. Durante a década de 1940, o cinema viveu seu auge, exibindo grandes clássicos e musicais que marcaram época.\n\nNo entanto, com o tempo, a popularização da televisão e novas formas de entretenimento impactaram a frequência ao cinema, levando à sua decadência. Eventualmente, o prédio foi demolido, restando apenas a lembrança do Cine Ideal como o primeiro espaço dedicado à sétima arte em Canela e um ponto de encontro essencial para a comunidade local. Seu anexo, o Café Ideal, também teve grande importância social, servindo como local de reuniões e debates entre amigos, esportistas, políticos e visitantes da cidade.\n\nA demolição do Cine Ideal marcou o fim de uma era para Canela, mas sua história continua viva na memória dos moradores e na evolução cultural da cidade.',
+    ano: 1974,
+    coordenadas: [-29.362273917852086, -50.819350835166894]
+  },
+  {
+    id: 152,
+    rua_id: 5,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/serra-azul-74.jpg'
+    ],
+    titulo: 'Hotel Serra Azul: Um Ícone da Hospitalidade em Gramado',
+    descricao: 'O Hotel Serra Azul, inaugurado em 1916, é um marco na história da hotelaria em Gramado, refletindo o crescimento do turismo na região. Com uma estrutura confortável e sofisticada para a época, tornou-se rapidamente um dos destinos preferidos para visitantes e veranistas.\n\nAdministrado atualmente pela Perini S.A. Hotéis, o hotel recebeu diversos prêmios e reconhecimentos, incluindo a Medalha de Melhor Hotel de Turismo do Interior e o Diploma de Honra ao Mérito por sua contribuição ao desenvolvimento turístico do estado. A visão empreendedora de seus administradores garantiu que, ao longo dos anos, o Serra Azul se mantivesse como referência em qualidade e atendimento.\n\nA tradição do Hotel Serra Azul segue viva, sendo um ponto de encontro para turistas e personalidades, preservando sua história e adaptando-se às novas demandas da hotelaria moderna. Com sua arquitetura charmosa e hospitalidade impecável, continua a encantar gerações de visitantes.',
+    ano: 1974,
+    coordenadas: [-29.379600397803703, -50.8718169333127]
+  },
+  {
+    id: 153,
+    rua_id: 1,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/25-anos-gramado.jpg',
+      '/fotos/historias/25-anos-gramado-2.jpg'
+    ],
+    titulo: '25 Anos de Gramado: Uma Trajetória de Crescimento',
+    descricao: 'No dia 15 de dezembro de 1979, Gramado comemorou seus 25 anos de emancipação, marcando um importante momento na história da cidade. Diversos eventos e celebrações foram realizados para destacar essa conquista, refletindo o desenvolvimento e a transformação da pequena vila em um dos destinos turísticos mais reconhecidos do Brasil.\n\nA evolução de Gramado pode ser claramente observada ao compararmos imagens do passado. A cidade que antes possuía ruas simples, como a Avenida Borges de Medeiros ainda sem asfalto, tornou-se um modelo de planejamento urbano e referência em turismo. As mudanças ao longo dos anos revelam um crescimento sustentável e planejado, que impulsionou o município para o reconhecimento nacional e internacional.\n\nO jubileu de prata de Gramado não apenas celebrou a história e as conquistas da cidade, mas também reforçou seu papel como destino turístico de excelência, cuja tradição e inovação continuam a encantar visitantes de todas as partes.',
+    ano: 1979,
+    coordenadas: [-29.385472551811265, -50.87369337749338]
+  },
+  {
+    id: 154,
+    rua_id: 13,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/papa-canela1.jpg',
+      '/fotos/historias/papa-canela2.jpg'
+    ],
+    titulo: 'A Visita do Papa João Paulo II a Canela – 1980',
+    descricao: 'No dia 5 de julho de 1980, Canela recebeu um dos momentos mais marcantes de sua história com a visita do Papa João Paulo II. A cidade se preparou intensamente para esse grande evento, e desde as primeiras horas da tarde, milhares de fiéis lotaram as ruas e os arredores da Catedral de Pedra, aguardando ansiosamente a chegada do Sumo Pontífice.\n\nPor volta das 15h, a movimentação já era intensa, com policiais organizando o público, repórteres e fotógrafos posicionando-se estrategicamente e bandeiras tremulando em meio a cânticos e saudações. Quando o anúncio foi feito pelos alto-falantes de que o avião papal havia pousado no Aeroporto Salgado Filho, em Porto Alegre, a emoção tomou conta da multidão. Minutos depois, João Paulo II surgiu diante da Catedral, sendo aclamado com entusiasmo e devoção pelo povo gaúcho.\n\nO Papa dirigiu palavras de fé, esperança e união à multidão, carregando uma cruz prateada que simbolizava a presença de Cristo para todos os povos. Sua mensagem enfatizou a necessidade de solidariedade, justiça e amor entre os homens, ecoando valores universais e espirituais. O evento foi um marco não apenas para a comunidade católica de Canela, mas para toda a região, reforçando a importância da paz e da fraternidade em tempos de desafios globais.\n\nA visita de João Paulo II permanece viva na memória dos moradores e na história de Canela, simbolizando um momento de grande espiritualidade e conexão entre a fé e a comunidade.',
+    ano: 1980,
+    coordenadas: [-29.363708120431028, -50.80946126214977]
+  },
+  {
+    id: 155,
+    rua_id: 8,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/neve-gramado-79.jpg'
+    ],
+    titulo: 'A Forte Nevasca de 1979 em Gramado',
+    descricao: 'O inverno de 1979 ficou marcado na história de Gramado como um dos mais rigorosos já registrados na região. No dia 10 de agosto daquele ano, uma intensa nevasca cobriu a cidade, transformando suas paisagens em um verdadeiro cenário europeu. Com temperaturas abaixo de zero e uma espessa camada de neve cobrindo ruas, praças e telhados, o evento atraiu a atenção de moradores e visitantes, sendo lembrado até hoje como um fenômeno raro e memorável.\n\nA nevasca impactou significativamente a rotina da cidade, causando interrupções no tráfego e obrigando os habitantes a se adaptarem às condições extremas. Comerciantes e hoteleiros, no entanto, aproveitaram a ocasião para impulsionar o turismo, pois a beleza das paisagens cobertas de neve encantou turistas que lotaram hotéis e pousadas em busca da experiência única proporcionada pelo inverno rigoroso.\n\nAlém do impacto econômico e social, o evento também reforçou a fama de Gramado como um dos destinos mais charmosos do Brasil durante o inverno. As imagens da cidade coberta de neve foram amplamente divulgadas e contribuíram para consolidar ainda mais seu prestígio como um dos principais pontos turísticos da Serra Gaúcha. A forte nevasca de 1979 permanece como uma lembrança especial para aqueles que tiveram a oportunidade de presenciar esse espetáculo da natureza.',
+    ano: 1979,
+    coordenadas: [-29.37830164792847, -50.86612363516614]
+  },
+  {
+    id: 156,
+    rua_id: 10,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/lago-negro-79.jpg'
+    ],
+    titulo: 'O Lago Negro em Gramado – 1979',
+    descricao: 'Em 1979, o Lago Negro já era um dos principais cartões-postais de Gramado, encantando moradores e turistas com sua beleza singular. Criado artificialmente após um incêndio que devastou a vegetação local, o lago recebeu esse nome devido às árvores importadas da Floresta Negra, na Alemanha, que margeiam suas águas escuras e profundas.\n\nDurante esse ano, o Lago Negro continuou sendo um ponto de encontro para visitantes em busca de lazer e tranquilidade. Os tradicionais pedalinhos em formato de cisne eram uma atração à parte, permitindo que os turistas desfrutassem de um passeio sereno sobre suas águas. Além disso, o local servia como cenário para eventos culturais e atividades recreativas, fortalecendo ainda mais sua importância no turismo da cidade.\n\nA atmosfera romântica e o charme europeu do Lago Negro fizeram com que ele se consolidasse como um dos destinos mais procurados de Gramado. Sua vegetação densa, trilhas arborizadas e bancos estrategicamente posicionados tornavam o ambiente perfeito para caminhadas e momentos de contemplação. Até hoje, a história e a beleza desse icônico lago permanecem vivas na memória daqueles que o visitaram em 1979.',
+    ano: 1979,
+    coordenadas: [-29.393948560019467, -50.876597943139835]
+  },
+  {
+    id: 157,
+    rua_id: 17,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/desfile-militar1-79.jpg',
+      '/fotos/historias/desfile-militar2-79.jpg'
+    ],
+    titulo: 'Desfile Militar em Canela – 1979',
+    descricao: 'O desfile cívico-militar de Canela em 1979 foi um evento marcante na Semana da Pátria, reunindo autoridades, instituições e a população em uma grande celebração do patriotismo. O Prefeito Municipal, Günther Siegfried Schlieper, acompanhado do Presidente dos Festejos da Semana da Pátria, Cel. Daniel Cruz da Costa, e do Presidente da Comissão do Desfile, Ten. Edy Saul Pütten, deu início à cerimônia após inspecionar as 57 entidades participantes.\n\nA abertura ficou por conta da Banda Militar da Base Aérea de Canoas, que encantou o público com sua apresentação musical. Em seguida, desfilaram escolas municipais, estaduais e rurais, além do Grupo de Escoteiros Abaetê e do Distrito de Bandeirantes Araucária. A segunda parte do evento foi marcada pela participação dos cavalarianos da Invernada Campeira do CTG Querência, trazendo a tradição gaúcha para o desfile.\n\nNa última etapa, o desfile motorizado destacou o moderno caminhão de bombeiros recentemente adquirido pela Prefeitura Municipal, além da participação de sindicatos, associações de bairros e um animado grupo de motoqueiros. O evento reforçou o espírito cívico da comunidade e consolidou-se como uma das principais manifestações de patriotismo da cidade, unindo diferentes setores da sociedade em homenagem à Pátria.',
+    ano: 1979,
+    coordenadas: [-29.36217106146571, -50.8192220891327]
+  },
+  {
+    id: 158,
+    rua_id: 8,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/gramado-79.jpg'
+    ],
+    titulo: 'Gramado em 1979: Um Ano de Transformações',
+    descricao: 'O ano de 1979 foi um período marcante para Gramado, consolidando-se cada vez mais como um dos principais destinos turísticos do Brasil. A cidade, conhecida por sua arquitetura europeia, clima frio e hospitalidade, passou por diversas transformações que contribuíram para seu crescimento econômico e cultural.\n\nNeste ano, Gramado recebeu um grande número de visitantes, impulsionado pelos festivais e eventos que começaram a ganhar notoriedade nacional. O turismo de inverno se fortaleceu ainda mais, com a ocorrência de uma das nevascas mais intensas da história da cidade, o que atraiu turistas em busca de uma experiência única no país.\n\nAlém do turismo, o desenvolvimento urbano e a infraestrutura da cidade também foram destaques. Melhorias nas vias públicas, ampliação da rede hoteleira e incentivo ao comércio local ajudaram a moldar a identidade que Gramado carrega até os dias de hoje.\n\nA foto de Elias Nery produz uma imagem muito curiosa e ainda inédita da área central de Gramado, como se ela fosse uma outra cidade, com inegáveis toques europeus e uma atmosfera quase de inverno. Foi capturada em uma manhã de domingo, quando a temperatura caiu para 10 graus centígrados, contrastando com o calor intenso do dia anterior, que chegou a assustar os gramadenses.\n\nGramado em 1979 não foi apenas um ano de crescimento, mas também de afirmação como um dos destinos turísticos mais encantadores da Serra Gaúcha. A combinação de tradição, cultura e modernização fez com que a cidade se tornasse referência em turismo e qualidade de vida, um legado que permanece forte até hoje.',
+    ano: 1979,
+    coordenadas: [-29.37832034613453, -50.86605926214906]
+  },
+  {
+    id: 159,
+    rua_id: 7,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/asfaltamento-sao-pedro.jpg'
+    ],
+    titulo: 'Asfaltamento da Rua São Pedro – 1983',
+    descricao: 'O asfaltamento da Rua São Pedro, realizado em 1983, representou um importante avanço na infraestrutura urbana de Gramado. A obra foi parte de um projeto de modernização liderado pela Prefeitura, que, até o final do primeiro semestre daquele ano, já havia entregue cerca de 4 quilômetros de vias asfaltadas. Segundo o Secretário de Obras e Viação, engenheiro Alemir Coletto, a pavimentação da Rua São Pedro conectou de forma mais eficiente a via à Borges de Medeiros, beneficiando moradores, comerciantes e turistas. Além dessa melhoria, diversas outras ruas, como Ernesto Volk, Tia Rita e Augusto Daros, também foram contempladas, consolidando um período de grande progresso na mobilidade urbana da cidade.',
+    ano: 1983,
+    coordenadas: [-29.375051284929665, -50.877708362149114]
+  },
+  {
+    id: 160,
+    rua_id: 1,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/nova-rodoviaria83.jpg',
+      '/fotos/historias/nova-rodoviaria83-2.jpg'
+    ],
+    titulo: 'Reforma da Rodoviária de Gramado – 1983',
+    descricao: 'Em fevereiro de 1983, Gramado ganhou uma nova rodoviária, modernizada e construída dentro do estilo arquitetônico típico da cidade. Essa reforma atendeu a uma antiga aspiração da população, proporcionando instalações mais amplas e confortáveis para moradores e turistas. Além de melhorar a estrutura de atendimento aos passageiros, a nova rodoviária reforçou a identidade turística de Gramado, tornando-se um importante ponto de chegada para aqueles que visitam a cidade. Desde então, a edificação permanece como um marco na recepção dos viajantes, acompanhando o crescimento e a valorização do turismo local.',
+    ano: 1983,
+    coordenadas: [-29.383521700155843, -50.87206146214882]
+  },
+  {
+    id: 161,
+    rua_id: 10,
+    criador: 'Henrique Canova',
+    fotos: [
+      '/fotos/historias/lago-negro-57.jpg'
+    ],
+    titulo: 'A Construção do Lago Negro',
+    descricao: 'Em 1957, Gramado ganhou um de seus mais icônicos pontos turísticos: o Lago Negro. Construído por Leopoldo Rosenfeld, o lago nasceu da necessidade de revitalizar a área após um grande incêndio que devastou a vegetação local. Com um projeto ambicioso, Rosenfeld investiu recursos significativos para transformar o espaço em um refúgio natural. As margens foram decoradas com xaxins e receberam mudas importadas da Floresta Negra, na Alemanha, o que inspirou o nome do lago.\n\nDesde sua inauguração, o Lago Negro se tornou um dos cartões-postais mais visitados da cidade, oferecendo um ambiente encantador para passeios de pedalinho, caminhadas e momentos de contemplação. Sua beleza única e sua história de resiliência fazem dele um símbolo do crescimento e do cuidado ambiental em Gramado.',
+    ano: 1957,
+    coordenadas: [-29.39363541271001, -50.87665158731756]
+  },
+];
 
 const negocios = [{
 		id: 1,
