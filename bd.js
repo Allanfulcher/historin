@@ -226,7 +226,7 @@ const ruas = [{
 	'descricao': 'A Avenida das Hortênsias é uma das vias mais icônicas de Gramado e desempenha um papel central na ligação entre Gramado e Canela, duas das cidades mais visitadas na Serra Gaúcha. Seu nome homenageia a flor que se tornou um dos símbolos mais reconhecidos da região, as hortênsias, que adornam a avenida durante os meses de primavera e verão, proporcionando uma paisagem exuberante que atrai turistas de todo o Brasil.\n\nA avenida é o principal eixo turístico e comercial de Gramado, onde se concentram diversos hotéis, restaurantes, lojas e atrações turísticas, como o famoso Mini Mundo e o Museu de Cera. Sua importância transcende o aspecto econômico, pois a Avenida das Hortênsias também carrega o charme arquitetônico característico da cidade, com influências alemãs e italianas, preservadas em seus prédios e estabelecimentos.\n\nAlém disso, a Avenida das Hortênsias conecta importantes pontos turísticos das cidades de Gramado e Canela, sendo um verdadeiro cartão-postal para quem chega à região. A avenida é conhecida por oferecer experiências gastronômicas únicas, com renomados restaurantes que refletem a rica culinária local e internacional, consolidando-se como uma parada obrigatória para os visitantes que buscam aproveitar o melhor da Serra Gaúcha.',
 	'fotos': ['fotos/ruas/av-hortensias-antigamente.jpg','fotos/ruas/av-hortensias-anosatras.jpg'],
 	'relevancia': 5,
-	'coordenadas': [-29.379327139267666, -50.86844174214512],
+	'coordenadas': [-29.36172554595249, -50.85596874625489],
 	'cidade_id': 1
 }, {
 	'id': 9,
@@ -1773,6 +1773,27 @@ const historias = [{
     ano: 1957,
     coordenadas: [-29.39363541271001, -50.87665158731756]
   },
+  {
+  id: 162,
+  orgId: 4,
+  rua_id: 8,
+  criador: 'Família Urbani',
+  fotos: [
+    {
+      url: 'fotos/historias/mundo-a-vapor-inauguracao.jpg', // precisamos do caminho completo
+      credito: 'Família Urbani'
+    }
+  ],
+  titulo: 'A fundação do Mundo a Vapor',
+  descricao: `No dia 21 de dezembro de 1991, nascia o parque temático Mundo a Vapor.
+Era a realização de um sonho antigo de Benito Urbani: dividir com o mundo a paixão que cultivava desde menino, ao lado dos irmãos Omar e Hermes. Juntos, transformaram a fascinação pelas máquinas a vapor em legado.
+Essa paixão começou ainda na infância, quando acompanhavam o pai, Ernesto Urbani, nos consertos das antigas locomóveis e serrarias que, em tempos de trilhos e fumaça, ajudaram a construir Canela, Gramado e toda a região.
+O parque abriga um acervo singular de máquinas produzidas artesanalmente pelos irmãos. Cada peça revive a era do vapor e revela como a tecnologia moldou o mundo, engrenagem por engrenagem. Desde o primeiro dia, o passeio de trem é um convite à nostalgia.
+O Mundo a Vapor se firmou como símbolo de Canela. Ganhou ainda mais força em 1999, quando foi inaugurada a icônica fachada do "trem caído", inspirada no lendário acidente ferroviário de Paris, em 1895.
+E o cenário segue crescendo: em 2024, ao lado desse cartão-postal, nasce a Roda Canela, adicionando uma nova volta ao tempo e ao encantamento.`,
+  ano: 1991,
+  coordenadas: [-29.360819802065606, -50.835461990159054]
+}
 ];
 
 const negocios = [{
@@ -2287,6 +2308,7 @@ const questions = [{
 ];
 
 const orgs = [
+	
   /*{
 	id: 1,
 	fantasia: "Memorial Canela",
@@ -2321,6 +2343,15 @@ const orgs = [
 	logo: "fotos/orgs/gramado-era-assim-grupo.png",
 	cor: "#7a0c33",
 	sobre: "Um Grupo do Facebook voltado ao compartilhamento e comentários sobre a cidade e sua origem/desenvolvimento. Você é um convidado a entrar no grupo!",
+	foto: "fotos/historin-equipe.jpg"
+},
+  {
+	id: 4,
+	fantasia: "Mundo a Vapor",
+	link: "https://www.mundoavapor.com.br/",
+	logo: "fotos/orgs/logo-mundo-vapor.png",
+	cor: "#7a0c33",
+	sobre: "Um parque voltado a história do uso do vapor como energia. Com diversas atrações e um museu, o parque é um dos principais pontos turísticos de Canela.",
 	foto: "fotos/historin-equipe.jpg"
 },
 ];

@@ -1,8 +1,7 @@
-// sw.js
-const CACHE_NAME = 'historin-cache-v3';
+const CACHE_NAME = 'historin-cache-v4';
 const STATIC_FILES = [
   '/index.html',
-  '/styles3.4.css',
+  '/styles3.5.css',
   '/bd.js',
   'https://unpkg.com/react@17/umd/react.production.min.js',
   'https://unpkg.com/react-dom@17/umd/react-dom.production.min.js',
@@ -26,45 +25,51 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    const request = event.request;
-  
-    if (request.destination === 'image') {
-      event.respondWith(
-        caches.match(request).then((cachedResponse) => {
-          if (cachedResponse) {
-            // Se a imagem já estiver no cache, retorna ela
-            return cachedResponse;
-          }
-          // Caso contrário, busca na rede e armazena no cache
-          return fetch(request).then((networkResponse) => {
-            return caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, networkResponse.clone());
-              return networkResponse;
-            });
-          }).catch((error) => {
-            console.error('Erro ao buscar a imagem:', error);
-            return new Response(''); // Opcional: Retorna vazio em caso de erro
-          });
-        })
-      );
-    } else {
-      // Tratamento para outros tipos de requisição (CSS, JS, etc.)
-      event.respondWith(
-        caches.match(request).then((cachedResponse) => {
-          return cachedResponse || fetch(request).then((networkResponse) => {
-            if (request.method === 'GET') {
+  const request = event.request;
+
+  if (request.destination === 'image') {
+    event.respondWith(
+      caches.match(request).then((cachedResponse) => {
+        if (cachedResponse) {
+          // Se a imagem já estiver no cache, retorna ela
+          return cachedResponse;
+        }
+
+        // Caso contrário, busca na rede e armazena no cache
+        return fetch(request).then((networkResponse) => {
+          if (networkResponse.ok) {
               return caches.open(CACHE_NAME).then((cache) => {
                 cache.put(request, networkResponse.clone());
                 return networkResponse;
               });
-            }
-            return networkResponse;
+          } else {
+              console.error("Erro ao buscar imagem da rede:", networkResponse.status, request.url);
+              return fetch('/fotos/icons/historin-logo-192.png')
+          }
+        }).catch((error) => {
+            console.error('Erro ao buscar imagem:', error);
+            return caches.match('/fotos/icons/historin-logo-192.png')
           });
-        })
-      );
-    }
-  });
-  
+      })
+    );
+  } else {
+    // Tratamento para outros tipos de requisição (CSS, JS, etc.)
+    event.respondWith(
+      caches.match(request).then((cachedResponse) => {
+        return cachedResponse || fetch(request).then((networkResponse) => {
+          if (request.method === 'GET') {
+            return caches.open(CACHE_NAME).then((cache) => {
+              cache.put(request, networkResponse.clone());
+              return networkResponse;
+            });
+          }
+          return networkResponse;
+        });
+      })
+    );
+  }
+});
+
 
 // Limpa caches antigos quando o SW é ativado
 self.addEventListener('activate', (event) => {

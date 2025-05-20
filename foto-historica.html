@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>    
+    <title>Foto Histórica - Histórias das Cidades</title>
+    <meta name="theme-color" content="#E6D3B4">
+    <link rel="icon" href="fotos/historin-logo.svg" />
+    <script src="bd.js"></script>
+
+    <!-- React e ReactDOM -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- React Router DOM -->
+    <script src="https://unpkg.com/react-router-dom@5/umd/react-router-dom.min.js" crossorigin></script>
+    <!-- Babel para JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Merriweather:wght@400;700&family=Inter:wght@400;600&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+        integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="styles3.4.css" />
+    <style>
+        /* Personalizações adicionais, se necessário */
+    </style>
+</head>
+<body class="bg-gray-100 font-sans h-screen w-screen m-0 p-0">
+    <div id="root" class="h-full w-full"></div>
+
+    <script type="text/babel">
+
+        const { useState, useEffect, useRef } = React;
+        const { BrowserRouter, Route, Switch, Link, useParams, useHistory } = ReactRouterDOM;
+
+        // Funções utilitárias para a galeria
+        const GalleryStorageKey = 'foto_historica_gallery';
+
+        const saveImageToGallery = (dataURL) => {
+            const existing = JSON.parse(localStorage.getItem(GalleryStorageKey)) || [];
+            existing.push(dataURL);
+            localStorage.setItem(GalleryStorageKey, JSON.stringify(existing));
+        };
+
+        const getGalleryImages = () => {
+            return JSON.parse(localStorage.getItem(GalleryStorageKey)) || [];
+        };
+
+        const clearGallery = () => {
+            localStorage.removeItem(GalleryStorageKey);
+        };
+
+        // Função para compartilhar imagens
+        const shareImage = async (dataURL) => {
+            if (navigator.share) {
+                try {
+                    // Converter dataURL para Blob
+                    const response = await fetch(dataURL);
+                    const blob = await response.blob();
+                    const filesArray = [
+                        new File([blob], 'foto-historica.png', {
+                            type: blob.type,
+                        })
+                    ];
+                    await navigator.share({
+                        files: filesArray,
+                        title: 'Foto Histórica',
+                        text: 'Compartilhando uma foto histórica!',
+                    });
+                } catch (error) {
+                    console.error('Erro ao compartilhar:', error);
+                    alert('Não foi possível compartilhar a imagem.');
+                }
+            } else {
+                // Fallback: copiar o link para a imagem
+                navigator.clipboard.writeText(dataURL)
+                    .then(() => alert('Link da imagem copiado para a área de transferência.'))
+                    .catch(err => {
+                        console.error('Erro ao copiar link:', err);
+                        alert('Não foi possível copiar o link da imagem.');
+                    });
+            }
+        };
+
+        // Componente Header
+        function Header({ isOpen, toggleHeader }) {
+            const history = useHistory();
+            const [expandedRuas, setExpandedRuas] = useState({});
+
+            const toggleRua = (ruaId) => {
+                setExpandedRuas(prev => ({
+                    ...prev,
+                    [ruaId]: !prev[ruaId]
+                }));
+            };
+
+            return (
+                <div className={`fixed top-0 left-0 w-full bg-white shadow-lg transform transition-transform duration-300 z-50 ${isOpen ? 'translate-y-0' : '-translate-y-full'}`}>
+                    <div className="flex justify-between items-center p-4 border-b">
+                        <h1 className="text-xl font-bold text-gray-800">Foto Histórica</h1>
+                        <button
+                            onClick={toggleHeader}
+                            className="text-gray-600 hover:text-gray-800 focus:outline-none"
+                            aria-label="Fechar Cabeçalho"
+                        >
+                            <i className="fas fa-times text-2xl"></i>
+                        </button>
+                    </div>
+                    <nav className="p-4 overflow-y-auto max-h-80">
+                        <ul>
+                            <li className="mb-4">
+                                <Link to="/" onClick={toggleHeader} className="flex items-center text-gray-700 hover:text-gray-900">
+                                    <i className="fas fa-home mr-2"></i> Início
+                                </Link>
+                            </li>
+                            <li className="mb-4">
+                                <details className="group">
+                                    <summary className="flex items-center justify-between cursor-pointer text-gray-700 hover:text-gray-900">
+                                        <span><i className="fas fa-images mr-2"></i> Selecionar História</span>
+                                        <i className="fas fa-chevron-down transition-transform duration-200 group-open:rotate-180"></i>
+                                    </summary>
+                                    <ul className="mt-2 ml-6">
+                                        {ruas.map(rua => (
+                                            <li key={rua.id} className="mb-2">
+                                                <details className="group">
+                                                    <summary className="flex items-center justify-between cursor-pointer text-gray-600 hover:text-gray-800">
+                                                        <span>{rua.nome}</span>
+                                                        <i className="fas fa-chevron-down transition-transform duration-200 group-open:rotate-180"></i>
+                                                    </summary>
+                                                    <ul className="mt-2 ml-4">
+                                                        {historias.filter(historia => historia.rua_id === rua.id).map(historia => (
+                                                            <li key={historia.id} className="mb-1">
+                                                                <Link 
+                                                                    to={`/foto-historica/${rua.id}/${historia.id}`} 
+                                                                    onClick={toggleHeader} 
+                                                                    className="flex items-center text-gray-600 hover:text-gray-800"
+                                                                >
+                                                                    <i className="fas fa-book mr-2"></i> {historia.titulo}
+                                                                </Link>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </details>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </details>
+                            </li>
+                            <li>
+                                <Link to="/foto-historica/galeria" onClick={toggleHeader} className="flex items-center text-gray-700 hover:text-gray-900">
+                                    <i className="fas fa-camera-retro mr-2"></i> Galeria
+                                </Link>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            );
+        }
+
+        // Componente HomePage
+        function HomePage() {
+            return (
+                <div className="flex-1 flex flex-col items-center justify-center p-4">
+                    <h2 className="text-3xl font-bold mb-4">Bem-vindo ao Foto Histórica!</h2>
+                    <p className="text-lg text-gray-700 text-center">
+                        Explore histórias fascinantes das ruas da sua cidade e capture momentos únicos com sua câmera.
+                    </p>
+                </div>
+            );
+        }
+
+        // Componente Galeria
+        function Gallery() {
+            const [images, setImages] = useState([]);
+
+            useEffect(() => {
+                setImages(getGalleryImages());
+            }, []);
+
+            const handleClearGallery = () => {
+                if (window.confirm("Deseja realmente limpar a galeria?")) {
+                    clearGallery();
+                    setImages([]);
+                }
+            };
+
+            const handleDownload = (dataURL) => {
+                const link = document.createElement('a');
+                link.href = dataURL;
+                link.download = 'foto-historica.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            return (
+                <div className="p-4">
+                    <h2 className="text-2xl font-bold mb-4">Galeria</h2>
+                    {images.length === 0 ? (
+                        <p className="text-gray-600">Nenhuma imagem salva na galeria.</p>
+                    ) : (
+                        <>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                                {images.map((img, index) => (
+                                    <div key={index} className="border rounded-lg overflow-hidden shadow">
+                                        <img src={img} alt={`Galeria ${index + 1}`} className="w-full h-48 object-cover" />
+                                        <div className="flex justify-around p-2 bg-gray-100">
+                                            <button
+                                                onClick={() => handleDownload(img)}
+                                                className="text-blue-500 hover:text-blue-700"
+                                                title="Fazer Download"
+                                            >
+                                                <i className="fas fa-download"></i>
+                                            </button>
+                                            <button
+                                                onClick={() => shareImage(img)}
+                                                className="text-green-500 hover:text-green-700"
+                                                title="Compartilhar"
+                                            >
+                                                <i className="fas fa-share-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <button
+                                onClick={handleClearGallery}
+                                className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
+                            >
+                                Limpar Galeria
+                            </button>
+                        </>
+                    )}
+                </div>
+            );
+        }
+
+        // Componente de Captura de Foto
+        function CapturePage() {
+            const videoRef = useRef(null);
+            const canvasRef = useRef(null);
+            const [capturedImage, setCapturedImage] = useState(null);
+            const history = useHistory();
+            const { ruaId, historiaId } = useParams();
+
+            // Obter a história selecionada
+            const selectedHistoria = historias.find(h => h.id === parseInt(historiaId) && h.rua_id === parseInt(ruaId));
+
+            // Padroniza as fotos
+            const fotos = selectedHistoria ? selectedHistoria.fotos.map(f => {
+                return (typeof f === 'string') ? { url: f, credito: '' } : f;
+            }) : [];
+
+            // Foto histórica atual
+            const historicalPhoto = (fotos.length > 0 && fotos[0]) ? fotos[0].url : "https://i.imgur.com/CNOZBeg.png";
+
+            useEffect(() => {
+                // Ativa a câmera ao montar o componente
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(stream => {
+                        if(videoRef.current) {
+                            videoRef.current.srcObject = stream;
+                            videoRef.current.play();
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Erro ao acessar a câmera: ", err);
+                        alert("Não foi possível acessar a câmera. Por favor, verifique as permissões do navegador.");
+                    });
+                }
+            }, []);
+
+            const handleCapture = async () => {
+                const canvas = canvasRef.current;
+                const video = videoRef.current;
+                if (canvas && video) {
+                    const context = canvas.getContext('2d');
+                    // Definir largura e altura com base na largura do vídeo
+                    const width = video.videoWidth;
+                    const height = video.videoHeight;
+                    canvas.width = width;
+                    canvas.height = height * 2; // Para a colagem
+
+                    // Desenhar a foto histórica na parte superior
+                    const historicalImg = new Image();
+                    historicalImg.crossOrigin = "anonymous";
+                    historicalImg.src = historicalPhoto;
+                    historicalImg.onload = () => {
+                        // Ajustar a foto histórica para a largura do vídeo mantendo a proporção
+                        const aspectRatio = historicalImg.width / historicalImg.height;
+                        const historicalHeight = width / aspectRatio;
+                        context.drawImage(historicalImg, 0, 0, width, historicalHeight);
+
+                        // Desenhar a foto capturada abaixo da foto histórica
+                        context.drawImage(video, 0, historicalHeight, width, height);
+
+                        const dataURL = canvas.toDataURL('image/png');
+                        setCapturedImage(dataURL);
+                    };
+                    historicalImg.onerror = () => {
+                        alert("Não foi possível carregar a foto histórica.");
+                    };
+                }
+            }
+
+            const handleSave = () => {
+                if (capturedImage) {
+                    saveImageToGallery(capturedImage);
+                    alert("Foto salva na galeria!");
+                    history.push("/foto-historica/galeria");
+                }
+            }
+
+            const handleShare = () => {
+                if (capturedImage) {
+                    shareImage(capturedImage);
+                }
+            }
+
+            if (!selectedHistoria) {
+                return (
+                    <div className="flex-1 flex items-center justify-center p-4">
+                        <p className="text-red-500">História não encontrada.</p>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="flex-1 flex flex-col h-full">
+                    {/* Foto Histórica Selecionada */}
+                    <div className="flex-1 relative">
+                        <img 
+                            src={historicalPhoto} 
+                            alt="Foto Histórica" 
+                            className="object-cover w-full h-full"
+                        />
+                        {/* Informações adicionais sobre a história podem ser adicionadas aqui */}
+                    </div>
+
+                    {/* Câmera do Usuário */}
+                    <div className="flex-1 bg-gray-900 relative">
+                        {!capturedImage && (
+                            <video
+                                ref={videoRef}
+                                className="object-cover w-full h-full"
+                                autoPlay
+                                playsInline
+                            ></video>
+                        )}
+                        
+                        {capturedImage && (
+                            <div className="flex flex-col items-center justify-center h-full bg-black bg-opacity-75 p-4">
+                                <img 
+                                    src={capturedImage} 
+                                    alt="Captura da Câmera" 
+                                    className="object-cover w-3/4 h-auto mb-4 border border-white"
+                                />
+                                <div className="flex space-x-4">
+                                    <button 
+                                        onClick={handleSave} 
+                                        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition flex items-center"
+                                    >
+                                        <i className="fas fa-save mr-2"></i> Salvar Foto
+                                    </button>
+                                    <button 
+                                        onClick={handleShare} 
+                                        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition flex items-center"
+                                    >
+                                        <i className="fas fa-share-alt mr-2"></i> Compartilhar
+                                    </button>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {!capturedImage && (
+                            <button 
+                                onClick={handleCapture} 
+                                className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white px-4 py-2 rounded-full shadow hover:bg-gray-300 transition flex items-center"
+                            >
+                                <i className="fas fa-camera mr-2"></i>
+                                Fotografar
+                            </button>
+                        )}
+                        <canvas ref={canvasRef} className="hidden"></canvas>
+                    </div>
+                </div>
+            );
+        }
+
+        // Componente Detalhes da História
+        function HistoriaDetalhes() {
+            const { ruaId, historiaId } = useParams();
+            const selectedHistoria = historias.find(h => h.id === parseInt(historiaId) && h.rua_id === parseInt(ruaId));
+            const selectedRua = ruas.find(r => r.id === parseInt(ruaId));
+
+            if (!selectedHistoria || !selectedRua) {
+                return (
+                    <div className="flex-1 flex items-center justify-center p-4">
+                        <p className="text-red-500">História ou Rua não encontrada.</p>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="p-4 flex flex-col h-full">
+                    <h2 className="text-2xl font-bold mb-2">{selectedHistoria.titulo}</h2>
+                    <p className="text-gray-700 mb-4 whitespace-pre-line">{selectedHistoria.descricao}</p>
+                    <p className="text-gray-600 mb-4"><strong>Ano:</strong> {selectedHistoria.ano}</p>
+                    <MapComponent coordenadas={selectedHistoria.coordenadas} />
+                    <div className="mt-4">
+                        <Link to={`/foto-historica/${ruaId}/${historiaId}/capturar`} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+                            Capturar Foto
+                        </Link>
+                    </div>
+                </div>
+            );
+        }
+
+        // Componente de Mapa
+        function MapComponent({ coordenadas }) {
+            const mapRef = useRef(null);
+
+            useEffect(() => {
+                if (mapRef.current && coordenadas) {
+                    const L = window.L;
+                    if (!L) {
+                        console.error("Leaflet não está disponível.");
+                        return;
+                    }
+                    const map = L.map(mapRef.current).setView(coordenadas, 15);
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    }).addTo(map);
+
+                    L.marker(coordenadas).addTo(map);
+                }
+            }, [coordenadas]);
+
+            return (
+                <div ref={mapRef} className="w-full h-64 mt-4 rounded shadow"></div>
+            );
+        }
+
+        // Componente App
+        function App() {
+            const [isHeaderOpen, setIsHeaderOpen] = useState(false);
+
+            const toggleHeader = () => {
+                setIsHeaderOpen(prev => !prev);
+            };
+
+            return (
+                <BrowserRouter>
+                    {/* Cabeçalho Oculto */}
+                    <Header isOpen={isHeaderOpen} toggleHeader={toggleHeader} />
+
+                    {/* Botão para abrir o cabeçalho */}
+                    {!isHeaderOpen && (
+                        <button
+                            onClick={toggleHeader}
+                            className="fixed top-4 left-4 bg-transparent p-2 rounded-full shadow-lg z-40"
+                            aria-label="Abrir Cabeçalho"
+                        >
+                            <i className="fas fa-bars text-2xl text-gray-800"></i>
+                        </button>
+                    )}
+
+                    {/* Conteúdo Principal */}
+                    <div className="h-full w-full overflow-auto pt-16">
+                        <Switch>
+                            <Route exact path="/">
+                                <HomePage />
+                            </Route>
+                            <Route exact path="/foto-historica/galeria">
+                                <Gallery />
+                            </Route>
+                            <Route exact path="/foto-historica/:ruaId/:historiaId">
+                                <HistoriaDetalhes />
+                            </Route>
+                            <Route exact path="/foto-historica/:ruaId/:historiaId/capturar">
+                                <CapturePage />
+                            </Route>
+                            {/* Rota padrão para páginas não encontradas */}
+                            <Route path="*">
+                                <div className="flex-1 flex items-center justify-center p-4">
+                                    <p className="text-red-500">Página não encontrada.</p>
+                                </div>
+                            </Route>
+                        </Switch>
+                    </div>
+                </BrowserRouter>
+            );
+        }
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+</body>
+</html>
