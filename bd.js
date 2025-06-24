@@ -190,7 +190,7 @@ const ruas = [{
 	'cidade_id': 1
 }, {
 	'id': 4,
-	'nome': 'Rua Mde Veronica - coberta',
+	'nome': 'Rua Coberta/Mde Verônica',
 	'descricao': 'A Rua Coberta de Gramado, originalmente chamada de Rua Madre Verônica, é uma das atrações mais famosas da cidade. Inaugurada em 31 de dezembro de 1996, ela foi criada como parte de um projeto para revitalizar o centro, tornando-se um ponto de encontro ideal para eventos e lazer, protegido por uma cobertura de vidro que permite passeios a pé mesmo em dias de chuva ou frio.\n\nCom 100 metros de extensão, a Rua Coberta liga as Avenidas Borges de Medeiros e Garibaldi, sendo repleta de restaurantes, lojas e cafés. O local é palco de importantes eventos como o Festival de Cinema de Gramado, o Natal Luz, e várias exposições e desfiles ao longo do ano. Sua atmosfera acolhedora e charmosa faz com que seja um ponto obrigatório para turistas que visitam Gramado\u200b',
 	'fotos': [],
 	'relevancia': 5,
@@ -543,28 +543,28 @@ const historias = [{
 }, {
 	'id': 18,
 	'rua_id': 4,
-	'criador': 'Allan',
+	'criador': 'Eduardo da Silva Weber',
 	'fotos': ['https://i.imgur.com/1EfUUX6.png'],
-	'titulo': 'Desfile de Rainhas da Festa das Hortênsias',
-	'descricao': 'Ocorre o tradicional desfile da Festa das Hortênsias, evento que antecedeu o Natal Luz, no que vem a ser a Rua Coberta.',
+	'titulo': 'Desfile das candidatas à rainha da XI Festa das Hortênsias',
+	'descricao': 'Gramado possui uma longa tradição de desfiles de rua durante eventos, que vêm desde a década de 1920, quando ainda era o Quinto Distrito de Taquara. Os primeiros desfiles documentados são os de carnaval. Desfilar pelas ruas era uma prática cultural da alta sociedade gramadense ligada à Sociedade Recreio Gramadense e que contava também com a participação dos turistas que visitavam a localidade para veranear. Após a emancipação política, o primeiro grande evento turístico organizado pela Prefeitura Municipal, a Festa das Hortênsias, também teve vários tipos de desfiles de rua como atração. Na foto, desfilam sobre os carros as candidatas à Rainha da XI Festa das Hortênsias, realizada de 15/12/1984 a 13/01/1985. Para as leis de trânsito atuais, pode parecer perigoso, mas, na época, era comum que candidatas e soberanas de eventos da região desfilassem no capô dos veículos. Esta foi a penúltima edição do evento que era realizado desde 1958, de dois em dois anos, sempre durante o verão. A festa estava em decadência e não ocorria desde 1977. A edição marca uma retomada nostálgica, mas apenas para a realização de mais duas edições. Dentro delas, surgiram dois novos eventos secundários: a Festa da Colônia e o Natal Luz, que depois substituíram a Festa das Hortênsias e assumiram protagonismo desde então, juntamente com o Festival de Cinema, que já existia. No centro da foto, ao fundo, vemos o Hospital Arcanjo São Miguel.',
 	'ano': 1984,
 	'coordenadas': [-29.378759917508436, -50.873559432172605]
 }, {
 	'id': 19,
 	'rua_id': 4,
-	'criador': 'Allan',
+	'criador': 'Eduardo da Silva Weber',
 	'fotos': ['https://i.imgur.com/Fv15SWb.png'],
-	'titulo': 'Correios no Palácio',
-	'descricao': 'Foto de 1947 mostra o que hoje é o Palácio dos Festivais, com um cinema ao lado da igreja, onde está o hospital atualmente.',
+	'titulo': 'Vista panorâmica da Rua Madre Verônica',
+	'descricao': 'A foto, de 1947, foi tirada do alto do morro do Hospital Arcanjo São Miguel, anteriormente conhecido como “Morro dos Nelz”. Temos uma vista panorâmica de toda a extensão da Rua Madre Verônica, no interior da qual surgiria também, posteriormente, a Rua Coberta. A rua está praticamente vazia de construções. Em meio a gramados e árvores é possível distinguir a sede da Sociedade Recreio Gramadense, ao fundo, na esquina direita da via. Quem descesse o morro caminhando e chegasse ao final da rua, ficaria frente a frente com a residência de Oscar Fisch, onde ficava o primeiro Correio de Gramado. Hoje, quem faz o mesmo trajeto, de repente se depara com a imponência do Palácio dos Festivais. Ao lado esquerdo, vemos também a torre da nova Igreja Matriz São Pedro, concluída há menos de uma década, quando foi fotografada a rua. Quantas mudanças em quase 80 anos. Convidamos você a subir a ladeira do Hospital, mirar seu celular e tirar uma foto no mesmo ângulo. Que elementos novos há do início ao fim da rua?',
 	'ano': 1947,
 	'coordenadas': [-29.377146909828273, -50.87062970088388]
 }, {
 	'id': 20,
 	'rua_id': 4,
-	'criador': 'Allan',
+	'criador': 'Eduardo da Silva Weber',
 	'fotos': ['https://i.imgur.com/WDguy0P.png', 'https://i.imgur.com/I0HC767.png'],
 	'titulo': 'Grupo Escolar Santos Dumont',
-	'descricao': 'O Grupo Escolar Santos Dumont, onde hoje está o Banrisul, localizava-se na atual Rua Coberta.',
+	'descricao': 'No início do século XX, havia em Gramado, sede do antigo Quinto Distrito de Taquara, quatro professores atuantes: Bruno Boelter, Amélia Bossle, Emma Bastos e Boaventura Ramos Pacheco, cada qual com sua escola e seus alunos. A situação mudou em 1930, quando o professor Boaventura realizou uma viagem e reivindicou junto a Getúlio Vargas, então Presidente (Governador) do estado, a unificação das quatro escolas isoladas. Unidos, os quatro recolheram 150 assinaturas, legitimando, assim, a fusão das classes individuais e a criação do Grupo Escolar Gramado, em maio do mesmo ano. Posteriormente, foram também integrados os professores Sylvio Hoffmann, Alba Bandeira dos Santos e Antônia Chaulet. Os grupos escolares foram o modelo de ensino primário organizado e padronizado que vigorou no Brasil do início da República até 1971. Tinham como foco a disciplina, o patriotismo e o esporte. Em Gramado, o nome oficial “Grupo Escolar Santos Dumont” veio apenas em 1940. Antes disso, o educandário teve duas sedes provisórias, até que foi construída, em 1941, a sede definitiva, a mesma que aparece nas fotos, localizada na esquina da Rua Coberta com a Rua Garibaldi, exatamente onde está o prédio do Banrisul, atualmente. Dos professores citados, Boaventura e Amélia foram diretores e, posteriormente, Hugo Daros, antigo aluno da docente.',
 	'ano': 1943,
 	'coordenadas': [-29.37810303798205, -50.87263417204498]
 }, {
@@ -572,8 +572,8 @@ const historias = [{
 	'rua_id': 4,
 	'criador': 'Allan',
 	'fotos': ['https://i.imgur.com/qvtPRtf.png', 'https://i.imgur.com/eJrCoLH.png', 'https://i.imgur.com/AhESztV.png', 'https://i.imgur.com/SLxY8fk.png'],
-	'titulo': 'Construção da Rua Coberta',
-	'descricao': 'A construção da Rua Coberta acontece ao longo de 1996, com sua inauguração no dia 31 de dezembro sob a gestão de Pedro Bertolucci.',
+	'titulo': 'Construção e inauguração da Rua Coberta ',
+	'descricao': 'Na década de 1990, Gramado já possuía uma economia turística consolidada. Muitos dos eventos eram a céu aberto e a instabilidade do clima serrano com chuvas, nevoeiros e quedas de temperatura repentinas, tornava necessária a existência de um espaço externo e coberto para a sua realização. Foi, então, projetada a cobertura de parte da Rua Madre Verônica, no trecho defronte ao Palácio dos Festivais, até pouco antes dos prédios do Banco do Brasil e do Banrisul. Assim surgiu a Rua Coberta. A construção, que começou nos últimos meses de 1996, aparece nas três primeiras fotos. O ato de inauguração, que ocorreu a 31 de dezembro do mesmo ano, no final do mandato de Pedro Henrique Bertolucci, foi ao som da Banda Novos Talentos, regida pelo maestro Ivo Egídio Michaelsen, como se vê na última foto. Apesar de não ser a primeira rua do gênero no Brasil, é, certamente, a mais conhecida e seu sucesso fez dela modelo para outras ruas semelhantes em várias cidades de nosso país. Em seus quase 30 anos de existência, a Rua Coberta abrigou eventos como a Árvore Cantante do Natal Luz, as tendas de produtos coloniais da Festa da Colônia e dos livreiros da Feira do Livro, o tapete vermelho do Festival de Cinema, os blocos de carnaval do Gramado Fantasia, além de exposições e shows diversos.',
 	'ano': 1996,
 	'coordenadas': [-29.378176614045163, -50.87252538201938]
 }, {
@@ -884,20 +884,20 @@ const historias = [{
 	'coordenadas': [-29.3791166889611, -50.87454163224789]
 }, {
 	'id': 56,
-	'rua_id': 5,
-	'criador': 'Mateus Canova',
+	'rua_id': 4,
+	'criador': 'Eduardo da Silva Weber',
 	'fotos': ['https://i.imgur.com/l3ubmWb.png'],
-	'titulo': 'Escola já não é no mesmo local',
-	'descricao': 'O predio que antes era o grupo escolar santos dumont, hoje se localiza o banco do estado, Banrisul.',
+	'titulo': 'Agência do Banrisul com ipê amarelo histórico ao lado',
+	'descricao': 'A agência do Banco do Estado do Rio Grande do Sul, no centro de Gramado, começou a ser construída no ano de 1981 e foi inaugurada em 01/11/1982. O terreno é o mesmo do antigo Grupo Escolar Santos Dumont. Da época do educandário, restou um ipê amarelo histórico. Foi plantado por professores e alunos em 21/09/1942, Dia da Árvore, quando Hugo Daros era o diretor. A espécie é reconhecida internacionalmente como árvore símbolo do Brasil, desde 1961. Até poucos anos atrás, estava ameaçada de extinção. Durante a construção da agência, o antigo diretor protestou contra a derrubada do ipê. Os apelos foram ouvidos e a árvore foi tombada como Patrimônio Histórico Municipal em 09/03/1998, na gestão do prefeito Nelson Dinnebier. Convidamos você a tirar uma selfie. O cenário pode ser o prédio do Banrisul de Gramado, único no estado com arquitetura inspirada no estilo bávaro alemão, ou o ipê amarelo octogenário, que é patrimônio histórico de nossa cidade, ou ainda os dois. Talvez você tenha a sorte de admirar entre o final de julho e setembro, quando a árvore estiver repleta de suas flores amarelas vibrantes, que lhe são características.',
 	'ano': 2012,
 	'coordenadas': [-29.37787939416001, -50.8728018828596]
 }, {
 	'id': 57,
 	'rua_id': 5,
-	'criador': 'Mateus Canova',
+	'criador': 'Eduardo da Silva Weber',
 	'fotos': ['https://i.imgur.com/xqkd9wI.png'],
-	'titulo': 'Fundação Recreio gramadense',
-	'descricao': 'Casa de Manuel Becharra alugada por ele para ser a primeira sede da recreio gramadense fundada em 1915',
+	'titulo': 'Primeira sede da Sociedade Recreio Gramadense',
+	'descricao': 'A Sociedade Recreio Gramadense foi fundada em 15/04/1915. A iniciativa veio do escrivão distrital João Leopoldo Lied, de sua esposa Osvaldina, do comerciante Augusto Zatti, do subintendente (subprefeito) capitão José Nicoletti, do comerciante Pedro Benetti, do professor Bruno Boelter, juntamente com outros moradores. Temos aqui uma foto da primeira sede, que ficava na esquina da então Rua Borges de Medeiros com a atual Rua Madre Verônica, exatamente onde hoje inicia a Rua Coberta. O prédio era alugado, pertencia a Antônio Bechara e, posteriormente, abrigou também uma loteria esportiva. Foi utilizado até 1928, quando encerrou-se a construção da sede definitiva, na esquina entre as atuais Rua Garibaldi e Rua Madre Verônica. Ao longo desses primeiros anos, foram sendo aceitos inúmeros sócios, que realizaram doações financeiras e de materiais de construção e promoveram bailes, quermesses, torneios e rifas, com o objetivo de arrecadar fundos para a compra do terreno e edificação do novo “salão”. Data dessa época da sede ainda provisória da Sociedade Recreio Gramadense o 1º Carnaval de Gramado, em 1922. As atrações incluíram um desfile de carretas enfeitadas puxadas por cavalos, levando a rainha do carnaval fantasiada e sentada no trono, além de um baile de máscaras à noite.',
 	'ano': 1915,
 	'coordenadas': [-29.378194109472847, -50.872120310317705]
 }, {
@@ -1047,11 +1047,11 @@ const historias = [{
 }, {
 	'id': 82,
 	'rua_id': 4,
-	'criador': 'Mateus Canova',
+	'criador': 'Eduardo da Silva Weber',
 	'fotos': ['https://i.imgur.com/qNAi68X.png'],
 	'titulo': 'Hospital Arcanjo São Miguel',
-	'descricao': 'O hospital estava em construção, muito esperados por todos pois seria o princiapal ponto de atendimento médico da cidade',
-	'ano': 1940,
+	'descricao': 'Em 01/05/1937, reuniu-se pela primeira vez em assembleia geral a Sociedade Beneficente Hospitalar. O objetivo era construir em Gramado, Quinto Distrito de Taquara, um moderno hospital, que atendesse o crescente número de moradores e turistas que buscavam atendimento médico e necessitavam de estrutura hospitalar. Os principais incentivadores foram o Dr. Carlos Nelz e o Dr. Nilo Dias. Até então, os doentes eram atendidos a domicílio ou em residências particulares alugadas para esta finalidade. Após a reunião, iniciou-se a arrecadação de fundos para a compra do terreno, que ocorreu em 1938. Na etapa seguinte, foi feito o nivelamento do terreno a pás e picaretas pela Legião do Trabalho, que reunia moradores que voluntariamente construíam estradas e outras obras públicas. A pedra fundamental foi colocada em 09/04/1939. Para continuar a construção, além de coletas, foram realizados sorteios, quermesses e um chá dançante beneficente na Sociedade Recreio Gramadense, visando angariar fundos. Durante as obras, o terreno foi doado para a Congregação das Irmãs do Imaculado Coração de Maria, que também administrava o Colégio Santa Terezinha. De lá, a Madre Verônica de Jesus, a mesma que foi depois homenageada com o nome da rua, supervisionava a construção com um binóculo. A inauguração ocorreu em 26/10/1947 e o nome escolhido foi Hospital Arcanjo São Miguel. Quem assumiu como médico chefe foi o alemão Dr. Carlos Nelz, que antes presidiu a sociedade pró-construção. Uma curiosidade é que, para acolher os primeiros doentes, camas e cobertores foram doados pelos hotéis.',
+	'ano': 1947,
 	'coordenadas': [-29.377043304850982, -50.87040426666953]
 }, {
 	'id': 83,
@@ -1793,7 +1793,55 @@ O Mundo a Vapor se firmou como símbolo de Canela. Ganhou ainda mais força em 1
 E o cenário segue crescendo: em 2024, ao lado desse cartão-postal, nasce a Roda Canela, adicionando uma nova volta ao tempo e ao encantamento.`,
   ano: 1991,
   coordenadas: [-29.360819802065606, -50.835461990159054]
-}
+},
+{
+  id: 163,
+  orgId: null,
+  rua_id: 8,
+  criador: 'Eduardo da Silva Weber',
+  fotos: [
+    {
+      url: 'fotos/historias/Prefeituramunicipaldecada1970.jpg',
+      credito: null,
+    }
+  ],
+  titulo: 'Prédio original da Prefeitura Municipal e sua arquitetura modernista',
+  descricao: `A foto é da Prefeitura Municipal na década de 1970, antes da reforma que a deixou com a fisionomia atual. O prédio foi construído em algum momento entre as décadas de 1930 e 1960, quando a arquitetura modernista estava em alta no Brasil e no mundo. Algumas características que definem o modernismo arquitetônico são o uso de materiais de construção modernos, ao mesmo tempo leves e resistentes, como o concreto, o aço e o vidro, a ordem e simetria das linhas retas e das formas geométricas, o minimalismo das fachadas pouco ornamentadas, além do apreço pela praticidade e eficiência dos espaços internos. Alguns desses elementos podem ser percebidos apenas por meio dessa foto histórica, enquanto outros podem ser notados ainda hoje, se examinarmos o interior da construção. A fachada tem o formato de um polígono de cinco lados, que lembra uma bandeira de festa junina invertida. A resistência do concreto aparece lado a lado com a leveza e simplicidade das grandes e pequenas janelas de vidro quadradas, algumas de correr e outras sem abertura, protegidas por grades de aço. A função delas era permitir o aproveitamento da luz natural do exterior para iluminar o interior. Assim, apesar das mudanças exteriores da década posterior à foto, a Prefeitura, que é um dos mais importantes prédios públicos municipais, possui até hoje um interior amplo e aberto. Este traço é um legado de sua arquitetura modernista original, que visava facilitar a grande circulação de pessoas, algo típico das cidades modernas, para as quais o estilo foi concebido. Ademais, a título de curiosidade, para os amantes de carros antigos, vemos, à frente da Prefeitura, estacionados dois Volkswagen Fusca e um DKW-Vemag Fissore. Quer ver outros modelos de carros antigos? Visite em nossa cidade o Hollywood Dream Cars - Museu do Automóvel.`,
+  ano: 1970,
+  coordenadas: [-29.386547220117478, -50.88277439057749]
+},
+{
+  id: 164,
+  orgId: null,
+  rua_id: 8,
+  criador: 'Eduardo da Silva Weber',
+  fotos: [
+    {
+      url: 'fotos/historias/1985prefeituramunicipal.jpg',
+      credito: null,
+    }
+  ],
+  titulo: 'A Prefeitura em reforma: rumo a uma nova identidade para a cidade',
+  descricao: `O estilo modernista anteriormente presente na Prefeitura Municipal representava o otimismo com o futuro, típico dos Anos Dourados (1945-1973), durante os quais Gramado se tornou município. A reforma no prédio em meados da década de 1980 é um indicador local de uma mudança na mentalidade a nível nacional e mundial após o encerramento do período áureo do Capitalismo nas três décadas do pós-guerra. Com a crise mundial do petróleo, em 1973, e a crise nacional da década de 1980, no final do Regime Civil-Militar, o passado começou a ser mais valorizado. Tudo, porque, com os problemas econômicos do presente, ficou cada vez mais difícil projetar o futuro. Nesse momento crítico, também declinava da indústria calçadista gramadense, por muitos anos detentora de grande parte das receitas municipais. A política econômica e cultural da cidade foi então marcada pela reforma dos prédios públicos, com o objetivo de evidenciar uma identidade urbana, que promovesse cada vez mais o turismo incipiente. A inspiração para as reformas foi encontrada no passado local. O modelo escolhido foi a mansão do imigrante alemão Oscar Knorr, construída no início da década de 1940 com vista para o Vale do Quilombo. A arquitetura de sua residência lembra o estilo bávaro, encontrado nos chalés alpinos da região da Baviera, no sul da Alemanha. `,
+  ano: 1985,
+  coordenadas: [-29.3788358104186, -50.87104964127779]
+},
+{
+  id: 165,
+  orgId: null,
+  rua_id: 7,
+  criador: 'Eduardo da Silva Weber',
+  fotos: [
+    {
+      url: 'fotos/historias/esquinapedrobenetti.jpg',
+      credito: 'Carlos Gilberto Drecksler',
+    }
+  ],
+  titulo: 'Tradição e reformas na esquina entre as ruas Pedro Benetti e São Pedro',
+  descricao: `Nesse ângulo, temos a esquina da Rua Pedro Benetti com a Rua São Pedro, vista da rua que leva o nome do nosso santo padroeiro. Estávamos em novembro, durante o Natal Luz. Como sabemos? Basta observar o arco decorativo natalino que enfeita a entrada da Rua Pedro Benetti. Vê-se uma das laterais e a traseira da Igreja Matriz. Na parte traseira, em direção à esquina, está a Padaria, Confeitaria e Café São Pedro. Ela funciona no mesmo lugar desde 1998, durante a década em que a economia turística gramadense deu os primeiros frutos. Atualmente, seu nome comercial sofreu algumas modificações, mas a ligação com o padroeiro se manteve. Ademais, o estabelecimento continua sendo uma boa opção para os moradores e os turistas que buscam um lugar aconchegante para um café da manhã ou da tarde. Na época da foto, o pároco da Paróquia São Pedro era o padre Luiz Pedro Wagner (1950-), que promoveu a construção da nova casa paroquial e dos novos jardins que hoje circundam a Igreja Matriz. Os investimentos vieram fortalecer a infraestrutura religiosa local, acolhendo mais sacerdotes, cuja presença viria melhorar o atendimento do crescente número de moradores e turistas, numa Gramado que se desenvolveu muito nas últimas décadas. `,
+  ano: 2011,
+  coordenadas: [-29.379870689958356, -50.87443065117556]
+},
 ];
 
 const negocios = [{
