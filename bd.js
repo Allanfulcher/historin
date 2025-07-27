@@ -570,7 +570,7 @@ const historias = [{
 }, {
 	'id': 21,
 	'rua_id': 4,
-	'criador': 'Allan',
+	'criador': 'Eduardo da Silva Weber',
 	'fotos': ['https://i.imgur.com/qvtPRtf.png', 'https://i.imgur.com/eJrCoLH.png', 'https://i.imgur.com/AhESztV.png', 'https://i.imgur.com/SLxY8fk.png'],
 	'titulo': 'Construção e inauguração da Rua Coberta ',
 	'descricao': 'Na década de 1990, Gramado já possuía uma economia turística consolidada. Muitos dos eventos eram a céu aberto e a instabilidade do clima serrano com chuvas, nevoeiros e quedas de temperatura repentinas, tornava necessária a existência de um espaço externo e coberto para a sua realização. Foi, então, projetada a cobertura de parte da Rua Madre Verônica, no trecho defronte ao Palácio dos Festivais, até pouco antes dos prédios do Banco do Brasil e do Banrisul. Assim surgiu a Rua Coberta. A construção, que começou nos últimos meses de 1996, aparece nas três primeiras fotos. O ato de inauguração, que ocorreu a 31 de dezembro do mesmo ano, no final do mandato de Pedro Henrique Bertolucci, foi ao som da Banda Novos Talentos, regida pelo maestro Ivo Egídio Michaelsen, como se vê na última foto. Apesar de não ser a primeira rua do gênero no Brasil, é, certamente, a mais conhecida e seu sucesso fez dela modelo para outras ruas semelhantes em várias cidades de nosso país. Em seus quase 30 anos de existência, a Rua Coberta abrigou eventos como a Árvore Cantante do Natal Luz, as tendas de produtos coloniais da Festa da Colônia e dos livreiros da Feira do Livro, o tapete vermelho do Festival de Cinema, os blocos de carnaval do Gramado Fantasia, além de exposições e shows diversos.',
@@ -1842,6 +1842,91 @@ E o cenário segue crescendo: em 2024, ao lado desse cartão-postal, nasce a Rod
   ano: 2011,
   coordenadas: [-29.379870689958356, -50.87443065117556]
 },
+{
+    id: 166,
+    rua_id: 9,
+    criador: 'Brocker Turismo',
+    fotos: [
+      {
+        url: 'fotos/historias/primeira-sede-brocker-1995.jpg',
+        credito: 'Brocker Turismo'
+      }
+    ],
+    titulo: 'Surge a Brocker Turismo',
+    ano: 1995,
+    descricao: `Em 1995, a Brocker Turismo abriu sua primeira sede na Rua Fernando Ferrari, região conhecida como Lageana. O local passou a abrigar a agência de viagens fundada pelas proprietárias Adriane e Luiza. O contato com a natureza era uma marca registrada da empresa, que se destacou no turismo estudantil, levando grupos de jovens para todo o Brasil e até mesmo para a Argentina. Com as viagens estudantis, começava a se consolidar o setor emissivo da Brocker.`,
+    coordenadas: [-29.351110824777617, -50.81762877483056],
+    orgId: 5
+  },
+  {
+    id: 167,
+    rua_id: 13,
+    criador: 'Brocker Turismo',
+    fotos: [
+      {
+        url: 'fotos/historias/segunda-sede-brocker-1998.jpg',
+        credito: 'Brocker Turismo'
+      }
+    ],
+    titulo: 'Agência de Turismo Brocker em Destaque',
+    ano: 1998,
+    descricao: `Com o aumento da demanda e a necessidade de crescimento, a Brocker mudou-se, em 1998, para a Avenida Borges de Medeiros, próximo à Catedral de Pedra. Nesse novo endereço, uma grande equipe foi se formando e, junto a ela, surgiu a frota própria da empresa. Os carros com a logomarca da Brocker passaram a fazer parte da paisagem da cidade. Em meio a esse crescimento, os colaboradores descobriam a paixão por trabalhar com turismo.`,
+    coordenadas: [-29.36330281151832, -50.80909275619882],
+    orgId: 5,
+  },
+  {
+    id: 168,
+    rua_id: 13,
+    criador: 'Brocker Turismo',
+    fotos: [
+      {
+        url: 'fotos/historias/metedodo-disney-2000.jpg',
+        credito: 'Brocker Turismo'
+      }
+    ],
+    titulo: 'A profissionalização da Brocker com o Método Disney',
+    ano: 2000,
+    descricao: `Em 2000, Adriane concluiu a faculdade de Turismo e partiu para um estágio de dois meses na Disney World. Lá, vivenciou um valioso aprendizado: estudou na Universidade da Disney e trabalhou no parque Disney's Animal Kingdom. Essa imersão no "jeito Disney" de encantar motivou Adriane a trazer uma fatia daquele universo mágico para a Serra Gaúcha. Com belezas naturais e infraestrutura turística em expansão, aplicar esse encantamento seria fundamental para fortalecer a experiência dos visitantes.`,
+    coordenadas: [-29.36330281151832, -50.80909275619882],
+    orgId: 5
+  },
+  {
+    id: 169,
+    rua_id: 19,
+    criador: 'Família Urbani',
+    fotos: [
+      {
+        url: 'fotos/historias/oficina-mechanica-urbani.jpg',
+        credito: 'Família Urbani'
+      }
+    ],
+    titulo: 'A oficina de máquinas a vapor de Ernesto Urbani',
+    ano: 1927,
+    descricao: `Em 1927, Ernesto Urbani fundou uma oficina mecânica em Canela — ou melhor, uma *Officina Mechanica*, como se escrevia na época. Era um tempo em que as grandes serrarias moviam a economia de Canela e Gramado, e as locomóveis — motores a vapor montados sobre rodas — eram o coração que fazia tudo pulsar. Versáteis e indispensáveis, essas máquinas podiam ser usadas como geradores, motores industriais ou bombas d’água.
+
+Na oficina, Ernesto fazia de tudo: de consertos simples à fabricação completa de peças, moldando ferro com engenho e suas próprias mãos. Nesse ambiente de fuligem, graxa e invenção, cresceram seus filhos Omar, Hermes e Benito. Absorvendo desde cedo a lógica das engrenagens e o fascínio pelo vapor, eles cultivaram uma paixão que, anos mais tarde, daria forma ao parque Mundo a Vapor.`,
+    coordenadas: [-29.36212824675232, -50.812526172756584],
+    orgId: 4
+  },
+  {
+    id: 170,
+    rua_id: 8,
+    criador: 'Família Urbani',
+    fotos: [
+      {
+        url: 'fotos/historias/inauguracao-mundo-vapor.png',
+        credito: 'Família Urbani'
+      }
+    ],
+    titulo: 'A inauguração de um cartão-postal de Canela',
+    ano: 1990,
+    descricao: `Foi através de um pôster enviado por um amigo que Benito Urbani descobriu a história do célebre acidente ferroviário de 1895, em Paris, quando um trem descarrilou e atravessou o segundo andar da estação Montparnasse, despencando para a rua. A imagem icônica inspirou Benito a recriar a cena na fachada do Parque Mundo a Vapor.
+
+Com a compra de uma locomotiva sucateada em São Paulo, iniciou-se o processo de restauração. Em dezembro de 1999, chegou o grande momento: erguer as 38 toneladas de ferro. Dois guindastes, uma multidão de espectadores e um sonho suspenso no ar marcaram o nascimento de um dos cartões-postais mais emblemáticos de Canela.`,
+    coordenadas: [-29.361410732232496, -50.8346716150922],
+    orgId: 4
+  }
+
 ];
 
 const negocios = [{
@@ -1899,6 +1984,13 @@ const negocios = [{
 		segmento: 'Atração',
 		foto: 'https://portalgramado.s3.sa-east-1.amazonaws.com/images/yljIt4L2yZHyr0ia089RwloOOcgbWuQZhCUBYEmP.png',
 		link: 'https://maps.app.goo.gl/wsaeWvbxcY8FoGoh9'
+	},
+	{
+		id: 8,
+		titulo: 'Mundo a vapor',
+		segmento: 'Atração',
+		foto: 'https://portais-s3.s3.sa-east-1.amazonaws.com/images/eL7yc2VHyP3gDgMsjSOstlphZtzYFoh4uag4sFby.png',
+		link: 'https://g.co/kgs/jpuJWWN'
 	},
 ];
 
@@ -2400,6 +2492,15 @@ const orgs = [
 	logo: "fotos/orgs/logo-mundo-vapor.png",
 	cor: "#7a0c33",
 	sobre: "Um parque voltado a história do uso do vapor como energia. Com diversas atrações e um museu, o parque é um dos principais pontos turísticos de Canela.",
+	foto: "fotos/historin-equipe.jpg"
+},
+  {
+	id: 5,
+	fantasia: "Brocker Turismo",
+	link: "https://brockerturismo.com.br/",
+	logo: "https://brockerturismo.com.br/images/modulo/logo/brocker-turismo.svg",
+	cor: "#80b93f",
+	sobre: "Uma das maiores operadoras de turismo do Brasil, empresa com grande participação no resgate da história, a Brocker Turismo é uma referência em Gramado e Canela.",
 	foto: "fotos/historin-equipe.jpg"
 },
 ];
